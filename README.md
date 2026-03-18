@@ -27,7 +27,7 @@ Welcome to our project portfolio for CPT208 Human-Centric Computing.
     <td>
       <h3>Yiguan Zhang</h3><br>
       <strong>Student ID:</strong> 2362131<br>
-      <strong>Brief Introduction:</strong> I’m currently learning full-stack development with Python, java, linux.
+      <strong>Brief Introduction:</strong> A XJTLU ICS student.
     </td>
   </tr>
 </table>
