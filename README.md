@@ -17,8 +17,20 @@ Welcome to our project portfolio for CPT208 Human-Centric Computing.
     </td>
   </tr>
 </table>
-
 <!-- 成员 2 (格式保持一致，若需调整则请在群里发起沟通) -->
+
+<table>
+  <tr>
+    <td width="200" align="center">
+      <img src="images/Yiguan Zhang.jpg" width="150" style="border-radius: 10px;">
+    </td>
+    <td>
+      <h3>Yiguan Zhang</h3><br>
+      <strong>Student ID:</strong> 2362131<br>
+      <strong>Brief Introduction:</strong> I’m currently learning full-stack development with Python, java, linux.
+    </td>
+  </tr>
+</table>
 
 <!-- 成员 3 (同上) -->
 
