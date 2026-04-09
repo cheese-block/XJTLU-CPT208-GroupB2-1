@@ -46,11 +46,13 @@ export function initGameLoop(vnScreen) {
 // 行动执行（由 MapScreen 调用）
 // ─────────────────────────────────────────────────────────────
 
+// src/engine/GameLoop.js
+
 /**
  * 执行一个建筑行动：消耗 AP → 结算数值 → 检查 Bad Ending → 触发随机事件。
  * @param {string}   actionId
- * @param {object}   action     来自 actions.js 的行动配置
- * @param {function} onEvent    随机事件触发时的回调（切换到 VN 模式）
+ * @param {object}   action    来自 actions.js 的行动配置
+ * @param {function} onEvent   随机事件触发时的回调（切换到 VN 模式）
  * @returns {boolean}  是否成功执行（AP 不足返回 false）
  */
 export function executeAction(actionId, action, onEvent) {
@@ -80,10 +82,17 @@ export function executeAction(actionId, action, onEvent) {
   // 随机事件判定
   const fresh = StateManager.getState();
   const hitId = EventEngine.rollRandomEvent(fresh);
-  if (hitId && onEvent) {
+  
+  if (hitId) {
     // 短暂延迟，让飘字动画先播完
     setTimeout(() => {
-      processEventQueue(onEvent);
+      processEventQueue(() => {
+        // 【修复点】：队列清空后，强制将游戏阶段切回地图
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+        
+        // 执行外部传入的额外回调（如有）
+        if (onEvent) onEvent();
+      });
     }, 800);
   }
 
