@@ -65,6 +65,7 @@ export class MapScreen {
     this._bindMapClick();
     this._bindEndMonthButton();
     this._renderInfoPanel(null);
+    this._renderPlayerStatus(state); // 【新增】初始化个人状态面板
 
     if (CONSTANTS.MAP_DEBUG) {
       this._mountDebugTool();
@@ -86,10 +87,15 @@ export class MapScreen {
 
   onStateChange(state) {
     this._state = state;
+    
+    // 更新建筑面板（如果当前有选中）
     if (this._selectedId) {
       const building = BUILDINGS.find(b => b.id === this._selectedId);
       if (building) this._renderInfoPanel(building);
     }
+
+    // 每次状态改变，都重新渲染下方的个人状态面板
+    this._renderPlayerStatus(state);
   }
 
   // ───────────────────────────────────────────────────────────
@@ -171,10 +177,19 @@ export class MapScreen {
         </div>
 
         <!-- 右侧：信息面板（35%）-->
-        <div id="info-panel"
+        <div id="right-sidebar"
              class="flex-[35] flex flex-col
                     border-l-2 border-gray-200
                     bg-white overflow-hidden">
+          
+          <!-- 上半部：建筑信息 -->
+          <div id="info-panel" class="flex-1 flex flex-col overflow-hidden border-b-2 border-gray-100">
+          </div>
+
+          <!-- 下半部：个人简历与状态 (固定高度或按比例) -->
+          <div id="player-status-panel" class="h-[42%] shrink-0 flex flex-col bg-gray-50 overflow-hidden">
+          </div>
+
         </div>
 
       </div>
@@ -324,6 +339,150 @@ export class MapScreen {
         this._handleAction(btn.dataset.actionId);
       });
     });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 个人简历与状态面板 (Player Status & Buffs)
+  // ───────────────────────────────────────────────────────────
+
+  _renderPlayerStatus(state) {
+    const panel = this._container?.querySelector('#player-status-panel');
+    if (!panel) return;
+
+    // 解析雅思成绩
+    const ieltsTag = state.tags.find(t => t.startsWith('IELTS_'));
+    const ieltsScore = ieltsTag ? ieltsTag.replace('IELTS_', '') : '未出分';
+
+    // 解析软背景
+    const softBgs = [];
+    if (state.tags.includes('Internship_Exp')) softBgs.push('一段实习');
+    if (state.tags.includes('Research_Exp'))   softBgs.push('一段科研');
+    // 未来可扩展更多：Big4_Intern, Paper_Published 等
+
+    panel.innerHTML = `
+      <div class="px-5 py-3 border-b border-gray-200 bg-white flex items-center justify-between">
+        <h3 class="text-sm font-black text-xjtlu-navy flex items-center gap-1.5">
+          <i data-lucide="contact" class="lucide w-4 h-4"></i>
+          我的申请履历
+        </h3>
+        
+        <!-- 教学 Tooltip -->
+        <div class="relative group cursor-help">
+          <i data-lucide="help-circle" class="lucide w-4 h-4 text-xjtlu-gray"></i>
+          <div class="absolute bottom-full right-0 mb-2 w-56 p-3 rounded-xl
+                      bg-xjtlu-navy text-white text-xs leading-relaxed
+                      shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none
+                      transition-opacity z-50">
+            <p class="font-bold text-xjtlu-yellow mb-1">状态与增益说明</p>
+            <p>你的履历（GPA、雅思、软背景）将直接决定最终能拿到的 Offer 级别。</p>
+            <p class="mt-1">下方的<span class="text-xjtlu-yellow">活跃状态 (Buff)</span> 会在日常行动中为你提供额外的数值加成或惩罚。请注意保持心理健康，避免获得负面状态！</p>
+            <div class="absolute top-full right-1.5 border-4 border-transparent border-t-xjtlu-navy"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto custom-scroll p-5 flex flex-col gap-4">
+        
+        <!-- 硬件条件 -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1">
+            <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">累计 GPA</span>
+            <span class="text-lg font-black ${state.cumulativeGPA >= 3.3 ? 'text-xjtlu-green' : 'text-xjtlu-navy'}">
+              ${state.cumulativeGPA ? state.cumulativeGPA.toFixed(2) : '暂无'}
+            </span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1">
+            <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">雅思成绩</span>
+            <span class="text-lg font-black ${ieltsScore !== '未出分' ? 'text-xjtlu-blue' : 'text-gray-400'}">
+              ${ieltsScore}
+            </span>
+          </div>
+        </div>
+
+        <!-- 软背景 -->
+        <div class="flex flex-col gap-2">
+          <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">软背景积累</span>
+          <div class="flex flex-wrap gap-2">
+            ${softBgs.length > 0 
+              ? softBgs.map(bg => `<span class="tag-badge tag-badge--blue">${bg}</span>`).join('')
+              : `<span class="text-xs text-gray-400 italic">简历空空如也...去参加点活动吧</span>`
+            }
+          </div>
+        </div>
+
+        <div class="h-px bg-gray-200 my-1"></div>
+
+        <!-- 活跃 Buff -->
+        <div class="flex flex-col gap-2">
+          <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">活跃状态 (Buffs)</span>
+          <div class="flex flex-wrap gap-2">
+            ${state.activeBuff && state.activeBuff.length > 0 
+              ? state.activeBuff.map(buff => this._buildBuffBadge(buff)).join('')
+              : `<span class="text-xs text-gray-400 italic">当前无特殊状态</span>`
+            }
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  _buildBuffBadge(buff) {
+    const isDebuff = buff.effects?.event_prob_modifier < 0 || buff.effects?.stat_modifier?.delta < 0;
+    const colorClass = isDebuff ? 'tag-badge--red' : 'tag-badge--yellow';
+    const effectDesc = this._describeBuffEffect(buff);
+
+    return `
+      <div class="relative group">
+        <span class="tag-badge ${colorClass} cursor-default shadow-sm">
+          <i data-lucide="${buff.icon ?? 'star'}" class="lucide w-3 h-3"></i>
+          ${buff.label}
+        </span>
+
+        <!-- 悬停气泡 (向上弹出) -->
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    w-48 p-2.5 rounded-xl
+                    bg-xjtlu-navy text-white text-xs leading-relaxed
+                    shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none
+                    transition-opacity z-50">
+          <p class="font-black ${isDebuff ? 'text-xjtlu-red' : 'text-xjtlu-yellow'} mb-1">${buff.label}</p>
+          ${effectDesc ? `<p class="text-white/90">${effectDesc}</p>` : ''}
+          <p class="text-white/50 mt-1 text-[0.6rem]">
+            ${buff.durationType === 'months' ? `剩余 ${buff.remainingMonths} 个月` : '永久效果'}
+          </p>
+          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-xjtlu-navy"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  _describeBuffEffect(buff) {
+    const effects = buff.effects;
+    if (!effects) return '';
+    const parts = [];
+
+    if (effects.stat_modifier) {
+      const { stat, delta, action } = effects.stat_modifier;
+      const statLabel = {
+        English_Ability:  '英语能力',
+        Academic_Ability: '学力',
+        Mental_Health:    '心理健康',
+        Physical_Health:  '身体健康',
+      }[stat] ?? stat;
+      const sign = delta > 0 ? '+' : '';
+      const actionDesc = action ? `执行相关行动时` : '每次行动';
+      parts.push(`${actionDesc} ${statLabel} ${sign}${delta}`);
+    }
+
+    if (effects.event_prob_modifier) {
+      const pct = Math.round(effects.event_prob_modifier * 100);
+      const sign = pct > 0 ? '+' : '';
+      parts.push(`随机事件概率 ${sign}${pct}%`);
+    }
+
+    return parts.join('；');
   }
 
   _buildDefaultPanel() {

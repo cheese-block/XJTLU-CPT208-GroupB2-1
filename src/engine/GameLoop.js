@@ -76,6 +76,9 @@ export function executeAction(actionId, action, onEvent) {
     _trackProgressTag(action.tagsProgress);
   }
 
+  // ── 【修复点】：每次行动后立即检查状态 Debuff ──
+  _checkStatusDebuffs();
+
   // Bad Ending 检查
   const badEnd = checkBadEndings();
   if (badEnd) return true;

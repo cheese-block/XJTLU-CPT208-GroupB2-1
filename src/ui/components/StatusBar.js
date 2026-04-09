@@ -171,14 +171,6 @@ export class StatusBar {
           </div>
         </div>
 
-        <div class="w-px h-8 bg-gray-200 shrink-0"></div>
-
-        <!-- ⑧ 活跃 Buff 列表 -->
-        <div id="sb-buffs"
-             class="shrink-0 flex items-center gap-1 flex-wrap max-w-[160px]">
-          <!-- 由 JS 动态渲染 -->
-        </div>
-
       </div>
     `;
   }
