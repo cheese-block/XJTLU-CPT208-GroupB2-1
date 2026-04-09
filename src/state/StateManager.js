@@ -521,11 +521,17 @@ export function saveGame() {
 
   _state.saveTimestamp = Date.now();
 
+  // gamePhase 属于 UI 状态，不持久化
+  // 读档后统一从 MAP 界面继续（语义：继续游戏 = 回到地图）
+  const dataToSave = {
+    ..._state,
+    gamePhase: CONSTANTS.GAME_PHASE.MAP,
+  };
+
   try {
-    localStorage.setItem(CONSTANTS.SAVE_KEY, JSON.stringify(_state));
+    localStorage.setItem(CONSTANTS.SAVE_KEY, JSON.stringify(dataToSave));
     log('debug', 'StateManager', `💾 自动存档 @ ${formatTimestamp(_state.saveTimestamp)}`);
   } catch (e) {
-    // localStorage 可能因隐私模式/容量不足而失败
     log('error', 'StateManager', '存档失败（localStorage 不可用）', e);
   }
 }
