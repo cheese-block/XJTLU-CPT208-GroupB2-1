@@ -62,24 +62,22 @@ document.addEventListener('DOMContentLoaded', () => {
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
   log('info', 'Main', '🚀 应用启动完成');
 
-  // DEBUG：暴露测试函数到全局
-  if (CONSTANTS.MAP_DEBUG) {
-    window._testVN = (eventId) => {
-      import('./src/data/events.js').then(({ EVENTS }) => {
-        const event = EVENTS[eventId];
-        if (!event) { console.error('事件不存在:', eventId); return; }
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
-        setTimeout(() => {
-          _vnScreen.startEvent(event, () => {
-            log('info', 'Test', '事件结束，返回地图');
-            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-          });
-        }, 100);
-      });
-    };
-    console.log('%c调试：_testVN("agency_selection") 可测试任意事件',
-      'color:#004B9B;font-weight:700;');
-  }
+  // 改为：始终挂载，不受 MAP_DEBUG 控制
+  window._testVN = (eventId) => {
+    import('./src/data/events.js').then(({ EVENTS }) => {
+      const event = EVENTS[eventId];
+      if (!event) { console.error('事件不存在:', eventId); return; }
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
+      setTimeout(() => {
+        _vnScreen.startEvent(event, () => {
+          log('info', 'Test', '事件结束，返回地图');
+          StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+        });
+      }, 100);
+    });
+  };
+  console.log('%c调试：_testVN("agency_selection") 可测试任意事件',
+    'color:#004B9B;font-weight:700;');
 });
 
 function initLucide() {
