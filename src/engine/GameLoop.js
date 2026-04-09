@@ -17,6 +17,7 @@ import * as EventEngine          from './EventEngine.js';
 import { resolveFinalExam }      from './ExamEngine.js';
 import { resolveIeltsExam }      from './ExamEngine.js';
 import { log, deepClone }        from '../utils/helpers.js';
+import * as BuffEngine           from './BuffEngine.js';
 
 // ─────────────────────────────────────────────────────────────
 // 模块内部引用
@@ -46,8 +47,6 @@ export function initGameLoop(vnScreen) {
 // 行动执行（由 MapScreen 调用）
 // ─────────────────────────────────────────────────────────────
 
-// src/engine/GameLoop.js
-
 /**
  * 执行一个建筑行动：消耗 AP → 结算数值 → 检查 Bad Ending → 触发随机事件。
  * @param {string}   actionId
@@ -58,14 +57,19 @@ export function initGameLoop(vnScreen) {
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
 
+  // ── 【M10 新增】：计算真实的 AP 消耗 ──
+  const apMod = BuffEngine.getAPCostModifier(state, actionId);
+  const finalApCost = Math.max(0, action.apCost + apMod);
+
   // AP 检查
-  if (!StateManager.consumeAP(action.apCost)) {
+  if (!StateManager.consumeAP(finalApCost)) {
     log('info', 'GameLoop', 'AP 不足，行动取消');
     return false;
   }
 
-  // 数值结算
-  StateManager.applyStatDelta(action.baseEffects, action.labels ?? {});
+  // ── 【M10 新增】：计算真实的数值收益 ──
+  const finalEffects = BuffEngine.applyBuffModifiers(state, actionId, action.baseEffects);
+  StateManager.applyStatDelta(finalEffects, action.labels ?? {});
 
   // 科研进度追踪（research_ir 累计 3 次获得标签）
   if (action.tagsProgress) {
@@ -87,10 +91,7 @@ export function executeAction(actionId, action, onEvent) {
     // 短暂延迟，让飘字动画先播完
     setTimeout(() => {
       processEventQueue(() => {
-        // 【修复点】：队列清空后，强制将游戏阶段切回地图
         StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-        
-        // 执行外部传入的额外回调（如有）
         if (onEvent) onEvent();
       });
     }, 800);
