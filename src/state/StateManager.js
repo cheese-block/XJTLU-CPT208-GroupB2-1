@@ -342,12 +342,26 @@ export function getBuff(buffId) {
  * 切换游戏阶段（gamePhase），通知 UIManager 切换 Screen。
  * @param {string} phase  CONSTANTS.GAME_PHASE 中的枚举值
  */
+// export function setGamePhase(phase) {
+//   if (!_state) throw new Error('[StateManager] 状态未初始化');
+
+//   const prev = _state.gamePhase;
+//   _state.gamePhase = phase;
+//   log('info', 'StateManager', `GamePhase: ${prev} → ${phase}`);
+//   _notifyChange();
+// }
 export function setGamePhase(phase) {
   if (!_state) throw new Error('[StateManager] 状态未初始化');
 
   const prev = _state.gamePhase;
   _state.gamePhase = phase;
   log('info', 'StateManager', `GamePhase: ${prev} → ${phase}`);
+
+  // 离开 TITLE 时说明玩家做出了第一个有效操作，触发首次存档
+  if (prev === CONSTANTS.GAME_PHASE.TITLE && phase !== CONSTANTS.GAME_PHASE.TITLE) {
+    saveGame();
+  }
+
   _notifyChange();
 }
 

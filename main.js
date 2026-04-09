@@ -39,11 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 5. 初始化 UIManager
   initUIManager();
 
-  // 6. DEBUG 模式：先跑验证，验证完毕后再触发 TITLE Screen
-  //    验证函数内部会操作状态，必须在 setGamePhase 之前完成
-  if (CONSTANTS.MAP_DEBUG) {
-    runM1Verification();
-  }
+  // 6. M1 验证已完成，暂时禁用（避免污染存档）
+  // if (CONSTANTS.MAP_DEBUG) {
+  //   runM1Verification();
+  // }
 
   // 7. 触发主菜单显示
   //    无论存档的 gamePhase 是什么，都先回到 TITLE 让玩家手动选择继续/重开
