@@ -17,6 +17,7 @@ import * as EventEngine          from './EventEngine.js';
 import { resolveFinalExam }      from './ExamEngine.js';
 import { resolveIeltsExam }      from './ExamEngine.js';
 import { log }                   from '../utils/helpers.js';
+import { log, deepClone }        from '../utils/helpers.js';
 
 // ─────────────────────────────────────────────────────────────
 // 模块内部引用
@@ -115,13 +116,29 @@ export function processEventQueue(onEmpty) {
 
 function _playNextEvent() {
   const state     = StateManager.getState();
-  const eventData = EventEngine.dequeueNextEvent(state);
+  let eventData = EventEngine.dequeueNextEvent(state);
 
   if (!eventData) {
     log('info', 'GameLoop', '事件队列已清空');
     _onQueueEmpty?.();
     return;
   }
+
+  // ── 【修改点 2】：M9 动态事件内容注入拦截 ──
+  if (eventData.event_id === 'ielts_exam_result') {
+    // 深拷贝，避免污染 events.js 中的原始数据模板
+    eventData = deepClone(eventData); 
+    
+    // 调用 ExamEngine 计算出分结果（此函数内部会自动修改 state 中的标签和心理健康）
+    const result = resolveIeltsExam(StateManager.getState());
+    
+    // 将计算出的文案注入到第二个场景中替换占位符
+    eventData.scenes[1].text = result.summary;
+    
+    // 因为 resolveIeltsExam 修改了内部状态，需要触发一次存档
+    StateManager.saveGame();
+  }
+  // ──────────────────────────────────────────
 
   // 从队列移除（在播放前移除，防止重复触发）
   StateManager.startEvent(eventData);  // 内部已有 shift() 逻辑
