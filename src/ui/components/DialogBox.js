@@ -17,10 +17,6 @@ export class DialogBox {
     this._onComplete   = null;
   }
 
-  /**
-   * 挂载到指定容器。
-   * @param {HTMLElement} container
-   */
   mount(container) {
     this._container = container;
     container.innerHTML = this._buildHTML();
@@ -31,20 +27,25 @@ export class DialogBox {
     this._container = null;
   }
 
-  // ───────────────────────────────────────────────────────────
-  // 公共 API
-  // ───────────────────────────────────────────────────────────
-
   /**
-   * 显示一段文本（逐字打印）。
    * @param {object} options
-   * @param {string}   options.text        主文本
-   * @param {string}   [options.speaker]   发言人（留空为旁白）
-   * @param {string}   [options.tip]       知识提示框文本
-   * @param {boolean}  [options.showHint]  是否显示"点击继续"提示
-   * @param {function} [options.onComplete] 打印完成回调
+   * @param {string}   options.text
+   * @param {string}   [options.speaker]
+   * @param {string}   [options.tip]
+   * @param {object}   [options.effects]   数值得失，如 { Money: -30000, Mental_Health: +5 }
+   * @param {object}   [options.effectLabels] 显示名称，如 { Money: '资金' }
+   * @param {boolean}  [options.showHint]
+   * @param {function} [options.onComplete]
    */
-  show({ text, speaker = '', tip = '', showHint = true, onComplete = null }) {
+  show({
+    text,
+    speaker      = '',
+    tip          = '',
+    effects      = null,
+    effectLabels = {},
+    showHint     = true,
+    onComplete   = null,
+  }) {
     this._stopTyping();
     this._fullText   = text;
     this._onComplete = onComplete;
@@ -52,6 +53,7 @@ export class DialogBox {
     const speakerEl  = this._container?.querySelector('#vn-speaker');
     const textEl     = this._container?.querySelector('#vn-text');
     const tipEl      = this._container?.querySelector('#vn-tip');
+    const effectsEl  = this._container?.querySelector('#vn-effects');
     const hintEl     = this._container?.querySelector('#vn-hint');
 
     if (!textEl) return;
@@ -72,37 +74,54 @@ export class DialogBox {
       if (tip && typeof lucide !== 'undefined') lucide.createIcons();
     }
 
+    // 数值得失
+    if (effectsEl) {
+      if (effects && Object.keys(effects).length > 0) {
+        effectsEl.innerHTML = Object.entries(effects)
+          .filter(([, delta]) => delta !== 0)
+          .map(([stat, delta]) => {
+            const label    = effectLabels[stat] ?? stat;
+            const isPos    = delta > 0;
+            const sign     = isPos ? '+' : '';
+            const colorCls = isPos ? 'text-xjtlu-green' : 'text-xjtlu-red';
+            const bgCls    = isPos ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+            return `
+              <span class="inline-flex items-center gap-1
+                           px-2 py-0.5 rounded-full border text-xs font-black
+                           ${colorCls} ${bgCls}">
+                ${sign}${delta} ${label}
+              </span>
+            `;
+          }).join('');
+        effectsEl.classList.remove('hidden');
+      } else {
+        effectsEl.innerHTML = '';
+        effectsEl.classList.add('hidden');
+      }
+    }
+
     // 隐藏提示，清空文本
     if (hintEl) hintEl.classList.add('hidden');
     textEl.textContent = '';
 
-    // 开始逐字打印
     this._typeText(text, textEl, () => {
       if (hintEl && showHint) hintEl.classList.remove('hidden');
       this._onComplete?.();
     });
   }
 
-  /**
-   * 若正在打印则跳过（显示全文），否则返回 false（由外部处理推进）。
-   * @returns {boolean} 是否消费了本次点击（true = 跳过打印，false = 已打印完毕）
-   */
   skipOrAdvance() {
     if (this._isTyping) {
       this._skipTyping();
-      return true;  // 消费了点击，用于跳过打印
+      return true;
     }
-    return false;   // 文本已显示完，外部负责推进
+    return false;
   }
-
-  // ───────────────────────────────────────────────────────────
-  // 逐字打印
-  // ───────────────────────────────────────────────────────────
 
   _typeText(text, el, onDone) {
     this._isTyping = true;
     let index = 0;
-    const speed = 28; // ms/字
+    const speed = 28;
 
     const tick = () => {
       if (index >= text.length) {
@@ -122,10 +141,8 @@ export class DialogBox {
     const textEl = this._container?.querySelector('#vn-text');
     if (textEl) textEl.textContent = this._fullText;
     this._isTyping = false;
-
     const hintEl = this._container?.querySelector('#vn-hint');
     if (hintEl) hintEl.classList.remove('hidden');
-
     this._onComplete?.();
   }
 
@@ -137,18 +154,12 @@ export class DialogBox {
     this._isTyping = false;
   }
 
-  // ───────────────────────────────────────────────────────────
-  // HTML
-  // ───────────────────────────────────────────────────────────
-
   _buildHTML() {
     return `
       <div class="vn-dialog-box">
 
         <!-- 发言人标签 -->
-        <div id="vn-speaker"
-             class="vn-dialog-box__speaker hidden">
-        </div>
+        <div id="vn-speaker" class="vn-dialog-box__speaker hidden"></div>
 
         <!-- 知识提示框 -->
         <div id="vn-tip"
@@ -157,6 +168,11 @@ export class DialogBox {
 
         <!-- 主文本 -->
         <p id="vn-text" class="vn-dialog-box__text"></p>
+
+        <!-- 数值得失（选择后显示）-->
+        <div id="vn-effects"
+             class="hidden flex flex-wrap gap-2 pt-1">
+        </div>
 
         <!-- 点击继续提示 -->
         <p id="vn-hint" class="vn-dialog-box__hint hidden">

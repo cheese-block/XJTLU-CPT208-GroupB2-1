@@ -187,44 +187,38 @@ export class VNScreen {
   _resolveChoice(choice) {
     // 应用数值效果
     if (choice.effects && Object.keys(choice.effects).length > 0) {
-      const labels = this._buildEffectLabels(choice.effects);
-      StateManager.applyStatDelta(choice.effects, labels);
+        const labels = this._buildEffectLabels(choice.effects);
+        StateManager.applyStatDelta(choice.effects, labels);
     }
 
     // 添加标签
     if (choice.tags_added && choice.tags_added.length > 0) {
-      choice.tags_added.forEach(tag => StateManager.addTag(tag));
+        choice.tags_added.forEach(tag => StateManager.addTag(tag));
     }
 
     // 注入连续事件
     if (choice.next_event_id) {
-      StateManager.enqueueEventFront({
+        StateManager.enqueueEventFront({
         eventId: choice.next_event_id,
         source:  'chain',
-      });
+        });
     }
 
     StateManager.saveGame();
 
-    // 显示选择后的旁白（flavor_text）
+    // 显示 flavor_text，同时展示数值得失
     if (choice.flavor_text) {
-      this._updateBackground(choice.bg ?? null);
-      this._dialogBox.show({
-        text:     choice.flavor_text,
-        showHint: true,
-        tip:      choice.tip ?? '',
-        // 选完后的旁白播完，等待点击进入下一 scene 或结束
-        onComplete: () => {
-          // 将"选完"标记为当前 scene 已处理完，下次点击推进
-        },
-      });
-
-      // 覆盖 sceneIndex：选完后下次点击跳到下一 scene
-      this._sceneIndex = this._getCurrentSceneIndex();
-
+        this._updateBackground(choice.bg ?? null);
+        this._dialogBox.show({
+        text:         choice.flavor_text,
+        showHint:     true,
+        tip:          choice.tip ?? '',
+        // ↓ 新增：传入得失数值
+        effects:      choice.effects ?? {},
+        effectLabels: this._buildEffectLabels(choice.effects ?? {}),
+        });
     } else {
-      // 无 flavor_text，直接推进
-      this._playScene(this._sceneIndex + 1);
+        this._playScene(this._sceneIndex + 1);
     }
   }
 
