@@ -7,10 +7,20 @@
  *   3. 移除调试工具
  */
 
+/**
+ * @fileoverview 校园地图 Screen（M8 完整版）
+ *
+ * 变更：
+ *   - _handleAction 改为调用 GameLoop.executeAction
+ *   - 新增"结束本月"按钮，触发月末结算流程
+ */
+
 import * as StateManager  from '../../state/StateManager.js';
 import { CONSTANTS }      from '../../utils/constants.js';
 import { BUILDINGS }      from '../../data/buildings.js';
 import { ACTIONS }        from '../../data/actions.js';
+import { executeAction, resolveMonthEnd } from '../../engine/GameLoop.js';
+import { MapDebugTool }   from '../MapHotspot.js';
 import { log }            from '../../utils/helpers.js';
 
 export class MapScreen {
@@ -19,8 +29,6 @@ export class MapScreen {
     this._selectedId     = null;
     this._state          = null;
     this._resizeObserver = null;
-
-    // 拖拽调试用：运行时坐标副本
     this._hotspotPositions = {};
   }
 
@@ -55,10 +63,11 @@ export class MapScreen {
     }
 
     this._bindMapClick();
+    this._bindEndMonthButton();
     this._renderInfoPanel(null);
 
     if (CONSTANTS.MAP_DEBUG) {
-      this._bindExportButton();
+      this._mountDebugTool();
     }
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -67,11 +76,11 @@ export class MapScreen {
 
   unmount() {
     this._resizeObserver?.disconnect();
-    this._resizeObserver    = null;
-    this._container         = null;
-    this._state             = null;
-    this._selectedId        = null;
-    this._hotspotPositions  = {};
+    this._resizeObserver   = null;
+    this._container        = null;
+    this._state            = null;
+    this._selectedId       = null;
+    this._hotspotPositions = {};
     log('info', 'MapScreen', '已卸载');
   }
 
@@ -120,6 +129,7 @@ export class MapScreen {
               draggable="false"
             />
 
+            <!-- Pin 层 -->
             <div id="hotspot-layer"
                  class="absolute pointer-events-none"
                  style="left:0;top:0;width:0;height:0;">
@@ -128,10 +138,21 @@ export class MapScreen {
 
           </div>
 
-          <!-- 调试工具栏（MAP_DEBUG 模式下显示）-->
+          <!-- 结束本月按钮 -->
+          <div class="absolute bottom-4 right-4 z-40">
+            <button
+              id="btn-end-month"
+              class="xjtlu-btn xjtlu-btn--primary text-sm shadow-lg"
+            >
+              <i data-lucide="skip-forward" class="lucide w-4 h-4"></i>
+              结束本月
+            </button>
+          </div>
+
+          <!-- 调试提示角标 -->
           ${CONSTANTS.MAP_DEBUG ? `
             <div id="debug-toolbar"
-                 class="absolute bottom-3 left-3 right-3 z-50
+                 class="absolute bottom-4 left-4 z-50
                         flex items-center gap-2">
               <div class="bg-xjtlu-navy/90 text-white text-xs font-bold
                           px-3 py-2 rounded-lg flex items-center gap-2">
@@ -140,7 +161,7 @@ export class MapScreen {
               </div>
               <button
                 id="btn-export-coords"
-                class="xjtlu-btn xjtlu-btn--warning text-xs py-2 px-3 ml-auto"
+                class="xjtlu-btn xjtlu-btn--warning text-xs py-2 px-3"
               >
                 <i data-lucide="download" class="lucide w-3.5 h-3.5"></i>
                 导出坐标
@@ -187,7 +208,6 @@ export class MapScreen {
     layer.style.width  = `${renderW}px`;
     layer.style.height = `${renderH}px`;
 
-    // 存储供拖拽计算用
     layer.dataset.renderW = renderW;
     layer.dataset.renderH = renderH;
 
@@ -195,7 +215,6 @@ export class MapScreen {
       const id  = pin.dataset.buildingId;
       const pos = this._hotspotPositions[id];
       if (!pos) return;
-
       pin.style.display = '';
       pin.style.left    = `${pos.x}%`;
       pin.style.top     = `${pos.y}%`;
@@ -222,159 +241,7 @@ export class MapScreen {
   }
 
   // ───────────────────────────────────────────────────────────
-  // 拖拽逻辑（调试模式专用）
-  // ───────────────────────────────────────────────────────────
-
-  /**
-   * 为单个 Pin 绑定拖拽事件。
-   * 拖拽期间实时更新 _hotspotPositions，释放后更新坐标。
-   * @param {HTMLElement} pin
-   * @param {HTMLElement} layer  热区层（用于计算相对坐标）
-   */
-  _bindPinDrag(pin, layer) {
-    let isDragging  = false;
-    let startMouseX = 0;
-    let startMouseY = 0;
-    let startPctX   = 0;
-    let startPctY   = 0;
-
-    // 鼠标按下：开始拖拽
-    pin.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      isDragging  = true;
-      startMouseX = e.clientX;
-      startMouseY = e.clientY;
-
-      const id    = pin.dataset.buildingId;
-      startPctX   = this._hotspotPositions[id].x;
-      startPctY   = this._hotspotPositions[id].y;
-
-      pin.style.cursor    = 'grabbing';
-      pin.style.zIndex    = '9999';
-      pin.style.animation = 'none';
-
-      const renderW = parseFloat(layer.dataset.renderW) || layer.clientWidth;
-      const renderH = parseFloat(layer.dataset.renderH) || layer.clientHeight;
-
-      const onMouseMove = (moveEvt) => {
-        if (!isDragging) return;
-
-        const dx     = moveEvt.clientX - startMouseX;
-        const dy     = moveEvt.clientY - startMouseY;
-        const newX   = startPctX + (dx / renderW * 100);
-        const newY   = startPctY + (dy / renderH * 100);
-
-        // 边界限制
-        const clampedX = Math.max(0, Math.min(100, newX));
-        const clampedY = Math.max(0, Math.min(100, newY));
-
-        pin.style.left = `${clampedX}%`;
-        pin.style.top  = `${clampedY}%`;
-
-        this._hotspotPositions[pin.dataset.buildingId] = {
-          x: Math.round(clampedX * 10) / 10,
-          y: Math.round(clampedY * 10) / 10,
-        };
-      };
-
-      const onMouseUp = () => {
-        isDragging          = false;
-        pin.style.cursor    = 'grab';
-        pin.style.zIndex    = '';
-
-        // 恢复 B 类动画
-        const building = BUILDINGS.find(b => b.id === pin.dataset.buildingId);
-        if (building?.type === 'B') {
-          pin.style.animation = '';
-        }
-
-        const id  = pin.dataset.buildingId;
-        const pos = this._hotspotPositions[id];
-        log('debug', 'MapScreen',
-          `📍 ${id}: { x: ${pos.x}, y: ${pos.y} }`);
-
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup',   onMouseUp);
-      };
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup',   onMouseUp);
-    });
-
-    // 调试模式下 cursor 改为 grab
-    pin.style.cursor = 'grab';
-  }
-
-  // ───────────────────────────────────────────────────────────
-  // 导出坐标
-  // ───────────────────────────────────────────────────────────
-
-  _bindExportButton() {
-    const btn = this._container?.querySelector('#btn-export-coords');
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-      this._exportCoords();
-    });
-  }
-
-  /**
-   * 将当前所有 Pin 坐标格式化输出到控制台。
-   * 格式直接对应 buildings.js 的 hotspot 字段，可直接复制粘贴。
-   */
-  _exportCoords() {
-    console.group(
-      '%c📍 Pin 坐标导出（可直接粘贴到 buildings.js）',
-      'font-size:1rem;font-weight:900;color:#004B9B;'
-    );
-
-    // 表格形式（直观对比）
-    const tableData = {};
-    BUILDINGS.forEach(b => {
-      const pos = this._hotspotPositions[b.id];
-      tableData[b.id] = {
-        建筑:    b.name,
-        'x (%)': pos.x,
-        'y (%)': pos.y,
-      };
-    });
-    console.table(tableData);
-
-    // buildings.js hotspot 字段格式（直接复制）
-    console.log('%c--- 复制以下内容替换 buildings.js 中的 hotspot 字段 ---',
-      'color:#6B7280;font-style:italic;');
-
-    BUILDINGS.forEach(b => {
-      const pos = this._hotspotPositions[b.id];
-      console.log(
-        `%c${b.id}%c\t{ x: ${pos.x}, y: ${pos.y} }`,
-        'color:#004B9B;font-weight:700;',
-        'color:#1E8A44;'
-      );
-    });
-
-    console.groupEnd();
-
-    // 视觉反馈
-    const btn = this._container?.querySelector('#btn-export-coords');
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = `<i data-lucide="check" class="lucide w-3.5 h-3.5"></i> 已导出到控制台`;
-      btn.classList.add('xjtlu-btn--primary');
-      btn.classList.remove('xjtlu-btn--warning');
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.classList.remove('xjtlu-btn--primary');
-        btn.classList.add('xjtlu-btn--warning');
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      }, 2000);
-    }
-  }
-
-  // ───────────────────────────────────────────────────────────
-  // 建筑选中（非调试模式）
+  // 建筑选中
   // ───────────────────────────────────────────────────────────
 
   _selectBuilding(buildingId) {
@@ -399,11 +266,42 @@ export class MapScreen {
     if (!mapWrap) return;
     mapWrap.addEventListener('click', (e) => {
       if (e.target.closest('.map-pin')) return;
-      if (CONSTANTS.MAP_DEBUG) return;  // 调试模式下点击地图不清除选中
+      if (CONSTANTS.MAP_DEBUG) return;
       this._selectedId = null;
       this._container?.querySelectorAll('.map-pin')
         .forEach(pin => pin.classList.remove('map-pin--selected'));
       this._renderInfoPanel(null);
+    });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 结束本月
+  // ───────────────────────────────────────────────────────────
+
+  _bindEndMonthButton() {
+    const btn = this._container?.querySelector('#btn-end-month');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      log('info', 'MapScreen', '📅 玩家触发月末结算');
+
+      // 禁用按钮防止重复点击
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+
+      resolveMonthEnd(({ newMonth, examResult }) => {
+        // 将数据挂到 window 供 MonthSummaryScreen 读取
+        window._pendingMonthSummary = {
+          prevMonth:  newMonth - 1,
+          newMonth,
+          examResult,
+          state:      StateManager.getState(),
+          onConfirm:  () => {
+            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+          },
+        };
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MONTH_SUMMARY);
+      });
     });
   }
 
@@ -465,6 +363,8 @@ export class MapScreen {
 
     return `
       <div class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- 头部 -->
         <div class="shrink-0 px-5 pt-5 pb-4 border-b border-gray-100">
           <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-xl shrink-0
@@ -493,6 +393,7 @@ export class MapScreen {
           </div>
         </div>
 
+        <!-- 内容（可滚动）-->
         <div class="flex-1 overflow-y-auto custom-scroll px-5 py-4
                     flex flex-col gap-4">
           <p class="text-xs text-gray-600 leading-relaxed">
@@ -511,6 +412,7 @@ export class MapScreen {
           </div>
         </div>
 
+        <!-- 行动按钮区 -->
         <div class="shrink-0 border-t-2 border-gray-100 px-5 py-4
                     flex flex-col gap-2">
           ${isAction && actions.length > 0 ? `
@@ -523,6 +425,7 @@ export class MapScreen {
             </p>
           `}
         </div>
+
       </div>
     `;
   }
@@ -575,14 +478,112 @@ export class MapScreen {
     const action = ACTIONS[actionId];
     if (!action) return;
 
-    if (!StateManager.consumeAP(action.apCost)) {
-      log('info', 'MapScreen', 'AP 不足');
-      return;
-    }
+    executeAction(actionId, action, () => {
+      // 随机事件触发时 GameLoop 内部已切换到 VN 模式
+      // 此回调暂时留空
+    });
+  }
 
-    StateManager.applyStatDelta(action.baseEffects, action.labels);
-    StateManager.saveGame();
-    log('info', 'MapScreen', `执行行动：${action.label}`);
+  // ───────────────────────────────────────────────────────────
+  // 调试工具
+  // ───────────────────────────────────────────────────────────
+
+  _mountDebugTool() {
+    const mapWrap  = this._container?.querySelector('#map-wrap');
+    const mapImage = this._container?.querySelector('#campus-map-img');
+    if (!mapWrap || !mapImage) return;
+
+    const mount = () => {
+      this._debugTool = new MapDebugTool();
+      this._debugTool.mount(mapWrap, mapImage);
+      this._bindExportButton();
+    };
+
+    if (mapImage.complete) {
+      mount();
+    } else {
+      mapImage.addEventListener('load', mount, { once: true });
+    }
+  }
+
+  _bindExportButton() {
+    const btn = this._container?.querySelector('#btn-export-coords');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      console.group('%c📍 Pin 坐标导出', 'font-size:1rem;font-weight:900;color:#004B9B;');
+      BUILDINGS.forEach(b => {
+        const pos = this._hotspotPositions[b.id];
+        console.log(
+          `%c${b.id}%c\t{ x: ${pos.x}, y: ${pos.y} }`,
+          'color:#004B9B;font-weight:700;',
+          'color:#1E8A44;'
+        );
+      });
+      console.groupEnd();
+    });
+  }
+
+  _bindPinDrag(pin, layer) {
+    let isDragging  = false;
+    let startMouseX = 0;
+    let startMouseY = 0;
+    let startPctX   = 0;
+    let startPctY   = 0;
+
+    pin.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      isDragging  = true;
+      startMouseX = e.clientX;
+      startMouseY = e.clientY;
+
+      const id    = pin.dataset.buildingId;
+      startPctX   = this._hotspotPositions[id].x;
+      startPctY   = this._hotspotPositions[id].y;
+
+      pin.style.cursor    = 'grabbing';
+      pin.style.zIndex    = '9999';
+      pin.style.animation = 'none';
+
+      const renderW = parseFloat(layer.dataset.renderW) || layer.clientWidth;
+      const renderH = parseFloat(layer.dataset.renderH) || layer.clientHeight;
+
+      const onMouseMove = (moveEvt) => {
+        if (!isDragging) return;
+        const dx       = moveEvt.clientX - startMouseX;
+        const dy       = moveEvt.clientY - startMouseY;
+        const newX     = startPctX + (dx / renderW * 100);
+        const newY     = startPctY + (dy / renderH * 100);
+        const clampedX = Math.max(0, Math.min(100, newX));
+        const clampedY = Math.max(0, Math.min(100, newY));
+
+        pin.style.left = `${clampedX}%`;
+        pin.style.top  = `${clampedY}%`;
+
+        this._hotspotPositions[pin.dataset.buildingId] = {
+          x: Math.round(clampedX * 10) / 10,
+          y: Math.round(clampedY * 10) / 10,
+        };
+      };
+
+      const onMouseUp = () => {
+        isDragging       = false;
+        pin.style.cursor = 'grab';
+        pin.style.zIndex = '';
+
+        const building = BUILDINGS.find(b => b.id === pin.dataset.buildingId);
+        if (building?.type === 'B') pin.style.animation = '';
+
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup',   onMouseUp);
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup',   onMouseUp);
+    });
+
+    pin.style.cursor = 'grab';
   }
 
   // ───────────────────────────────────────────────────────────

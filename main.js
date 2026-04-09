@@ -3,12 +3,13 @@ import * as StateManager      from './src/state/StateManager.js';
 import { log }                from './src/utils/helpers.js';
 
 import { initUIManager, registerScreen } from './src/ui/UIManager.js';
+import { initGameLoop }       from './src/engine/GameLoop.js';
 import { TitleScreen }        from './src/ui/screens/TitleScreen.js';
 import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
 import { MapScreen }          from './src/ui/screens/MapScreen.js';
 import { VNScreen }           from './src/ui/screens/VNScreen.js';
+import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
 
-// VNScreen 单例（需要在 Screen 外部调用 startEvent）
 let _vnScreen = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,10 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   _vnScreen = new VNScreen();
 
+  // 初始化 GameLoop（注入 VNScreen）
+  initGameLoop(_vnScreen);
+
   registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
   registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
   registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
   registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
+  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
 
   const placeholder = (label) => ({
     mount(container) {
@@ -48,9 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     onStateChange() {},
   });
 
-  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, placeholder('月末结算（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  placeholder('人生印记（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.ENDING,        placeholder('结局（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE, placeholder('人生印记（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.ENDING,       placeholder('结局（开发中）'));
 
   initUIManager();
 
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
   log('info', 'Main', '🚀 应用启动完成');
 
-  // 改为：始终挂载，不受 MAP_DEBUG 控制
+  // 调试工具
   window._testVN = (eventId) => {
     import('./src/data/events.js').then(({ EVENTS }) => {
       const event = EVENTS[eventId];
@@ -70,39 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
       setTimeout(() => {
         _vnScreen.startEvent(event, () => {
-          log('info', 'Test', '事件结束，返回地图');
           StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
         });
       }, 100);
     });
   };
-  console.log('%c调试：_testVN("agency_selection") 可测试任意事件',
-    'color:#004B9B;font-weight:700;');
 
-  // main.js，在 window._testVN 定义后面追加
-  window._addBuff = (buff) => {
-    StateManager.addBuff(buff);
-  };
-
+  window._addBuff = (buff) => StateManager.addBuff(buff);
   window._testAddBuff = () => {
     StateManager.addBuff({
-      buffId:          'test_buff',
-      label:           '雅思搭子',
-      icon:            'users',
-      durationType:    'months',
-      remainingMonths: 3,
-      effects: {
-        stat_modifier: {
-          stat:   'English_Ability',
-          action: 'study_ielts',
-          delta:  3,
-        },
-      },
+      buffId: 'test_buff', label: '雅思搭子', icon: 'users',
+      durationType: 'months', remainingMonths: 3,
+      effects: { stat_modifier: { stat: 'English_Ability',
+        action: 'study_ielts', delta: 3 } },
       source_event_id: 'test',
     });
   };
-
-  console.log('%c调试：_testAddBuff() 可添加测试 Buff', 'color:#004B9B;font-weight:700;');
 });
 
 function initLucide() {
