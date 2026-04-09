@@ -1,21 +1,21 @@
-import { CONSTANTS }            from './src/utils/constants.js';
-import * as StateManager        from './src/state/StateManager.js';
-import { log }                  from './src/utils/helpers.js';
+import { CONSTANTS }          from './src/utils/constants.js';
+import * as StateManager      from './src/state/StateManager.js';
+import { log }                from './src/utils/helpers.js';
 
 import { initUIManager, registerScreen } from './src/ui/UIManager.js';
-import { TitleScreen }          from './src/ui/screens/TitleScreen.js';
-import { SchoolSelectScreen }   from './src/ui/screens/SchoolSelectScreen.js';
+import { TitleScreen }        from './src/ui/screens/TitleScreen.js';
+import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
+import { MapScreen }          from './src/ui/screens/MapScreen.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
   initLucide();
   StateManager.initStateManager();
 
-  // 注册已实现的 Screen
   registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
   registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
 
-  // 占位 Screen
   const placeholder = (label) => ({
     mount(container) {
       container.innerHTML = `
@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     onStateChange() {},
   });
 
-  registerScreen(CONSTANTS.GAME_PHASE.MAP,           placeholder('校园地图（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.VN,            placeholder('剧情事件（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, placeholder('月末结算（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  placeholder('人生印记（开发中）'));
