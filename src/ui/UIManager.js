@@ -153,7 +153,7 @@ function _switchToPhase(phase) {
 
     // 淡入动画
     container.style.opacity = '0';
-    container.style.transition = 'opacity 0.3s ease';
+    container.style.transition = 'opacity 0.6s ease';
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         container.style.opacity = '1';

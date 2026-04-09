@@ -37,15 +37,14 @@ const BG_FALLBACK = 'linear-gradient(135deg, #001f4d 0%, #003366 50%, #004B9B 10
 
 export class VNScreen {
   constructor() {
-    this._container   = null;
-    this._dialogBox   = null;
-    this._choicePanel = null;
-
-    this._event       = null;   // 当前事件完整数据
-    this._sceneIndex  = 0;      // 当前 scene 索引
-    this._onEventEnd  = null;   // 事件结束回调
-
-    this._bound_onClick = null;
+    this._container      = null;
+    this._dialogBox      = null;
+    this._choicePanel    = null;
+    this._event          = null;
+    this._sceneIndex     = 0;
+    this._onEventEnd     = null;
+    this._bound_onClick  = null;
+    this._waitingAdvance = false; // 标志：是否处于"等待推进到已设好的下一scene"状态
   }
 
   // ───────────────────────────────────────────────────────────
@@ -156,18 +155,22 @@ export class VNScreen {
    * - 若正在展示选项 → 不响应（点击选项按钮自己处理）
    */
   _handleClick(e) {
-    // 点击选项按钮不触发推进
     if (e.target.closest('.vn-choice-btn')) return;
 
     const consumed = this._dialogBox?.skipOrAdvance();
-    if (consumed) return;  // 跳过了打印，等待下次点击
+    if (consumed) return;
 
-    // 有选项时不推进
     const choiceLayer = this._container?.querySelector('#vn-choice-layer');
     if (choiceLayer && !choiceLayer.classList.contains('hidden')) return;
 
-    // 推进到下一 scene
-    this._playScene(this._sceneIndex + 1);
+    if (this._waitingAdvance) {
+      // flavor_text 已显示完，推进到预设好的下一 scene
+      this._waitingAdvance = false;
+      this._playScene(this._sceneIndex);
+    } else {
+      // 普通旁白推进
+      this._playScene(this._sceneIndex + 1);
+    }
   }
 
   // ───────────────────────────────────────────────────────────
@@ -185,40 +188,41 @@ export class VNScreen {
    * @param {object} choice
    */
   _resolveChoice(choice) {
-    // 应用数值效果
     if (choice.effects && Object.keys(choice.effects).length > 0) {
-        const labels = this._buildEffectLabels(choice.effects);
-        StateManager.applyStatDelta(choice.effects, labels);
+      const labels = this._buildEffectLabels(choice.effects);
+      StateManager.applyStatDelta(choice.effects, labels);
     }
 
-    // 添加标签
     if (choice.tags_added && choice.tags_added.length > 0) {
-        choice.tags_added.forEach(tag => StateManager.addTag(tag));
+      choice.tags_added.forEach(tag => StateManager.addTag(tag));
     }
 
-    // 注入连续事件
     if (choice.next_event_id) {
-        StateManager.enqueueEventFront({
+      StateManager.enqueueEventFront({
         eventId: choice.next_event_id,
         source:  'chain',
-        });
+      });
     }
 
     StateManager.saveGame();
 
-    // 显示 flavor_text，同时展示数值得失
     if (choice.flavor_text) {
-        this._updateBackground(choice.bg ?? null);
-        this._dialogBox.show({
+      this._updateBackground(choice.bg ?? null);
+
+      // 提前设好下一个 scene 索引
+      this._sceneIndex     = this._sceneIndex + 1;
+      this._waitingAdvance = true;  // 标记：flavor_text 结束后直接用新的 _sceneIndex
+
+      this._dialogBox.show({
         text:         choice.flavor_text,
         showHint:     true,
         tip:          choice.tip ?? '',
-        // ↓ 新增：传入得失数值
         effects:      choice.effects ?? {},
         effectLabels: this._buildEffectLabels(choice.effects ?? {}),
-        });
+      });
+
     } else {
-        this._playScene(this._sceneIndex + 1);
+      this._playScene(this._sceneIndex + 1);
     }
   }
 
