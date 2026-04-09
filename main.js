@@ -9,7 +9,9 @@ import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
 import { MapScreen }          from './src/ui/screens/MapScreen.js';
 import { VNScreen }           from './src/ui/screens/VNScreen.js';
 import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
-import { initTooltipManager } from './src/ui/components/TooltipManager.js'; 
+import { initTooltipManager } from './src/ui/components/TooltipManager.js';
+import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
+import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
 
 let _vnScreen = null;
 
@@ -57,8 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     onStateChange() {},
   });
 
-  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE, placeholder('人生印记（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.ENDING,       placeholder('结局（开发中）'));
+  // 【修改注册部分】：删除原来的 placeholder 逻辑，注册真实的 Screen
+  registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
+  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  new TagShowcaseScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.ENDING,        new EndingScreen());
 
   initUIManager();
 

@@ -1,0 +1,112 @@
+import * as StateManager from '../../state/StateManager.js';
+import { CONSTANTS }     from '../../utils/constants.js';
+import { calculateSoftScore } from '../../engine/EndingEngine.js';
+
+export class TagShowcaseScreen {
+  constructor() {
+    this._container = null;
+  }
+
+  mount(container, state) {
+    this._container = container;
+    container.innerHTML = this._buildHTML(state);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    this._bindEvents();
+  }
+
+  unmount() {
+    this._container = null;
+  }
+
+  onStateChange(_state) {}
+
+  _buildHTML(state) {
+    const tags = state.tags || [];
+    const softScore = calculateSoftScore(tags);
+    
+    // 过滤掉内部系统 Tag
+    const displayTags = tags.filter(t => !t.startsWith('__'));
+    const mappedTags = displayTags.map(t => this._mapTagToUI(t));
+
+    return `
+      <div class="w-full h-full flex items-center justify-center bg-gray-50 px-6">
+        <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl border-2 border-xjtlu-navy overflow-hidden flex flex-col animate-fade-in">
+          
+          <div class="bg-xjtlu-navy px-8 py-6 text-center">
+            <h1 class="text-2xl font-black text-white tracking-widest">人生印记复盘</h1>
+            <p class="text-white/70 text-sm mt-2">你在西浦这一年半积累的所有筹码</p>
+          </div>
+
+          <div class="p-8 flex flex-col gap-8">
+            
+            <!-- 标签墙 -->
+            <div class="flex flex-col gap-3">
+              <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">获得的所有标签</span>
+              <div class="flex flex-wrap gap-2">
+                ${mappedTags.length > 0 
+                  ? mappedTags.map(t => `
+                      <span class="tag-badge ${t.colorCls} px-3 py-1.5 text-sm shadow-sm"
+                            data-tooltip-title="${t.label}"
+                            data-tooltip-desc="${t.desc}"
+                            data-tooltip-type="info">
+                        <i data-lucide="${t.icon}" class="lucide w-4 h-4"></i>
+                        ${t.label}
+                      </span>
+                    `).join('')
+                  : `<span class="text-gray-400 italic text-sm">空空如也...</span>`
+                }
+              </div>
+            </div>
+
+            <div class="h-px bg-gray-100"></div>
+
+            <!-- 软背景评分 -->
+            <div class="flex items-center justify-between bg-blue-50 rounded-xl p-4 border border-blue-100">
+              <div class="flex flex-col">
+                <span class="text-sm font-bold text-xjtlu-navy">软背景综合评分</span>
+                <span class="text-xs text-xjtlu-gray mt-1">影响顶尖名校录取的关键隐藏分</span>
+              </div>
+              <span class="text-3xl font-black text-xjtlu-blue">${softScore}</span>
+            </div>
+
+          </div>
+
+          <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <button id="btn-reveal-ending" class="xjtlu-btn xjtlu-btn--primary text-base px-8 py-3">
+              查看最终录取结果
+              <i data-lucide="arrow-right" class="lucide w-5 h-5"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    `;
+  }
+
+  _bindEvents() {
+    this._container?.querySelector('#btn-reveal-ending')?.addEventListener('click', () => {
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+    });
+  }
+
+  _mapTagToUI(tag) {
+    const dict = {
+      'GPA_High': { label: '高 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--blue', desc: 'GPA 大于 3.3，极具竞争力。' },
+      'GPA_Mid':  { label: '中等 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--gray', desc: 'GPA 在 2.8 - 3.3 之间，中规中矩。' },
+      'GPA_Low':  { label: '低 GPA', icon: 'alert-triangle', colorCls: 'tag-badge--red', desc: 'GPA 低于 2.8，申请阻力很大。' },
+      'IELTS_7.5':{ label: '雅思 7.5', icon: 'languages', colorCls: 'tag-badge--blue', desc: '横扫绝大多数名校语言要求。' },
+      'IELTS_7.0':{ label: '雅思 7.0', icon: 'languages', colorCls: 'tag-badge--blue', desc: '满足绝大多数名校语言要求。' },
+      'IELTS_6.5':{ label: '雅思 6.5', icon: 'languages', colorCls: 'tag-badge--gray', desc: '刚好够用，部分名校可能需配语言班。' },
+      'IELTS_6.0':{ label: '雅思 6.0', icon: 'languages', colorCls: 'tag-badge--red', desc: '语言成绩偏低，选择受限。' },
+      'IELTS_5.5':{ label: '雅思 5.5', icon: 'alert-triangle', colorCls: 'tag-badge--red', desc: '基本无缘直录，必须读语言班。' },
+      'Internship_Exp': { label: '实习经历', icon: 'briefcase', colorCls: 'tag-badge--green', desc: '真实的职场经历，软背景加分。' },
+      'Research_Exp':   { label: '科研经历', icon: 'microscope', colorCls: 'tag-badge--green', desc: '参与过教授项目，极具含金量。' },
+      'Reliable_Agency':{ label: '靠谱中介', icon: 'shield-check', colorCls: 'tag-badge--green', desc: '避开了申请路上的大坑。' },
+      'Scam_Agency':    { label: '黑中介受害者', icon: 'skull', colorCls: 'tag-badge--red', desc: '交了智商税，申请结果堪忧。' },
+      'Study_Buddy':    { label: '雅思搭子', icon: 'users', colorCls: 'tag-badge--yellow', desc: '有人陪伴的备考之路。' },
+      'Anxious':        { label: '曾陷入焦虑', icon: 'frown', colorCls: 'tag-badge--gray', desc: '心理健康曾亮起红灯。' },
+      'Sick':           { label: '曾大病一场', icon: 'thermometer', colorCls: 'tag-badge--gray', desc: '身体曾发出严重警告。' },
+    };
+    return dict[tag] || { label: tag, icon: 'tag', colorCls: 'tag-badge--gray', desc: '未知印记' };
+  }
+}
