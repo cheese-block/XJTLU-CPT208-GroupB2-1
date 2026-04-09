@@ -367,18 +367,13 @@ export class MapScreen {
         </h3>
         
         <!-- 教学 Tooltip -->
-        <div class="relative group cursor-help">
-          <i data-lucide="help-circle" class="lucide w-4 h-4 text-xjtlu-gray"></i>
-          <div class="absolute bottom-full right-0 mb-2 w-56 p-3 rounded-xl
-                      bg-xjtlu-navy text-white text-xs leading-relaxed
-                      shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none
-                      transition-opacity z-50">
-            <p class="font-bold text-xjtlu-yellow mb-1">状态与增益说明</p>
-            <p>你的履历（GPA、雅思、软背景）将直接决定最终能拿到的 Offer 级别。</p>
-            <p class="mt-1">下方的<span class="text-xjtlu-yellow">活跃状态 (Buff)</span> 会在日常行动中为你提供额外的数值加成或惩罚。请注意保持心理健康，避免获得负面状态！</p>
-            <div class="absolute top-full right-1.5 border-4 border-transparent border-t-xjtlu-navy"></div>
-          </div>
-        </div>
+        <!-- 【修改点 1】：使用全局 Tooltip 属性 -->
+        <i data-lucide="help-circle" 
+           class="lucide w-4 h-4 text-xjtlu-gray cursor-help"
+           data-tooltip-title="状态与增益说明"
+           data-tooltip-desc="你的履历（GPA、雅思、软背景）将直接决定最终能拿到的 Offer 级别。<br><br>下方的<span class='text-xjtlu-yellow font-bold'>活跃状态 (Buff)</span> 会在日常行动中为你提供额外的数值加成或惩罚。请注意保持心理健康，避免获得负面状态！"
+           data-tooltip-type="info">
+        </i>
       </div>
 
       <div class="flex-1 overflow-y-auto custom-scroll p-5 flex flex-col gap-4">
@@ -433,28 +428,18 @@ export class MapScreen {
     const isDebuff = buff.effects?.event_prob_modifier < 0 || buff.effects?.stat_modifier?.delta < 0;
     const colorClass = isDebuff ? 'tag-badge--red' : 'tag-badge--yellow';
     const effectDesc = this._describeBuffEffect(buff);
+    const durationText = buff.durationType === 'months' ? `剩余 ${buff.remainingMonths} 个月` : '永久效果';
 
+    // 【修改点 2】：移除内部的 absolute div，换成 data 属性
     return `
-      <div class="relative group">
-        <span class="tag-badge ${colorClass} cursor-default shadow-sm">
-          <i data-lucide="${buff.icon ?? 'star'}" class="lucide w-3 h-3"></i>
-          ${buff.label}
-        </span>
-
-        <!-- 悬停气泡 (向上弹出) -->
-        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
-                    w-48 p-2.5 rounded-xl
-                    bg-xjtlu-navy text-white text-xs leading-relaxed
-                    shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none
-                    transition-opacity z-50">
-          <p class="font-black ${isDebuff ? 'text-xjtlu-red' : 'text-xjtlu-yellow'} mb-1">${buff.label}</p>
-          ${effectDesc ? `<p class="text-white/90">${effectDesc}</p>` : ''}
-          <p class="text-white/50 mt-1 text-[0.6rem]">
-            ${buff.durationType === 'months' ? `剩余 ${buff.remainingMonths} 个月` : '永久效果'}
-          </p>
-          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-xjtlu-navy"></div>
-        </div>
-      </div>
+      <span class="tag-badge ${colorClass} cursor-help shadow-sm"
+            data-tooltip-title="${buff.label}"
+            data-tooltip-desc="${effectDesc}"
+            data-tooltip-footer="${durationText}"
+            data-tooltip-type="${isDebuff ? 'debuff' : 'buff'}">
+        <i data-lucide="${buff.icon ?? 'star'}" class="lucide w-3 h-3"></i>
+        ${buff.label}
+      </span>
     `;
   }
 

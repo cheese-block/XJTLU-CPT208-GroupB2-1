@@ -9,6 +9,7 @@ import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
 import { MapScreen }          from './src/ui/screens/MapScreen.js';
 import { VNScreen }           from './src/ui/screens/VNScreen.js';
 import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
+import { initTooltipManager } from './src/ui/components/TooltipManager.js'; 
 
 let _vnScreen = null;
 
@@ -16,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initLucide();
   StateManager.initStateManager();
+
+  // 【新增调用】：初始化全局 Tooltip
+  initTooltipManager();
 
   _vnScreen = new VNScreen();
 
