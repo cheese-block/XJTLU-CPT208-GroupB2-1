@@ -1,13 +1,3 @@
-/**
- * @fileoverview 建筑节点数据
- *
- * type:
- *   "A" — 纯科普建筑（点击仅显示介绍，无行动按钮）
- *   "B" — 养成建筑（可消耗 AP 执行固定活动）
- *
- * hotspot: 坐标为百分比，相对于地图图片左上角
- */
-
 export const BUILDINGS = [
   {
     id:          'fb',
@@ -35,14 +25,14 @@ export const BUILDINGS = [
   },
   {
     id:          'sb',
-    name:        'SB · 理科楼',
+    name:        'SA, SB, SC, SD · 理科楼',
     fullName:    'Science Building A/B/C/D',
     type:        'A',
     icon:        'flask-conical',
     description: '理学院的主要教学与实验区域，包含 A、B、C、D 四栋楼。对 SAT 学院的同学来说，这里偶尔会有联合课程或讲座。',
     lore:        '理科楼的实验室灯光永远亮到很晚，不知道是在做实验还是在卷期末。',
     photo:       null,
-    hotspot:     { x: 40.2, y: 36.0 },
+    hotspot:     { x: 38.0, y: 33.0 },
     actions:     [],
   },
   {
@@ -59,14 +49,14 @@ export const BUILDINGS = [
   },
   {
     id:          'mb',
-    name:        'MB · 数学楼',
+    name:        'MA, MB · 数学楼',
     fullName:    'Mathematics Building A/B',
     type:        'A',
     icon:        'sigma',
     description: '数学系的主场，也是 SAT 学院部分数学类课程的上课地点。申研方向偏向统计、数据科学的同学会在这里花大量时间。',
     lore:        '数学楼的黑板永远写满了没擦掉的公式，不知道是上节课留下的还是某位教授的灵感草稿。',
     photo:       null,
-    hotspot:     { x: 68.6, y: 30.2 },
+    hotspot:     { x: 71.0, y: 28.0 },
     actions:     [],
   },
   {
@@ -78,7 +68,7 @@ export const BUILDINGS = [
     description: 'SAT 学院的核心实验与项目楼，包含计算机实验室、项目工作室和各类工程设备。做 Final Project 和找科研机会的主战场。',
     lore:        'EB 地下室的服务器机房发出的嗡嗡声是很多 SAT 学生的白噪音，有人说在那里写代码效率特别高。',
     photo:       null,
-    hotspot:     { x: 72.5, y: 41.3 },
+    hotspot:     { x: 74.0, y: 38.5 },
     actions:     ['study_research'],
   },
   {
@@ -90,7 +80,7 @@ export const BUILDINGS = [
     description: '电子与电气工程方向的专属教学楼，配备专业实验设备。EEE 专业的同学在这里度过了大量时间。',
     lore:        '据说 EE 楼的示波器比某些同学的电脑还贵，但使用频率可能还不如那台电脑高。',
     photo:       null,
-    hotspot:     { x: 56.1, y: 45.0 },
+    hotspot:     { x: 54.0, y: 43.5 },
     actions:     [],
   },
   {
@@ -102,7 +92,7 @@ export const BUILDINGS = [
     description: '承接国际科研项目的核心机构，有机会在此参与教授的课题组。对于申请科研型研究生项目，这里的经历含金量极高。',
     lore:        '能进 IR 做 RA 的学生不多，但每个人的简历上都会把这段经历写满整整一页。',
     photo:       null,
-    hotspot:     { x: 41.5, y: 60.8 },
+    hotspot:     { x: 41.5, y: 58.5 },
     actions:     ['research_ir'],
   },
   {
@@ -114,7 +104,7 @@ export const BUILDINGS = [
     description: '负责国际交流、留学申请咨询和校际合作项目的行政中心。这里的老师能给你提供官方的申研信息和推荐信建议。',
     lore:        '每年十月申请季，IA 门口都会排起长队。有人来咨询，有人来碰运气，还有人只是来蹭空调的。',
     photo:       null,
-    hotspot:     { x: 60.4, y: 64.3 },
+    hotspot:     { x: 60.0, y: 62.0 },
     actions:     ['consult_ia'],
   },
   {
@@ -126,7 +116,7 @@ export const BUILDINGS = [
     description: '人文与社会科学学院的主楼，偶尔会举办跨学科讲座和文化活动，是 SAT 学生拓展视野的好去处。',
     lore:        '有 SAT 的同学跑来旁听人文课，说是"换换脑子"，但其实只是因为这里的座椅比工科楼舒服。',
     photo:       null,
-    hotspot:     { x: 35.0, y: 75.2 },
+    hotspot:     { x: 44.0, y: 71.5 },
     actions:     [],
   },
   {
@@ -138,7 +128,7 @@ export const BUILDINGS = [
     description: '聚焦前沿与跨学科科研的新楼，承载着学校对新兴技术方向的布局。部分 AI、生物信息学方向的课题组在此驻扎。',
     lore:        'ES 楼还很新，走廊里的气味还带着装修的味道。但已经有人在这里发了顶会论文了。',
     photo:       null,
-    hotspot:     { x: 59.6, y: 76.6 },
+    hotspot:     { x: 44.0, y: 78.5 },
     actions:     [],
   },
   {
@@ -150,7 +140,7 @@ export const BUILDINGS = [
     description: '西浦国际商学院，拥有独立的教学和行政体系。对 SAT 学生而言，偶尔会有联合课程或商业竞赛合作机会。',
     lore:        'IBSS 的同学永远穿得比你正式，手里拿着咖啡，走路带风。据说这是商学院的必修课。',
     photo:       null,
-    hotspot:     { x: 44.0, y: 89.0 },
+    hotspot:     { x: 38.0, y: 84.0 },
     actions:     [],
   },
   {
@@ -162,7 +152,7 @@ export const BUILDINGS = [
     description: '设计学院的主楼，充满创意氛围。工科生偶尔会来这里参加 Hackathon 或跨学科项目，换换思维方式。',
     lore:        'DB 楼门口永远停着各种奇怪的装置艺术，有时候你分不清那是作品还是施工遗留物。',
     photo:       null,
-    hotspot:     { x: 64.6, y: 83.9 },
+    hotspot:     { x: 62.0, y: 80.0 },
     actions:     [],
   },
   {
@@ -174,7 +164,7 @@ export const BUILDINGS = [
     description: '校园内的体育运动中心，包含篮球场、羽毛球场、健身房等设施。适量运动是对抗申研焦虑最有效的方法之一。',
     lore:        '有数据显示，GPA 最高的那批人里，有相当一部分是健身房常客。但也可能只是因为他们有时间管理能力。',
     photo:       null,
-    hotspot:     { x: 83.0, y: 62.7 },
+    hotspot:     { x: 84.0, y: 60.0 },
     actions:     ['exercise'],
   },
   {

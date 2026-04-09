@@ -419,11 +419,11 @@ export class MapScreen {
 
   _getShortLabel(id) {
     const map = {
-      fb:   'FB',  cb:   'CB',  sb:   'SB',
-      pb:   'PB',  mb:   'MB',  eb:   'EB',
-      ee:   'EE',  ir:   'IR',  ia:   'IA',
-      hs:   'HS',  es:   'ES',  ibss: 'IBSS',
-      db:   'DB',  gym:  'GYM', dorm: '宿舍',
+      fb:   'FB',   cb:   'CB',   sb:   'SA~SD',
+      pb:   'PB',   mb:   'MA~MB', eb:  'EB',
+      ee:   'EE',   ir:   'IR',   ia:   'IA',
+      hs:   'HS',   es:   'ES',   ibss: 'IBSS',
+      db:   'DB',   gym:  'GYM',  dorm: '宿舍',
     };
     return map[id] ?? id.toUpperCase();
   }
