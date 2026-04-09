@@ -6,24 +6,33 @@ import { initUIManager, registerScreen } from './src/ui/UIManager.js';
 import { TitleScreen }        from './src/ui/screens/TitleScreen.js';
 import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
 import { MapScreen }          from './src/ui/screens/MapScreen.js';
+import { VNScreen }           from './src/ui/screens/VNScreen.js';
+
+// VNScreen 单例（需要在 Screen 外部调用 startEvent）
+let _vnScreen = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
   initLucide();
   StateManager.initStateManager();
 
+  _vnScreen = new VNScreen();
+
   registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
   registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
   registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
 
   const placeholder = (label) => ({
     mount(container) {
       container.innerHTML = `
-        <div class="w-full h-full flex flex-col items-center justify-center gap-6 bg-white">
+        <div class="w-full h-full flex flex-col items-center
+                    justify-center gap-6 bg-white">
           <div class="text-6xl">🚧</div>
           <p class="text-xl font-black text-xjtlu-navy">${label}</p>
-          <p class="text-sm text-xjtlu-gray">该界面正在开发中，敬请期待</p>
-          <button id="placeholder-back" class="xjtlu-btn xjtlu-btn--secondary mt-4">
+          <p class="text-sm text-xjtlu-gray">该界面正在开发中</p>
+          <button id="placeholder-back"
+                  class="xjtlu-btn xjtlu-btn--secondary mt-4">
             <i data-lucide="arrow-left" class="lucide w-4 h-4"></i>
             返回主菜单
           </button>
@@ -39,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     onStateChange() {},
   });
 
-  registerScreen(CONSTANTS.GAME_PHASE.VN,            placeholder('剧情事件（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, placeholder('月末结算（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  placeholder('人生印记（开发中）'));
   registerScreen(CONSTANTS.GAME_PHASE.ENDING,        placeholder('结局（开发中）'));
@@ -53,6 +61,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
   log('info', 'Main', '🚀 应用启动完成');
+
+  // DEBUG：暴露测试函数到全局
+  if (CONSTANTS.MAP_DEBUG) {
+    window._testVN = (eventId) => {
+      import('./src/data/events.js').then(({ EVENTS }) => {
+        const event = EVENTS[eventId];
+        if (!event) { console.error('事件不存在:', eventId); return; }
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
+        setTimeout(() => {
+          _vnScreen.startEvent(event, () => {
+            log('info', 'Test', '事件结束，返回地图');
+            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+          });
+        }, 100);
+      });
+    };
+    console.log('%c调试：_testVN("agency_selection") 可测试任意事件',
+      'color:#004B9B;font-weight:700;');
+  }
 });
 
 function initLucide() {
