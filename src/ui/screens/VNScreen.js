@@ -313,11 +313,11 @@ export class VNScreen {
         </div>
 
         <!-- 选项层（绝对定位，叠在插画区中央）-->
+        <!-- 修复：去掉 pointer-events-none -->
         <div
-          id="vn-choice-layer"
-          class="absolute inset-0 flex items-center justify-center
-                 pointer-events-none hidden"
-          style="z-index: 300;"
+        id="vn-choice-layer"
+        class="absolute inset-0 flex items-center justify-center hidden"
+        style="z-index: 300;"
         >
           <!-- ChoicePanel 渲染到此处 -->
         </div>

@@ -47,6 +47,7 @@ export class ChoicePanel {
     `;
 
     this._container.classList.remove('hidden');
+    this._container.style.pointerEvents = 'auto';
 
     this._container.querySelectorAll('.vn-choice-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -58,9 +59,10 @@ export class ChoicePanel {
   }
 
   /** 隐藏选项面板 */
-  hide() {
+    hide() {
     if (!this._container) return;
     this._container.innerHTML = '';
     this._container.classList.add('hidden');
-  }
+    this._container.style.pointerEvents = 'none';
+    }
 }
