@@ -16,7 +16,6 @@ import * as StateManager         from '../state/StateManager.js';
 import * as EventEngine          from './EventEngine.js';
 import { resolveFinalExam }      from './ExamEngine.js';
 import { resolveIeltsExam }      from './ExamEngine.js';
-import { log }                   from '../utils/helpers.js';
 import { log, deepClone }        from '../utils/helpers.js';
 
 // ─────────────────────────────────────────────────────────────
