@@ -561,3 +561,91 @@ svg.lucide {
     linear-gradient(90deg, rgba(0,75,155,0.08) 1px, transparent 1px);
   background-size: 5% 5%; /* 每格 = 5% 宽高 */
 }
+
+/* ── 16. 地图 Pin（胶囊样式）────────────────────────────────── */
+
+.map-pin {
+  position:        absolute;
+  transform:       translate(-50%, -50%);
+  display:         inline-flex;
+  align-items:     center;
+  gap:             4px;
+  padding:         4px 8px 4px 6px;
+  border-radius:   9999px;
+  border:          2px solid transparent;
+  font-size:       11px;
+  font-weight:     800;
+  white-space:     nowrap;
+  cursor:          pointer;
+  transition:      transform 0.15s ease,
+                   box-shadow 0.15s ease;
+  pointer-events:  auto;
+  user-select:     none;
+  line-height:     1;
+}
+
+.map-pin__icon {
+  width:        12px;
+  height:       12px;
+  stroke-width: 2.5px;
+  flex-shrink:  0;
+}
+
+.map-pin__label {
+  font-size:   11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* B 类：蓝色胶囊 */
+.map-pin--action {
+  background-color: #004B9B;
+  border-color:     #ffffff;
+  color:            #ffffff;
+  box-shadow:       0 2px 8px rgba(0, 75, 155, 0.5),
+                    0 0 0 2px rgba(0, 75, 155, 0.3);
+  animation:        pin-pulse 2.5s ease-in-out infinite;
+}
+
+.map-pin--action .map-pin__icon {
+  color: #FFD700;
+}
+
+.map-pin--action:hover {
+  transform:   translate(-50%, -50%) scale(1.12);
+  box-shadow:  0 4px 16px rgba(0, 75, 155, 0.7),
+               0 0 0 3px rgba(0, 75, 155, 0.4);
+  animation:   none;
+}
+
+/* A 类：灰色胶囊 */
+.map-pin--info {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color:     #9CA3AF;
+  color:            #6B7280;
+  box-shadow:       0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.map-pin--info .map-pin__icon {
+  color: #9CA3AF;
+}
+
+.map-pin--info:hover {
+  transform:        translate(-50%, -50%) scale(1.08);
+  background-color: #ffffff;
+  border-color:     #6B7280;
+}
+
+/* 选中状态 */
+.map-pin--selected {
+  box-shadow:  0 0 0 3px #FFD700,
+               0 4px 16px rgba(255, 215, 0, 0.5) !important;
+  animation:   none !important;
+  transform:   translate(-50%, -50%) scale(1.15) !important;
+}
+
+/* Pin 脉冲动画 */
+@keyframes pin-pulse {
+  0%, 100% { box-shadow: 0 2px 8px  rgba(0,75,155,0.4), 0 0 0 2px rgba(0,75,155,0.2); }
+  50%       { box-shadow: 0 2px 16px rgba(0,75,155,0.7), 0 0 0 4px rgba(0,75,155,0.3); }
+}
