@@ -175,7 +175,7 @@ export const CONSTANTS = Object.freeze({
   // ─────────────────────────────────────────────────────────
   // 【调试模式】
   // ─────────────────────────────────────────────────────────
-  MAP_DEBUG: true,    // true → 地图热区坐标叠层可见 + 控制台打印点击坐标
+  MAP_DEBUG: false,    // true → 地图热区坐标叠层可见 + 控制台打印点击坐标
   LOG_LEVEL: 'debug', // 'debug' | 'info' | 'warn' | 'error'
 
 });
