@@ -12,6 +12,7 @@ import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
 import { initTooltipManager } from './src/ui/components/TooltipManager.js';
 import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
 import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
+import { initGameLoop, checkBadEndings } from './src/engine/GameLoop.js'; 
 
 let _vnScreen = null;
 
@@ -70,9 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initUIManager();
 
+// 【修改点 2】：在全局监听中加入 Bad End 检查
   StateManager.subscribe((state) => {
     updateDangerOverlay(state);
     StateManager.consumePendingStatChanges();
+
+    // 全局 Bad End 拦截（防止死循环，只有在非结局界面才检查）
+    if (state.gamePhase !== CONSTANTS.GAME_PHASE.ENDING && 
+        state.gamePhase !== CONSTANTS.GAME_PHASE.TAG_SHOWCASE) {
+      checkBadEndings();
+    }
   });
 
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
@@ -113,11 +121,24 @@ function initLucide() {
   log('info', 'Main', '✅ Lucide 初始化完成');
 }
 
+// 【修改点 3】：加入边缘检测，只在跨过阈值时闪烁一次
+let _wasInDanger = false;
+
 function updateDangerOverlay(state) {
   const overlay = document.getElementById('danger-overlay');
   if (!overlay) return;
-  const danger =
+  
+  const isDanger = 
     state.Mental_Health   < CONSTANTS.MENTAL_HEALTH_WARN ||
     state.Physical_Health < CONSTANTS.PHYSICAL_HEALTH_WARN;
-  overlay.classList.toggle('is-active', danger);
+  
+  // 只有在【刚跨过阈值】的瞬间，才触发闪烁动画
+  if (isDanger && !_wasInDanger) {
+    overlay.classList.remove('hidden');
+    overlay.classList.remove('flash-once');
+    void overlay.offsetWidth; // 强制浏览器重绘，重置动画
+    overlay.classList.add('flash-once');
+  }
+  
+  _wasInDanger = isDanger;
 }

@@ -323,24 +323,20 @@ svg.lucide {
 
 /* ── 8. 屏幕危险叠层 ────────────────────────────────────────── */
 
-/*
-  当 Mental_Health 或 Physical_Health < 20 时，
-  #danger-overlay 切换为 .is-active，触发边缘红晕闪烁。
-*/
-
 #danger-overlay {
   border-radius: 0;
 }
 
-#danger-overlay.is-active {
-  display:    block !important;
-  box-shadow: inset 0 0 80px rgba(217, 48, 37, 0.5);
-  animation:  danger-pulse 1.2s ease-in-out infinite;
+/* 移除原来的 .is-active 和 infinite 动画，改为单次闪烁 */
+.flash-once {
+  display: block !important;
+  animation: danger-flash 1.5s ease-out forwards;
 }
 
-@keyframes danger-pulse {
-  0%, 100% { box-shadow: inset 0 0 40px rgba(217, 48, 37, 0.25); }
-  50%       { box-shadow: inset 0 0 90px rgba(217, 48, 37, 0.60); }
+@keyframes danger-flash {
+  0%   { box-shadow: inset 0 0 0px rgba(217, 48, 37, 0); }
+  15%  { box-shadow: inset 0 0 120px rgba(217, 48, 37, 0.7); }
+  100% { box-shadow: inset 0 0 0px rgba(217, 48, 37, 0); }
 }
 
 /* ── 9. 视觉小说对话框（VN Mode）───────────────────────────── */
