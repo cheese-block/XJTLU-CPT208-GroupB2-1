@@ -263,6 +263,8 @@ export class StatusBar {
   }
 
   /** 更新 Buff 标签列表 */
+  // StatusBar.js _updateBuffs() 方法替换
+
   _updateBuffs(state) {
     const container = this._container?.querySelector('#sb-buffs');
     if (!container) return;
@@ -272,14 +274,112 @@ export class StatusBar {
       return;
     }
 
-    container.innerHTML = state.activeBuff.map(buff => `
-      <span class="tag-badge tag-badge--blue" title="${buff.label}">
-        <i data-lucide="${buff.icon ?? 'star'}" class="lucide w-2.5 h-2.5"></i>
-        ${buff.label}
-      </span>
-    `).join('');
+    container.innerHTML = state.activeBuff.map(buff => {
+      // 生成效果描述文本
+      const effectDesc = this._describeBuffEffect(buff);
+
+      return `
+        <div class="relative group">
+          <span class="tag-badge tag-badge--blue cursor-default">
+            <i data-lucide="${buff.icon ?? 'star'}"
+              class="lucide w-2.5 h-2.5"></i>
+            ${buff.label}
+          </span>
+
+          <!-- 悬停气泡 -->
+          <div class="
+            absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+            w-48 p-2.5 rounded-xl
+            bg-xjtlu-navy text-white text-xs leading-relaxed
+            shadow-xl border border-white/10
+            opacity-0 group-hover:opacity-100
+            pointer-events-none
+            transition-opacity duration-150
+            z-[9999]
+          ">
+            <!-- 气泡标题 -->
+            <p class="font-black text-xjtlu-yellow mb-1">${buff.label}</p>
+
+            <!-- 效果描述 -->
+            ${effectDesc
+              ? `<p class="text-white/80">${effectDesc}</p>`
+              : ''}
+
+            <!-- 持续时间 -->
+            <p class="text-white/50 mt-1 text-[0.6rem]">
+              ${this._describeBuffDuration(buff)}
+            </p>
+
+            <!-- 气泡小三角 -->
+            <div class="
+              absolute top-full left-1/2 -translate-x-1/2
+              border-4 border-transparent
+              border-t-xjtlu-navy
+            "></div>
+          </div>
+        </div>
+      `;
+    }).join('');
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  /**
+   * 将 buff.effects 转化为人类可读描述。
+   * @param {object} buff
+   * @returns {string}
+   */
+  _describeBuffEffect(buff) {
+    const effects = buff.effects;
+    if (!effects) return '';
+
+    const parts = [];
+
+    if (effects.stat_modifier) {
+      const { stat, delta, action } = effects.stat_modifier;
+      const statLabel = {
+        English_Ability:  '英语能力',
+        Academic_Ability: '学力',
+        Mental_Health:    '心理健康',
+        Physical_Health:  '身体健康',
+        Money:            '资金',
+      }[stat] ?? stat;
+
+      const sign = delta > 0 ? '+' : '';
+      const actionDesc = action ? `执行相关行动时` : '每次行动';
+      parts.push(`${actionDesc} ${statLabel} ${sign}${delta}`);
+    }
+
+    if (effects.AP_cost_modifier) {
+      const sign = effects.AP_cost_modifier > 0 ? '+' : '';
+      parts.push(`AP 消耗 ${sign}${effects.AP_cost_modifier}`);
+    }
+
+    if (effects.event_prob_modifier) {
+      const pct = Math.round(effects.event_prob_modifier * 100);
+      const sign = pct > 0 ? '+' : '';
+      parts.push(`随机事件概率 ${sign}${pct}%`);
+    }
+
+    return parts.join('；');
+  }
+
+  /**
+   * 描述 Buff 持续时间。
+   * @param {object} buff
+   * @returns {string}
+   */
+  _describeBuffDuration(buff) {
+    switch (buff.durationType) {
+      case 'permanent':
+        return '永久效果';
+      case 'months':
+        return `剩余 ${buff.remainingMonths} 个月`;
+      case 'one_time':
+        return '下次触发后消失';
+      default:
+        return '';
+    }
   }
 
   // ───────────────────────────────────────────────────────────
