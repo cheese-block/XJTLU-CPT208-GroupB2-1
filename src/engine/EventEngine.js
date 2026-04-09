@@ -155,9 +155,6 @@ export function dequeueNextEvent(state) {
 
   if (!eventData) {
     log('warn', 'EventEngine', `事件数据不存在：${eventId}`);
-    // 移除无效事件
-    StateManager.enqueueEventFront = undefined; // 防止死循环
-    state.pendingEventQueue.shift();
     return null;
   }
 

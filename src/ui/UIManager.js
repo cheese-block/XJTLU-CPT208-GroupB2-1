@@ -148,16 +148,22 @@ function _switchToPhase(phase) {
   const containerId = CONSTANTS.SCREEN_IDS[phase];
   const container   = document.getElementById(containerId);
 
-  // Screen 容器需要为状态栏留出顶部空间
   if (container) {
     container.classList.remove('hidden');
 
-    // 非 TITLE/SCHOOL_SELECT 界面：顶部内边距让出状态栏高度
+    // 淡入动画
+    container.style.opacity = '0';
+    container.style.transition = 'opacity 0.3s ease';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        container.style.opacity = '1';
+      });
+    });
+
     const needsPadding = ![
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
     ].includes(phase);
-
     container.style.paddingTop = needsPadding ? 'var(--status-bar-height, 56px)' : '';
   }
 

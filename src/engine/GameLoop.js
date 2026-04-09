@@ -109,24 +109,24 @@ function _playNextEvent() {
   const eventData = EventEngine.dequeueNextEvent(state);
 
   if (!eventData) {
-    // 队列已空
     log('info', 'GameLoop', '事件队列已清空');
     _onQueueEmpty?.();
     return;
   }
 
-  // 切换到 VN 模式
+  // 从队列移除（在播放前移除，防止重复触发）
+  StateManager.startEvent(eventData);  // 内部已有 shift() 逻辑
+
+  // 切换到 VN 模式（带淡入过渡）
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
 
-  // 启动事件播放
   setTimeout(() => {
     _vnScreen?.startEvent(eventData, () => {
-      // 单个事件结束：标记已触发，继续处理队列
       StateManager.markEventTriggered(eventData.event_id);
       StateManager.saveGame();
       _playNextEvent();
     });
-  }, 100);
+  }, 400);  // 等待淡入动画
 }
 
 // ─────────────────────────────────────────────────────────────
