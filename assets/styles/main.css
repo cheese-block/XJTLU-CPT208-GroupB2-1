@@ -1,0 +1,563 @@
+/* ═══════════════════════════════════════════════════════════
+   西浦申研模拟器 · 全局样式
+   结构：
+     1. Lucide 图标全局规范
+     2. 可复用组件类（按钮、状态栏、血条、标签）
+     3. 飘字动画
+     4. 屏幕危险叠层
+     5. 视觉小说对话框
+     6. 工具类补充
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 0. 基础重置 ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 禁止页面滚动，由各 Screen 内部处理溢出 */
+}
+
+/* ── 1. Lucide 图标全局规范 ────────────────────────────────── */
+/*
+  PRD §2 要求：
+    - stroke-width: 2.5px（匹配吉祥物粗线条画风）
+    - stroke-linecap: round
+  所有通过 <i data-lucide="..."> 渲染的 SVG 均继承此规则。
+*/
+.lucide,
+svg.lucide {
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ── 2. 可复用按钮组件 ─────────────────────────────────────── */
+
+.xjtlu-btn {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.375rem;       /* gap-1.5 */
+  padding:         0.5rem 1.25rem; /* py-2 px-5 */
+  border-radius:   0.5rem;         /* rounded-lg */
+  font-size:       0.875rem;       /* text-sm */
+  font-weight:     700;
+  letter-spacing:  0.025em;
+  border:          2.5px solid transparent;
+  cursor:          pointer;
+  transition:      background-color 0.15s ease,
+                   border-color     0.15s ease,
+                   transform        0.1s  ease,
+                   box-shadow       0.15s ease;
+  position:        relative;
+  overflow:        hidden;         /* 水波纹裁切 */
+  user-select:     none;
+  white-space:     nowrap;
+}
+
+.xjtlu-btn:active {
+  transform: scale(0.96);
+}
+
+.xjtlu-btn:disabled,
+.xjtlu-btn[aria-disabled="true"] {
+  opacity:        0.45;
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
+/* 主色：西浦蓝 */
+.xjtlu-btn--primary {
+  background-color: #004B9B; /* xjtlu-blue */
+  color:            #ffffff;
+  border-color:     #004B9B;
+}
+.xjtlu-btn--primary:hover {
+  background-color: #003366; /* xjtlu-navy */
+  border-color:     #003366;
+  box-shadow:       0 4px 14px rgba(0, 75, 155, 0.35);
+}
+
+/* 次色：描边蓝（幽灵按钮） */
+.xjtlu-btn--secondary {
+  background-color: transparent;
+  color:            #004B9B;
+  border-color:     #004B9B;
+}
+.xjtlu-btn--secondary:hover {
+  background-color: rgba(0, 75, 155, 0.08);
+}
+
+/* 警告色：亮黄 */
+.xjtlu-btn--warning {
+  background-color: #FFD700; /* xjtlu-yellow */
+  color:            #1a1a1a;
+  border-color:     #FFD700;
+}
+.xjtlu-btn--warning:hover {
+  background-color: #FFC200;
+  border-color:     #FFC200;
+  box-shadow:       0 4px 14px rgba(255, 215, 0, 0.45);
+}
+
+/* 危险色：红 */
+.xjtlu-btn--danger {
+  background-color: #D93025;
+  color:            #ffffff;
+  border-color:     #D93025;
+}
+.xjtlu-btn--danger:hover {
+  background-color: #b5251c;
+  border-color:     #b5251c;
+  box-shadow:       0 4px 14px rgba(217, 48, 37, 0.35);
+}
+
+/* 灰色（禁用态备用） */
+.xjtlu-btn--ghost {
+  background-color: #f3f4f6;
+  color:            #6b7280;
+  border-color:     #e5e7eb;
+}
+.xjtlu-btn--ghost:hover {
+  background-color: #e5e7eb;
+}
+
+/* ── 3. 顶部状态栏 ─────────────────────────────────────────── */
+
+.status-bar {
+  display:          flex;
+  align-items:      center;
+  gap:              1rem;
+  padding:          0.625rem 1.25rem;
+  background-color: #ffffff;
+  border-bottom:    2.5px solid #003366; /* xjtlu-navy */
+  position:         relative;
+  z-index:          100;
+}
+
+/* 单个状态项（图标 + 标签 + 进度条/数值） */
+.stat-item {
+  display:     flex;
+  align-items: center;
+  gap:         0.375rem;
+  flex:        1 1 0%;
+  min-width:   0;
+  position:    relative; /* 飘字定位锚点 */
+}
+
+.stat-item__label {
+  font-size:   0.65rem;
+  font-weight: 700;
+  color:       #6b7280;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.stat-item__value {
+  font-size:   0.875rem;
+  font-weight: 700;
+  color:       #003366;
+  min-width:   2rem;
+  text-align:  right;
+}
+
+/* ── 4. 血条（进度条组件）──────────────────────────────────── */
+
+.health-bar {
+  flex:             1 1 0%;
+  height:           8px;
+  background-color: #e5e7eb; /* 灰色轨道 */
+  border-radius:    9999px;
+  overflow:         hidden;
+  min-width:        48px;
+}
+
+.health-bar__fill {
+  height:        100%;
+  border-radius: 9999px;
+  transition:    width 0.4s ease, background-color 0.3s ease;
+  will-change:   width;
+}
+
+/* 颜色语义：Mental Health（蓝） */
+.health-bar__fill--mental {
+  background-color: #004B9B;
+}
+
+/* 颜色语义：Physical Health（绿） */
+.health-bar__fill--physical {
+  background-color: #1E8A44;
+}
+
+/* 低值警告（< 20%）：变红 */
+.health-bar__fill--danger {
+  background-color: #D93025 !important;
+}
+
+/* AP 点数指示器（方块风格，非进度条）*/
+.ap-pip-group {
+  display:     flex;
+  align-items: center;
+  gap:         0.25rem;
+}
+
+.ap-pip {
+  width:         10px;
+  height:        10px;
+  border-radius: 2px;
+  border:        2px solid #004B9B;
+  transition:    background-color 0.2s ease;
+}
+
+.ap-pip--filled {
+  background-color: #004B9B;
+}
+
+.ap-pip--empty {
+  background-color: transparent;
+}
+
+/* ── 5. 标签组件（Tags / Active Buffs）────────────────────── */
+
+.tag-badge {
+  display:          inline-flex;
+  align-items:      center;
+  gap:              0.25rem;
+  padding:          0.2rem 0.6rem;
+  border-radius:    9999px;
+  font-size:        0.7rem;
+  font-weight:      700;
+  letter-spacing:   0.04em;
+  white-space:      nowrap;
+  border:           1.5px solid transparent;
+}
+
+.tag-badge--blue {
+  background-color: rgba(0, 75, 155, 0.1);
+  border-color:     #004B9B;
+  color:            #004B9B;
+}
+
+.tag-badge--green {
+  background-color: rgba(30, 138, 68, 0.1);
+  border-color:     #1E8A44;
+  color:            #1E8A44;
+}
+
+.tag-badge--red {
+  background-color: rgba(217, 48, 37, 0.1);
+  border-color:     #D93025;
+  color:            #D93025;
+}
+
+.tag-badge--yellow {
+  background-color: rgba(255, 215, 0, 0.2);
+  border-color:     #FFC200;
+  color:            #7a5c00;
+}
+
+.tag-badge--gray {
+  background-color: #f3f4f6;
+  border-color:     #d1d5db;
+  color:            #6b7280;
+}
+
+/* ── 6. 飘字动画（FloatingText）────────────────────────────── */
+
+/*
+  由 JS 动态创建 <span class="floating-text floating-text--positive|negative">
+  插入 #floating-text-layer，动画结束后自动移除。
+*/
+
+.floating-text {
+  position:      absolute;
+  font-size:     1rem;
+  font-weight:   900;
+  pointer-events: none;
+  white-space:   nowrap;
+  animation:     float-up 1.2s ease-out forwards;
+  /* 具体位置由 JS 内联 style 设置 */
+  z-index:       9999;
+}
+
+.floating-text--positive {
+  color:       #1E8A44; /* 绿色：数值增加 */
+  text-shadow: 0 1px 4px rgba(30, 138, 68, 0.3);
+}
+
+.floating-text--negative {
+  color:       #D93025; /* 红色：数值减少 */
+  text-shadow: 0 1px 4px rgba(217, 48, 37, 0.3);
+}
+
+.floating-text--neutral {
+  color:       #004B9B; /* 蓝色：中性信息 */
+}
+
+/* Keyframes（因 Tailwind CDN 模式限制，部分动画在此定义保底）*/
+@keyframes float-up {
+  0%   { opacity: 1;   transform: translateY(0px);   }
+  20%  { opacity: 1;   transform: translateY(-12px);  }
+  100% { opacity: 0;   transform: translateY(-52px);  }
+}
+
+/* ── 7. 数值抖动 bump（绑定在 .stat-item__value 上）──────── */
+
+@keyframes stat-bump {
+  0%   { transform: scale(1);    }
+  40%  { transform: scale(1.22); }
+  100% { transform: scale(1);    }
+}
+
+.stat-bump {
+  animation: stat-bump 0.3s ease-out;
+}
+
+/* ── 8. 屏幕危险叠层 ────────────────────────────────────────── */
+
+/*
+  当 Mental_Health 或 Physical_Health < 20 时，
+  #danger-overlay 切换为 .is-active，触发边缘红晕闪烁。
+*/
+
+#danger-overlay {
+  border-radius: 0;
+}
+
+#danger-overlay.is-active {
+  display:    block !important;
+  box-shadow: inset 0 0 80px rgba(217, 48, 37, 0.5);
+  animation:  danger-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+  0%, 100% { box-shadow: inset 0 0 40px rgba(217, 48, 37, 0.25); }
+  50%       { box-shadow: inset 0 0 90px rgba(217, 48, 37, 0.60); }
+}
+
+/* ── 9. 视觉小说对话框（VN Mode）───────────────────────────── */
+
+.vn-dialog-box {
+  position:         absolute;
+  bottom:           0;
+  left:             0;
+  right:            0;
+  /* PRD 要求：半透明黑色背景，白色文字，占屏幕下方 20-30% */
+  min-height:       24vh;
+  padding:          1.5rem 2rem;
+  background:       rgba(0, 0, 0, 0.72);
+  backdrop-filter:  blur(4px);
+  color:            #ffffff;
+  z-index:          200;
+  display:          flex;
+  flex-direction:   column;
+  justify-content:  flex-end;
+  gap:              0.75rem;
+}
+
+.vn-dialog-box__speaker {
+  font-size:    0.75rem;
+  font-weight:  700;
+  letter-spacing: 0.1em;
+  color:        #FFD700; /* 发言人名：亮黄 */
+  text-transform: uppercase;
+}
+
+.vn-dialog-box__text {
+  font-size:    1rem;
+  line-height:  1.75;
+  font-weight:  400;
+}
+
+.vn-dialog-box__hint {
+  font-size:    0.7rem;
+  color:        rgba(255, 255, 255, 0.5);
+  text-align:   right;
+  animation:    blink 1.5s ease-in-out infinite;
+}
+
+/* 知识提示框（橙黄色边框）*/
+.vn-knowledge-tip {
+  background:   rgba(255, 215, 0, 0.15);
+  border-left:  3px solid #FFD700;
+  padding:      0.5rem 0.75rem;
+  font-size:    0.78rem;
+  color:        #FFD700;
+  border-radius: 0 4px 4px 0;
+}
+
+/* 选项按钮组（垂直列表，悬浮于插画区中心）*/
+.vn-choices {
+  position:        absolute;
+  top:             50%;
+  left:            50%;
+  transform:       translate(-50%, -50%);
+  display:         flex;
+  flex-direction:  column;
+  gap:             0.75rem;
+  z-index:         300;
+  min-width:       min(480px, 80vw);
+}
+
+.vn-choice-btn {
+  background:      rgba(255, 255, 255, 0.95);
+  border:          2.5px solid #004B9B;
+  border-radius:   0.625rem;
+  padding:         0.875rem 1.5rem;
+  text-align:      left;
+  font-size:       0.9rem;
+  font-weight:     600;
+  color:           #003366;
+  cursor:          pointer;
+  transition:      background-color 0.15s ease,
+                   border-color     0.15s ease,
+                   transform        0.1s  ease;
+  box-shadow:      0 4px 16px rgba(0, 0, 0, 0.18);
+  line-height:     1.5;
+}
+
+.vn-choice-btn:hover {
+  background-color: #004B9B;
+  color:            #ffffff;
+  border-color:     #004B9B;
+  transform:        translateX(4px);
+}
+
+.vn-choice-btn:active {
+  transform: scale(0.98) translateX(4px);
+}
+
+/* ── 10. 地图热区（MapHotspot）─────────────────────────────── */
+
+.map-hotspot {
+  position:      absolute;
+  border-radius: 9999px;
+  cursor:        pointer;
+  transform:     translate(-50%, -50%);
+  transition:    box-shadow 0.2s ease, transform 0.15s ease;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+}
+
+/* A 类：灰色光晕（纯科普建筑）*/
+.map-hotspot--info {
+  width:            14px;
+  height:           14px;
+  background-color: rgba(107, 114, 128, 0.6);
+  border:           2px solid #6b7280;
+  box-shadow:       0 0 0 4px rgba(107, 114, 128, 0.2);
+}
+
+.map-hotspot--info:hover {
+  box-shadow: 0 0 0 6px rgba(107, 114, 128, 0.35);
+  transform:  translate(-50%, -50%) scale(1.3);
+}
+
+/* B 类：西浦蓝高亮（可行动建筑）*/
+.map-hotspot--action {
+  width:            18px;
+  height:           18px;
+  background-color: #004B9B;
+  border:           2.5px solid #ffffff;
+  box-shadow:       0 0 0 3px #004B9B,
+                    0 0 12px rgba(0, 75, 155, 0.5);
+}
+
+.map-hotspot--action:hover {
+  background-color: #003366;
+  box-shadow:       0 0 0 3px #003366,
+                    0 0 20px rgba(0, 75, 155, 0.7);
+  transform:        translate(-50%, -50%) scale(1.25);
+}
+
+/* 选中状态 */
+.map-hotspot--selected {
+  box-shadow: 0 0 0 4px #FFD700,
+              0 0 20px rgba(255, 215, 0, 0.6) !important;
+}
+
+/* 热区脉冲动画（吸引玩家注意力）*/
+@keyframes hotspot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #004B9B, 0 0 8px  rgba(0,75,155,0.4); }
+  50%       { box-shadow: 0 0 0 5px #004B9B, 0 0 20px rgba(0,75,155,0.7); }
+}
+
+.map-hotspot--action {
+  animation: hotspot-pulse 2.5s ease-in-out infinite;
+}
+
+.map-hotspot--action:hover,
+.map-hotspot--selected {
+  animation: none; /* 悬停/选中时停止脉冲 */
+}
+
+/* ── 11. 卡片淡入 ───────────────────────────────────────────── */
+
+@keyframes fade-in {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+
+.fade-in {
+  animation: fade-in 0.35s ease-out both;
+}
+
+/* ── 12. 光标闪烁（对话框推进提示）────────────────────────── */
+
+@keyframes blink {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.3; }
+}
+
+/* ── 13. 滚动条统一样式（仅内部容器使用）───────────────────── */
+
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 75, 155, 0.3);
+  border-radius:    9999px;
+}
+
+/* ── 14. 月末结算 / 结局界面通用卡片 ───────────────────────── */
+
+.summary-card {
+  background:    #ffffff;
+  border:        2.5px solid #003366;
+  border-radius: 1rem;
+  padding:       2rem;
+  box-shadow:    0 8px 32px rgba(0, 51, 102, 0.12);
+}
+
+/* ── 15. 调试：地图热区坐标叠层 ─────────────────────────────── */
+/*
+  当 MAP_DEBUG = true 时，由 JS 在 #map-debug-layer 上绘制网格。
+  正式发布时此层不可见。
+*/
+#map-debug-layer {
+  position:       absolute;
+  inset:          0;
+  pointer-events: none;
+  z-index:        500;
+  display:        none; /* JS 开启调试模式后切换为 block */
+}
+
+#map-debug-layer.is-active {
+  display: block;
+  background-image:
+    linear-gradient(rgba(0,75,155,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,75,155,0.08) 1px, transparent 1px);
+  background-size: 5% 5%; /* 每格 = 5% 宽高 */
+}

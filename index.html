@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>西浦申研模拟器 | XJTLU Postgrad Simulator</title>
+
+  <!-- ① Tailwind CSS (Play CDN，开发阶段使用) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ② Tailwind 主题扩展：注入西浦蓝与亮黄色 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // 西浦蓝
+            'xjtlu-navy':  '#003366',
+            'xjtlu-blue':  '#004B9B',
+            'xjtlu-light': '#1A6DC2',
+            // 亮黄（高亮 / 警告）
+            'xjtlu-yellow': '#FFD700',
+            'xjtlu-amber':  '#FFC200',
+            // 辅助色
+            'xjtlu-red':    '#D93025',
+            'xjtlu-green':  '#1E8A44',
+            'xjtlu-gray':   '#6B7280',
+          },
+          fontFamily: {
+            // 无衬线优先，覆盖系统默认
+            sans: [
+              '"Noto Sans SC"',
+              '"PingFang SC"',
+              '"Microsoft YaHei"',
+              'ui-sans-serif',
+              'system-ui',
+              'sans-serif',
+            ],
+          },
+          boxShadow: {
+            'hotspot-active': '0 0 0 4px rgba(0, 75, 155, 0.5)',
+            'hotspot-warn':   '0 0 0 4px rgba(217, 48, 37, 0.5)',
+          },
+          keyframes: {
+            // 数值飘字：向上淡出
+            'float-up': {
+              '0%':   { opacity: '1',   transform: 'translateY(0px)'  },
+              '100%': { opacity: '0',   transform: 'translateY(-48px)' },
+            },
+            // 屏幕变红警告闪烁
+            'danger-pulse': {
+              '0%, 100%': { 'box-shadow': 'inset 0 0 0px rgba(217,48,37,0)' },
+              '50%':       { 'box-shadow': 'inset 0 0 60px rgba(217,48,37,0.55)' },
+            },
+            // 数值变化时的轻微抖动
+            'stat-bump': {
+              '0%':   { transform: 'scale(1)'    },
+              '40%':  { transform: 'scale(1.18)' },
+              '100%': { transform: 'scale(1)'    },
+            },
+            // 卡片淡入
+            'fade-in': {
+              '0%':   { opacity: '0', transform: 'translateY(8px)'  },
+              '100%': { opacity: '1', transform: 'translateY(0px)' },
+            },
+            // 按钮点击水波纹
+            'ripple': {
+              '0%':   { transform: 'scale(0)', opacity: '0.6' },
+              '100%': { transform: 'scale(4)', opacity: '0'   },
+            },
+          },
+          animation: {
+            'float-up':     'float-up 1.2s ease-out forwards',
+            'danger-pulse': 'danger-pulse 1s ease-in-out infinite',
+            'stat-bump':    'stat-bump 0.3s ease-out',
+            'fade-in':      'fade-in 0.4s ease-out',
+            'ripple':       'ripple 0.6s ease-out',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- ③ Google Fonts：Noto Sans SC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ④ Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- ⑤ 项目全局样式 -->
+  <link rel="stylesheet" href="assets/styles/main.css" />
+</head>
+
+<body class="bg-white text-gray-900 font-sans antialiased">
+
+  <!--
+    ═══════════════════════════════════════
+      根容器：所有 Screen 挂载于此
+      固定全屏，防止页面滚动
+    ═══════════════════════════════════════
+  -->
+  <div
+    id="app"
+    class="relative w-screen h-screen overflow-hidden select-none"
+  >
+
+    <!-- ── 飘字动画宿主层（始终在最顶层）── -->
+    <div
+      id="floating-text-layer"
+      class="pointer-events-none absolute inset-0 z-[9999] overflow-hidden"
+      aria-hidden="true"
+    ></div>
+
+    <!-- ── 屏幕危险边框层（Mental / Physical 警告）── -->
+    <div
+      id="danger-overlay"
+      class="pointer-events-none absolute inset-0 z-[9998] hidden"
+      aria-hidden="true"
+    ></div>
+
+    <!-- ── 全局模态弹窗层（ConfirmModal 挂载处）── -->
+    <div
+      id="modal-layer"
+      class="pointer-events-none absolute inset-0 z-[9990] flex items-center justify-center"
+      aria-hidden="true"
+    ></div>
+
+    <!-- ════════════════════════════════════
+         各 Screen 容器（默认全部隐藏）
+         UIManager 负责控制显示/隐藏
+         ════════════════════════════════════ -->
+
+    <!-- Screen: 主菜单 -->
+    <div id="screen-title"         class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 院系选择 -->
+    <div id="screen-school-select" class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 校园地图（主养成界面） -->
+    <div id="screen-map"           class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 视觉小说 / 事件弹出 -->
+    <div id="screen-vn"            class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 月末结算 -->
+    <div id="screen-month-summary" class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 结局前标签展示 -->
+    <div id="screen-tag-showcase"  class="screen absolute inset-0 hidden"></div>
+
+    <!-- Screen: 最终结局 -->
+    <div id="screen-ending"        class="screen absolute inset-0 hidden"></div>
+
+    <!-- ── M0 验证用：启动画面（无游戏逻辑）── -->
+    <div
+      id="screen-boot"
+      class="screen absolute inset-0 flex flex-col items-center justify-center
+             bg-white gap-8"
+    >
+      <!-- 吉祥物 SVG 占位 -->
+      <div id="mascot-container" class="w-36 h-36">
+        <!-- goose_idle SVG 将由 main.js 注入 -->
+      </div>
+
+      <!-- 标题文字组 -->
+      <div class="text-center space-y-2">
+        <h1 class="text-4xl font-black tracking-tight text-xjtlu-navy">
+          西浦申研模拟器
+        </h1>
+        <p class="text-sm font-medium text-xjtlu-gray tracking-widest uppercase">
+          XJTLU Postgrad Simulator
+        </p>
+      </div>
+
+      <!-- Lucide 图标验证区 -->
+      <div class="flex items-center gap-4 text-xjtlu-blue">
+        <i data-lucide="graduation-cap" class="lucide w-7 h-7"></i>
+        <i data-lucide="brain"          class="lucide w-7 h-7"></i>
+        <i data-lucide="heart-pulse"    class="lucide w-7 h-7"></i>
+        <i data-lucide="coins"          class="lucide w-7 h-7"></i>
+        <i data-lucide="zap"            class="lucide w-7 h-7"></i>
+      </div>
+
+      <!-- 色板验证 -->
+      <div class="flex gap-3">
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-navy   shadow-md" title="xjtlu-navy"></div>
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-blue   shadow-md" title="xjtlu-blue"></div>
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-light  shadow-md" title="xjtlu-light"></div>
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-yellow shadow-md" title="xjtlu-yellow"></div>
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-red    shadow-md" title="xjtlu-red"></div>
+        <div class="w-10 h-10 rounded-lg bg-xjtlu-green  shadow-md" title="xjtlu-green"></div>
+      </div>
+
+      <!-- 飘字动效测试按钮 -->
+      <div class="flex gap-3">
+        <button
+          id="btn-test-positive"
+          class="xjtlu-btn xjtlu-btn--primary"
+        >
+          <i data-lucide="plus-circle" class="lucide w-4 h-4"></i>
+          测试正向飘字
+        </button>
+        <button
+          id="btn-test-negative"
+          class="xjtlu-btn xjtlu-btn--danger"
+        >
+          <i data-lucide="minus-circle" class="lucide w-4 h-4"></i>
+          测试负向飘字
+        </button>
+        <button
+          id="btn-test-warning"
+          class="xjtlu-btn xjtlu-btn--warning"
+        >
+          <i data-lucide="alert-triangle" class="lucide w-4 h-4"></i>
+          测试危险警告
+        </button>
+      </div>
+
+      <!-- 状态栏预览（M0 静态验证） -->
+      <div
+        id="status-bar-preview"
+        class="status-bar w-full max-w-2xl"
+      >
+        <!-- 由 main.js 渲染 -->
+      </div>
+
+      <!-- 版本标识 -->
+      <p class="absolute bottom-4 right-4 text-xs text-xjtlu-gray opacity-60">
+        v1.0.0-M0 · XJTLU Sim
+      </p>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- ⑥ 项目主脚本（type=module） -->
+  <script type="module" src="main.js"></script>
+
+</body>
+</html>
