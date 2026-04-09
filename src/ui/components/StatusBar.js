@@ -286,9 +286,9 @@ export class StatusBar {
             ${buff.label}
           </span>
 
-          <!-- 悬停气泡 -->
+          <!-- 悬停气泡：改为向下 -->
           <div class="
-            absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+            absolute top-full left-1/2 -translate-x-1/2 mt-2
             w-48 p-2.5 rounded-xl
             bg-xjtlu-navy text-white text-xs leading-relaxed
             shadow-xl border border-white/10
@@ -297,24 +297,16 @@ export class StatusBar {
             transition-opacity duration-150
             z-[9999]
           ">
-            <!-- 气泡标题 -->
             <p class="font-black text-xjtlu-yellow mb-1">${buff.label}</p>
-
-            <!-- 效果描述 -->
-            ${effectDesc
-              ? `<p class="text-white/80">${effectDesc}</p>`
-              : ''}
-
-            <!-- 持续时间 -->
+            ${effectDesc ? `<p class="text-white/80">${effectDesc}</p>` : ''}
             <p class="text-white/50 mt-1 text-[0.6rem]">
               ${this._describeBuffDuration(buff)}
             </p>
-
-            <!-- 气泡小三角 -->
+            <!-- 小三角改为朝上 -->
             <div class="
-              absolute top-full left-1/2 -translate-x-1/2
+              absolute bottom-full left-1/2 -translate-x-1/2
               border-4 border-transparent
-              border-t-xjtlu-navy
+              border-b-xjtlu-navy
             "></div>
           </div>
         </div>
