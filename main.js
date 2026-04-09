@@ -78,6 +78,31 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   console.log('%c调试：_testVN("agency_selection") 可测试任意事件',
     'color:#004B9B;font-weight:700;');
+
+  // main.js，在 window._testVN 定义后面追加
+  window._addBuff = (buff) => {
+    StateManager.addBuff(buff);
+  };
+
+  window._testAddBuff = () => {
+    StateManager.addBuff({
+      buffId:          'test_buff',
+      label:           '雅思搭子',
+      icon:            'users',
+      durationType:    'months',
+      remainingMonths: 3,
+      effects: {
+        stat_modifier: {
+          stat:   'English_Ability',
+          action: 'study_ielts',
+          delta:  3,
+        },
+      },
+      source_event_id: 'test',
+    });
+  };
+
+  console.log('%c调试：_testAddBuff() 可添加测试 Buff', 'color:#004B9B;font-weight:700;');
 });
 
 function initLucide() {
