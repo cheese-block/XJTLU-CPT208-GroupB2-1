@@ -308,7 +308,7 @@ function bindTestButtons() {
       { Mental_Health: +20, Academic_Ability: +5 },
       { Mental_Health: '心理健康', Academic_Ability: '学力' }
     );
-    StateManager.saveGame();
+    StateManager.saveGame(); // ← 按钮点击后立即存档
   });
 
   // 负向：Mental_Health -15, Money -10000
@@ -320,12 +320,13 @@ function bindTestButtons() {
     StateManager.saveGame();
   });
 
-  // 警告：直接把 Physical_Health 压到危险线以下，验证叠层响应
+  // 警告：Physical_Health 在 10/80 之间切换，验证叠层响应
   document.getElementById('btn-test-warning')?.addEventListener('click', () => {
-    const state = StateManager.getState();
+    const state  = StateManager.getState();
     const target = state.Physical_Health < CONSTANTS.PHYSICAL_HEALTH_WARN ? 80 : 10;
+    const delta  = target - state.Physical_Health;
     StateManager.applyStatDelta(
-      { Physical_Health: target - state.Physical_Health },
+      { Physical_Health: delta },
       { Physical_Health: '身体健康' }
     );
     StateManager.saveGame();
@@ -334,6 +335,13 @@ function bindTestButtons() {
 
 // ─────────────────────────────────────────────────────────────
 // 9. M1 验证（控制台断言）
+//
+// 【修复说明】
+//   验证函数在「隔离沙箱」中运行：
+//   1. 验证开始前，将真实状态重置为初始值（clearSave + resetGame）
+//   2. 所有断言基于初始状态，不依赖上次运行的存档
+//   3. 验证结束后，同样保持干净的初始状态（不存档验证过程中的脏数据）
+//   4. advanceMonth 等破坏性操作在验证末尾执行，执行后立即 resetGame 恢复
 // ─────────────────────────────────────────────────────────────
 
 function runM1Verification() {
@@ -352,72 +360,85 @@ function runM1Verification() {
     }
   }
 
+  // ══════════════════════════════════════════════════════════
+  //  关键：验证前强制重置为初始状态，清除任何历史存档污染
+  // ══════════════════════════════════════════════════════════
+  StateManager.resetGame();
+
   // ── 初始状态验证 ──────────────────────────────────────────
-  const state = StateManager.getState();
+  let state = StateManager.getState();
 
-  assert('初始状态：currentMonth = 1',        state.currentMonth === 1);
-  assert('初始状态：AP = 5',                  state.AP === CONSTANTS.AP_MAX_PER_MONTH);
-  assert('初始状态：Mental_Health = 80',      state.Mental_Health === 80);
-  assert('初始状态：Physical_Health = 80',    state.Physical_Health === 80);
-  assert('初始状态：Money = 50000',           state.Money === 50000);
-  assert('初始状态：English_Ability = 40',    state.English_Ability === 40);
-  assert('初始状态：tags 为空数组',            Array.isArray(state.tags) && state.tags.length === 0);
-  assert('初始状态：activeBuff 为空数组',      Array.isArray(state.activeBuff) && state.activeBuff.length === 0);
-  assert('初始状态：gamePhase = TITLE',       state.gamePhase === CONSTANTS.GAME_PHASE.TITLE);
+  assert('初始状态：currentMonth = 1',     state.currentMonth === 1,                        `实际：${state.currentMonth}`);
+  assert('初始状态：AP = 5',               state.AP === CONSTANTS.AP_MAX_PER_MONTH,          `实际：${state.AP}`);
+  assert('初始状态：Mental_Health = 80',   state.Mental_Health === 80,                      `实际：${state.Mental_Health}`);
+  assert('初始状态：Physical_Health = 80', state.Physical_Health === 80,                    `实际：${state.Physical_Health}`);
+  assert('初始状态：Money = 50000',        state.Money === 50000,                            `实际：${state.Money}`);
+  assert('初始状态：English_Ability = 40', state.English_Ability === 40,                    `实际：${state.English_Ability}`);
+  assert('初始状态：tags 为空数组',         Array.isArray(state.tags) && state.tags.length === 0);
+  assert('初始状态：activeBuff 为空数组',   Array.isArray(state.activeBuff) && state.activeBuff.length === 0);
+  assert('初始状态：gamePhase = TITLE',    state.gamePhase === CONSTANTS.GAME_PHASE.TITLE,  `实际：${state.gamePhase}`);
 
-  // ── applyStatDelta 验证 ───────────────────────────────────
-  StateManager.applyStatDelta({ Mental_Health: -90 }); // 应被 clamp 到 0
-  const s2 = StateManager.getState();
-  assert('clamp 下限：Mental_Health 不低于 0', s2.Mental_Health === 0, `实际值：${s2.Mental_Health}`);
+  // ── applyStatDelta + clamp 验证 ──────────────────────────
+  StateManager.applyStatDelta({ Mental_Health: -90 });      // 80 - 90 = -10 → clamp → 0
+  state = StateManager.getState();
+  assert('clamp 下限：Mental_Health ≥ 0',  state.Mental_Health === 0,  `实际：${state.Mental_Health}`);
 
-  StateManager.applyStatDelta({ Mental_Health: +200 }); // 应被 clamp 到 100
-  const s3 = StateManager.getState();
-  assert('clamp 上限：Mental_Health 不超过 100', s3.Mental_Health === 100, `实际值：${s3.Mental_Health}`);
+  StateManager.applyStatDelta({ Mental_Health: +200 });     // 0 + 200 = 200 → clamp → 100
+  state = StateManager.getState();
+  assert('clamp 上限：Mental_Health ≤ 100', state.Mental_Health === 100, `实际：${state.Mental_Health}`);
 
-  // 恢复初始值
-  StateManager.applyStatDelta({ Mental_Health: -20 });
+  StateManager.applyStatDelta({ Mental_Health: -20 });      // 100 - 20 = 80，恢复正常
 
   // ── consumeAP 验证 ────────────────────────────────────────
-  const apBefore  = StateManager.getState().AP;
+  const apBefore  = StateManager.getState().AP;             // 应为 5
   const apResult1 = StateManager.consumeAP(1);
-  const apAfter   = StateManager.getState().AP;
-  assert('consumeAP(1) 成功',             apResult1 === true);
-  assert('consumeAP(1) 后 AP -1',         apAfter === apBefore - 1, `${apBefore} → ${apAfter}`);
+  state           = StateManager.getState();
+  assert('consumeAP(1) 返回 true',          apResult1 === true);
+  assert('consumeAP(1) 后 AP 减少 1',       state.AP === apBefore - 1, `${apBefore} → ${state.AP}`);
 
-  // 耗尽 AP
-  for (let i = 0; i < apAfter; i++) StateManager.consumeAP(1);
-  const apExhausted = StateManager.consumeAP(1); // 应失败
-  assert('AP 耗尽后 consumeAP 返回 false', apExhausted === false);
+  // 耗尽剩余 AP
+  for (let i = 0; i < state.AP; i++) StateManager.consumeAP(1);
+  const apExhausted = StateManager.consumeAP(1);            // AP 已为 0，应失败
+  assert('AP 耗尽后 consumeAP 返回 false',  apExhausted === false);
+
+  // ── resetAPForNewMonth 验证 ───────────────────────────────
+  StateManager.resetAPForNewMonth();
+  state = StateManager.getState();
+  assert('resetAPForNewMonth：AP 恢复为 5', state.AP === CONSTANTS.AP_MAX_PER_MONTH, `实际：${state.AP}`);
 
   // ── Tag 操作验证 ──────────────────────────────────────────
   StateManager.addTag('TEST_TAG');
-  assert('addTag：标签已添加',             StateManager.hasTag('TEST_TAG'));
-  const dupResult = StateManager.addTag('TEST_TAG'); // 重复添加
+  assert('addTag：标签已添加',              StateManager.hasTag('TEST_TAG'));
+
+  const dupResult = StateManager.addTag('TEST_TAG');
   assert('addTag 去重：重复添加返回 false', dupResult === false);
+
   StateManager.removeTag('TEST_TAG');
   assert('removeTag：标签已移除',          !StateManager.hasTag('TEST_TAG'));
 
   // ── Buff 操作验证 ─────────────────────────────────────────
   const testBuff = {
-    buffId: 'test_buff',
-    label:  '测试 Buff',
-    icon:   'star',
-    durationType: 'months',
+    buffId:          'test_buff',
+    label:           '测试 Buff',
+    icon:            'star',
+    durationType:    'months',
     remainingMonths: 3,
-    effects: {},
+    effects:         {},
     source_event_id: 'test',
   };
   StateManager.addBuff(testBuff);
   assert('addBuff：Buff 已添加',           StateManager.getBuff('test_buff') !== null);
+
   StateManager.removeBuff('test_buff');
   assert('removeBuff：Buff 已移除',        StateManager.getBuff('test_buff') === null);
 
-  // ── 存档验证 ──────────────────────────────────────────────
+  // ── 存档 / 读档验证 ──────────────────────────────────────
   StateManager.saveGame();
   assert('saveGame：localStorage 存在存档', StateManager.hasSave());
 
   const preview = StateManager.getSavePreview();
-  assert('getSavePreview：返回有效对象',    preview !== null && typeof preview.month === 'number');
+  assert('getSavePreview：返回有效对象',    preview !== null && typeof preview.month === 'number', `month: ${preview?.month}`);
+  assert('getSavePreview：month = 1',      preview?.month === 1, `实际：${preview?.month}`);
 
   // ── validateState 验证 ────────────────────────────────────
   const { valid: v1 } = StateManager.validateState(StateManager.getState());
@@ -426,18 +447,43 @@ function runM1Verification() {
   const { valid: v2 } = StateManager.validateState({ broken: true });
   assert('validateState：损坏数据返回 false', !v2);
 
-  // ── advanceMonth 验证 ─────────────────────────────────────
-  StateManager.resetAPForNewMonth(); // 先恢复 AP
+  // ── advanceMonth 验证（放在最后，为破坏性操作）───────────
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
-  assert('advanceMonth：月份推进到 2',     newMonth === 2, `实际：${newMonth}`);
-  assert('advanceMonth：isGameEnd = false', isGameEnd === false);
+  assert('advanceMonth：月份推进到 2',      newMonth === 2,      `实际：${newMonth}`);
+  assert('advanceMonth：isGameEnd = false', isGameEnd === false, `实际：${isGameEnd}`);
+
+  // ── recordSemesterGPA 验证 ────────────────────────────────
+  StateManager.recordSemesterGPA({
+    phase:    'Y3_SEM1',
+    rawScore: 80,
+    gpa:      3.8,
+    tag:      'GPA_High',
+  });
+  state = StateManager.getState();
+  assert('recordSemesterGPA：semesterGPA 有记录', state.semesterGPA.length === 1);
+  assert('recordSemesterGPA：cumulativeGPA = 3.8', state.cumulativeGPA === 3.8, `实际：${state.cumulativeGPA}`);
+
+  // ══════════════════════════════════════════════════════════
+  //  验证结束：重置回干净的初始状态，避免污染后续游戏流程
+  //  注意：此处「不」调用 saveGame()，保留干净的初始存档
+  // ══════════════════════════════════════════════════════════
+  StateManager.resetGame();
+  // resetGame 内部已调用 clearSave + createInitialState + _notifyChange
+  // 页面状态栏会刷新回初始值
 
   // ── 最终摘要 ──────────────────────────────────────────────
   console.log('%c─────────────────────────────────', 'color:#6B7280;');
   StateManager.debugPrintState();
   console.log(
     `%c结果：${passed} 通过 / ${failed} 失败`,
-    failed > 0 ? 'color:#D93025;font-weight:900;' : 'color:#1E8A44;font-weight:900;'
+    failed > 0
+      ? 'color:#D93025;font-size:1rem;font-weight:900;'
+      : 'color:#1E8A44;font-size:1rem;font-weight:900;'
   );
+
+  if (failed === 0) {
+    console.log('%c🎉 M1 全部验证通过，可进入 M2。', 'color:#004B9B;font-weight:700;');
+  }
+
   console.groupEnd();
 }
