@@ -339,12 +339,12 @@ export class TitleScreen {
   _handleContinue() {
     log('info', 'TitleScreen', '继续游戏');
 
-    // 根据存档的 gamePhase 决定跳转目标
-    // 大多数情况下存档 gamePhase 为 MAP（日常养成界面）
-    const state = StateManager.getState();
-    const targetPhase = state.gamePhase === CONSTANTS.GAME_PHASE.TITLE
-      ? CONSTANTS.GAME_PHASE.SCHOOL_SELECT  // 若存档在 TITLE（首次完成院系选择前），进入院系选择
-      : state.gamePhase;
+    // 直接读存档中的进度，不依赖内存 gamePhase
+    // （内存 gamePhase 已被 main.js 强制重置为 TITLE）
+    const preview = StateManager.getSavePreview();
+    const targetPhase = preview?.phase
+      ? CONSTANTS.GAME_PHASE.MAP   // 有存档，直接进地图
+      : CONSTANTS.GAME_PHASE.SCHOOL_SELECT;
 
     StateManager.setGamePhase(targetPhase);
   }
