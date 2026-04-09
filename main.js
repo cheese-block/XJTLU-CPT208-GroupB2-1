@@ -1,11 +1,10 @@
-// main.js
-
-import { CONSTANTS }     from './src/utils/constants.js';
-import * as StateManager from './src/state/StateManager.js';
-import { log }           from './src/utils/helpers.js';
+import { CONSTANTS }            from './src/utils/constants.js';
+import * as StateManager        from './src/state/StateManager.js';
+import { log }                  from './src/utils/helpers.js';
 
 import { initUIManager, registerScreen } from './src/ui/UIManager.js';
-import { TitleScreen }                   from './src/ui/screens/TitleScreen.js';
+import { TitleScreen }          from './src/ui/screens/TitleScreen.js';
+import { SchoolSelectScreen }   from './src/ui/screens/SchoolSelectScreen.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -13,21 +12,18 @@ document.addEventListener('DOMContentLoaded', () => {
   StateManager.initStateManager();
 
   // 注册已实现的 Screen
-  registerScreen(CONSTANTS.GAME_PHASE.TITLE, new TitleScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
 
-  // ── 占位 Screen（M4 前临时使用）──────────────────────────
-  // 凡是还没实现的 Screen，统一注册一个占位对象
-  const placeholderScreen = (label) => ({
-    mount(container, state) {
+  // 占位 Screen
+  const placeholder = (label) => ({
+    mount(container) {
       container.innerHTML = `
         <div class="w-full h-full flex flex-col items-center justify-center gap-6 bg-white">
           <div class="text-6xl">🚧</div>
           <p class="text-xl font-black text-xjtlu-navy">${label}</p>
           <p class="text-sm text-xjtlu-gray">该界面正在开发中，敬请期待</p>
-          <button
-            id="placeholder-back"
-            class="xjtlu-btn xjtlu-btn--secondary mt-4"
-          >
+          <button id="placeholder-back" class="xjtlu-btn xjtlu-btn--secondary mt-4">
             <i data-lucide="arrow-left" class="lucide w-4 h-4"></i>
             返回主菜单
           </button>
@@ -43,13 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
     onStateChange() {},
   });
 
-  registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, placeholderScreen('院系选择（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.MAP,           placeholderScreen('校园地图（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.VN,            placeholderScreen('剧情事件（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, placeholderScreen('月末结算（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  placeholderScreen('人生印记（开发中）'));
-  registerScreen(CONSTANTS.GAME_PHASE.ENDING,        placeholderScreen('结局（开发中）'));
-  // ────────────────────────────────────────────────────────
+  registerScreen(CONSTANTS.GAME_PHASE.MAP,           placeholder('校园地图（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.VN,            placeholder('剧情事件（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, placeholder('月末结算（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  placeholder('人生印记（开发中）'));
+  registerScreen(CONSTANTS.GAME_PHASE.ENDING,        placeholder('结局（开发中）'));
 
   initUIManager();
 
