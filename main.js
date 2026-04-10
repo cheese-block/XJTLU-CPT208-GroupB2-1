@@ -3,7 +3,7 @@ import * as StateManager      from './src/state/StateManager.js';
 import { log }                from './src/utils/helpers.js';
 
 import { initUIManager, registerScreen } from './src/ui/UIManager.js';
-import { initGameLoop }       from './src/engine/GameLoop.js';
+import { initGameLoop, checkBadEndings } from './src/engine/GameLoop.js';
 import { TitleScreen }        from './src/ui/screens/TitleScreen.js';
 import { SchoolSelectScreen } from './src/ui/screens/SchoolSelectScreen.js';
 import { MapScreen }          from './src/ui/screens/MapScreen.js';
@@ -11,8 +11,7 @@ import { VNScreen }           from './src/ui/screens/VNScreen.js';
 import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
 import { initTooltipManager } from './src/ui/components/TooltipManager.js';
 import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
-import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
-import { initGameLoop, checkBadEndings } from './src/engine/GameLoop.js'; 
+import { EndingScreen }       from './src/ui/screens/EndingScreen.js'; 
 
 let _vnScreen = null;
 
