@@ -102,12 +102,20 @@ export class DialogBox {
 
     // 隐藏提示，清空文本
     if (hintEl) hintEl.classList.add('hidden');
-    textEl.textContent = '';
+    textEl.innerHTML = ''; // 改为 innerHTML
 
-    this._typeText(text, textEl, () => {
+    // 【修改点】：如果是包含 HTML 标签的文本（如拼接了 span），直接显示，跳过打字机
+    if (text.includes('<span') || text.includes('<br>')) {
+      textEl.innerHTML = text;
       if (hintEl && showHint) hintEl.classList.remove('hidden');
       this._onComplete?.();
-    });
+    } else {
+      // 纯文本依然保留打字机效果
+      this._typeText(text, textEl, () => {
+        if (hintEl && showHint) hintEl.classList.remove('hidden');
+        this._onComplete?.();
+      });
+    }
   }
 
   skipOrAdvance() {

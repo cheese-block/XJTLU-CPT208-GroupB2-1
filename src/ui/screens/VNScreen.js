@@ -100,14 +100,15 @@ export class VNScreen {
     this._updateBackground(scene.bg ?? null);
 
     if (scene.choices && scene.choices.length > 0) {
-      // 有选项：文本打印完后展示选项
       this._dialogBox.show({
         text:       scene.text,
         speaker:    scene.speaker ?? '',
         tip:        scene.tip ?? '',
         showHint:   false,
         onComplete: () => {
-          this._showChoices(scene.choices);
+          // 【修改点】：获取当前 tags 并传入
+          const playerTags = StateManager.getState().tags || [];
+          this._showChoices(scene.choices, scene.choice_type === 'multiple', playerTags);
         },
       });
     } else {
@@ -155,25 +156,53 @@ export class VNScreen {
   // 选项
   // ───────────────────────────────────────────────────────────
 
-  _showChoices(choices) {
-    this._choicePanel.show(choices, (choiceIndex) => {
-      this._resolveChoice(choices[choiceIndex]);
-    });
+  _showChoices(choices, isMultiple, playerTags) {
+    this._choicePanel.show(choices, (result) => {
+      if (Array.isArray(result)) {
+        this._resolveMultipleChoices(choices, result);
+      } else {
+        this._resolveChoice(choices[result]);
+      }
+    }, isMultiple, playerTags); // 【修改点】：传入 playerTags
   }
 
   _resolveChoice(choice) {
-    // 应用数值效果
-    if (choice.effects && Object.keys(choice.effects).length > 0) {
-      const labels = this._buildEffectLabels(choice.effects);
-      StateManager.applyStatDelta(choice.effects, labels);
+    const currentState = StateManager.getState();
+    const playerTags = currentState.tags || [];
+
+    let activeVariant = null;
+    if (choice.flavor_text_variants && choice.flavor_text_variants.length > 0) {
+      for (const variant of choice.flavor_text_variants) {
+        if (!variant.required_tag || playerTags.includes(variant.required_tag)) {
+          activeVariant = variant;
+          break;
+        }
+      }
     }
 
-    // 添加标签
-    if (choice.tags_added && choice.tags_added.length > 0) {
-      choice.tags_added.forEach(tag => StateManager.addTag(tag));
+    const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
+    const finalTags = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
+    
+    // 【核心修改点】：拼接基础文本与变色条件文本
+    let finalFlavorText = choice.flavor_text || ''; // 基础文本
+    if (activeVariant && activeVariant.text) {
+      // 根据 type 决定颜色
+      let colorClass = 'text-xjtlu-blue'; // 默认 neutral
+      if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
+      if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
+      
+      // 拼接：基础文本 + 换行 + 变色文本
+      const variantHtml = `<br><br><span class="${colorClass} font-bold">${activeVariant.text}</span>`;
+      finalFlavorText += variantHtml;
     }
 
-    // 注入连续事件
+    if (Object.keys(finalEffects).length > 0) {
+      const labels = this._buildEffectLabels(finalEffects);
+      StateManager.applyStatDelta(finalEffects, labels);
+    }
+
+    finalTags.forEach(tag => StateManager.addTag(tag));
+
     if (choice.next_event_id) {
       StateManager.enqueueEventFront({
         eventId: choice.next_event_id,
@@ -183,24 +212,22 @@ export class VNScreen {
 
     StateManager.saveGame();
 
-    if (choice.flavor_text) {
+    if (finalFlavorText) {
       this._updateBackground(choice.bg ?? null);
-
-      // 预设好下一个 scene 的索引
-      // choices scene 本身是 _sceneIndex，选完后应跳到 _sceneIndex + 1
       this._sceneIndex     = this._sceneIndex + 1;
       this._waitingAdvance = true;
 
+      // 注意：由于我们拼接了 HTML 标签 (<br>, <span>)，
+      // DialogBox 的打字机效果需要能兼容 HTML。
+      // 如果 DialogBox 的 _typeText 用的是 textContent，这里需要改成 innerHTML。
       this._dialogBox.show({
-        text:         choice.flavor_text,
+        text:         finalFlavorText,
         showHint:     true,
         tip:          choice.tip ?? '',
-        effects:      choice.effects ?? {},
-        effectLabels: this._buildEffectLabels(choice.effects ?? {}),
+        effects:      finalEffects,
+        effectLabels: this._buildEffectLabels(finalEffects),
       });
-
     } else {
-      // 无 flavor_text，直接推进
       this._playScene(this._sceneIndex + 1);
     }
   }
