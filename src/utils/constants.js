@@ -76,7 +76,7 @@ export const CONSTANTS = Object.freeze({
   //   Academic_Ability → GPA 数值 + 标签
   // ─────────────────────────────────────────────────────────
   GPA_THRESHOLDS: [
-    { minAbility: 80, gpa: 3.8, tag: 'GPA_High' },
+    { minAbility: 80, gpa: 3.8, tag: 'GPA_Top'  }, // 【修复 B】：3.8 单独标记
     { minAbility: 60, gpa: 3.3, tag: 'GPA_High' },
     { minAbility: 40, gpa: 2.8, tag: 'GPA_Mid'  },
     { minAbility:  0, gpa: 2.2, tag: 'GPA_Low'  }, // 兜底

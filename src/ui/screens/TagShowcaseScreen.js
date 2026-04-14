@@ -94,6 +94,7 @@ export class TagShowcaseScreen {
 
   _mapTagToUI(tag) {
     const dict = {
+      'GPA_Top':  { label: 'GPA 3.8 优秀', icon: 'graduation-cap', colorCls: 'tag-badge--blue', desc: 'GPA 达到 3.8，顶尖水平，G5 的敲门砖。' },
       'GPA_High': { label: '高 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--blue', desc: 'GPA 大于 3.3，极具竞争力。' },
       'GPA_Mid':  { label: '中等 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--gray', desc: 'GPA 在 2.8 - 3.3 之间，中规中矩。' },
       'GPA_Low':  { label: '低 GPA', icon: 'alert-triangle', colorCls: 'tag-badge--red', desc: 'GPA 低于 2.8，申请阻力很大。' },

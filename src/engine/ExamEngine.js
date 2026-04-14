@@ -26,7 +26,8 @@ export function resolveFinalExam(state) {
   const { gpa, tag } = calculateGPA(ability);
 
   // 移除旧 GPA 标签，添加新标签
-  ['GPA_Low', 'GPA_Mid', 'GPA_High'].forEach(t => StateManager.removeTag(t));
+  ['GPA_Low', 'GPA_Mid', 'GPA_High', 'GPA_Top'].forEach(t => StateManager.removeTag(t));
+
   StateManager.addTag(tag);
 
   // 记录 GPA
