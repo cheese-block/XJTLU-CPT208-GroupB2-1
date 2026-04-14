@@ -113,14 +113,23 @@ export function checkScheduledEvents(state) {
       return;
     }
 
-    // 【新增】：检查特殊事件的前置标签条件
+    // 【修复】：required_tags / forbidden_tags 必须读取最新的内存状态，
+    // 而不是 resolveMonthEnd 开头传入的旧快照。
+    // 因为玩家可能在本月的 VN 事件里刚刚获得了前置标签。
+    const freshState = StateManager.getState();
+
     if (eventData.required_tags && eventData.required_tags.length > 0) {
-      const hasAll = eventData.required_tags.every(tag => state.tags.includes(tag));
-      if (!hasAll) return; // 不满足条件则跳过，等待未来满足或直接作废
+      const hasAll = eventData.required_tags.every(tag =>
+        freshState.tags.includes(tag)
+      );
+      if (!hasAll) return;
     }
+
     if (eventData.forbidden_tags && eventData.forbidden_tags.length > 0) {
-      const hasForbidden = eventData.forbidden_tags.some(tag => state.tags.includes(tag));
-      if (hasForbidden) return; // 命中互斥标签则跳过
+      const hasForbidden = eventData.forbidden_tags.some(tag =>
+        freshState.tags.includes(tag)
+      );
+      if (hasForbidden) return;
     }
 
     StateManager.enqueueEventFront({ eventId, source: 'scheduled' });
@@ -165,7 +174,10 @@ export function dequeueNextEvent(state) {
   const eventData   = EVENTS[eventId];
 
   if (!eventData) {
-    log('warn', 'EventEngine', `事件数据不存在：${eventId}`);
+    // 【修复】：事件数据不存在时，必须把这条无效记录从队列里移除，
+    // 否则会导致队列永远卡在这条记录上，_playNextEvent 反复返回 null。
+    log('warn', 'EventEngine', `事件数据不存在，已从队列移除：${eventId}`);
+    StateManager.dequeueEvent();
     return null;
   }
 

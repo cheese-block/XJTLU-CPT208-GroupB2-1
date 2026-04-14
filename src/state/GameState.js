@@ -134,6 +134,9 @@ export function createInitialState() {
     Academic_Ability: CONSTANTS.ACADEMIC_ABILITY_INIT,
     English_Ability:  CONSTANTS.ENGLISH_ABILITY_INIT,
 
+    // ── 临时剧情数值（事件链专用，不显示在常驻 UI）──────────
+    Agency_Score: 0,  // 【新增】中介风云事件链的隐藏分数
+
     // ── 标签系统 ─────────────────────────────────────────────
     tags: [],
 

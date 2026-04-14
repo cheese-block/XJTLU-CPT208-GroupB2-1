@@ -465,6 +465,18 @@ export function startEvent(eventData) {
 }
 
 /**
+ * 将队首事件从 pendingEventQueue 中移除（无需启动事件时使用）。
+ * 用于清理数据不存在的无效事件记录，防止队列卡死。
+ */
+export function dequeueEvent() {
+  if (!_state || _state.pendingEventQueue.length === 0) return;
+  const removed = _state.pendingEventQueue.shift();
+  log('warn', 'StateManager', `已移除无效队首事件：${removed?.eventId}`);
+  _notifyChange();
+}
+
+
+/**
  * 清除当前事件（事件结束后调用）。
  */
 export function clearCurrentEvent() {
