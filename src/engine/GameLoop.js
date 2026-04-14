@@ -189,30 +189,26 @@ export function resolveMonthEnd(onMonthEnd) {
 function _resolveEndOfMonth(onMonthEnd) {
   const state = StateManager.getState();
 
-  // 期末考试结算
   let examResult = null;
   if (CONSTANTS.SEMESTER_END_MONTHS.includes(state.currentMonth)) {
     examResult = resolveFinalExam(state);
     log('info', 'GameLoop', `📝 期末结算：GPA ${examResult.gpa}`);
   }
 
-  // Buff 生命周期递减
   _tickBuffDurations();
-
-  // 状态 Debuff 检查（焦虑/生病）
   _checkStatusDebuffs();
 
-  // Bad Ending 检查
+  // ── 【修复点】：如果触发了 Bad End，直接 return 中断所有后续流程！ ──
   const badEnd = checkBadEndings();
-  if (badEnd) return;
+  if (badEnd) {
+    StateManager.saveGame(); // 保存一下死因
+    return; // 彻底中断，不要推进月份，也不要正常结算
+  }
 
-  // 推进月份
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
-
   StateManager.saveGame();
 
   if (isGameEnd) {
-    // 触发结局流程
     triggerEnding();
   } else {
     onMonthEnd?.({ newMonth, examResult });

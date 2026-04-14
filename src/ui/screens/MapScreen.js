@@ -22,6 +22,7 @@ import { ACTIONS }        from '../../data/actions.js';
 import { executeAction, resolveMonthEnd } from '../../engine/GameLoop.js';
 import { MapDebugTool }   from '../MapHotspot.js';
 import { log }            from '../../utils/helpers.js';
+import { showConfirm }    from '../components/ConfirmModal.js'; 
 
 export class MapScreen {
   constructor() {
@@ -298,24 +299,38 @@ export class MapScreen {
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-      log('info', 'MapScreen', '📅 玩家触发月末结算');
+      const state = StateManager.getState();
+      const apRemain = state.AP;
 
-      // 禁用按钮防止重复点击
-      btn.disabled = true;
-      btn.classList.add('opacity-50');
+      // 如果还有 AP 没用完，提示文案要更严厉一点
+      const message = apRemain > 0 
+        ? `本月还有 <span class="text-xjtlu-red font-black">${apRemain} 点 AP</span> 未使用，结束本月将会清零。<br><br>确定要进入下个月吗？`
+        : `确定要结束本月行程，进入下个月吗？`;
 
-      resolveMonthEnd(({ newMonth, examResult }) => {
-        // 将数据挂到 window 供 MonthSummaryScreen 读取
-        window._pendingMonthSummary = {
-          prevMonth:  newMonth - 1,
-          newMonth,
-          examResult,
-          state:      StateManager.getState(),
-          onConfirm:  () => {
-            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-          },
-        };
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MONTH_SUMMARY);
+      showConfirm({
+        title: '结束本月',
+        message: message,
+        confirmText: '进入下月',
+        cancelText: '再看看',
+        confirmVariant: 'primary',
+        onConfirm: () => {
+          log('info', 'MapScreen', '📅 玩家确认月末结算');
+          btn.disabled = true;
+          btn.classList.add('opacity-50');
+
+          resolveMonthEnd(({ newMonth, examResult }) => {
+            window._pendingMonthSummary = {
+              prevMonth:  newMonth - 1,
+              newMonth,
+              examResult,
+              state:      StateManager.getState(),
+              onConfirm:  () => {
+                StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+              },
+            };
+            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MONTH_SUMMARY);
+          });
+        }
       });
     });
   }
