@@ -134,7 +134,7 @@ export class VNScreen {
 
   _handleClick(e) {
     // 点击选项按钮不触发推进
-    if (e.target.closest('.vn-choice-btn')) return;
+    if (e.target.closest('.vn-choices')) return;
 
     // 若正在打印，跳过打印
     const consumed = this._dialogBox?.skipOrAdvance();
