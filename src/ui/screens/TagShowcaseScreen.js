@@ -24,8 +24,11 @@ export class TagShowcaseScreen {
     const tags = state.tags || [];
     const softScore = calculateSoftScore(tags);
     
-    // 过滤掉内部系统 Tag
-    const displayTags = tags.filter(t => !t.startsWith('__'));
+    // 过滤掉所有不应展示给玩家的内部临时标签
+    const HIDDEN_TAG_PREFIXES = ['__', 'Agency_'];
+    const displayTags = tags.filter(t =>
+      !HIDDEN_TAG_PREFIXES.some(prefix => t.startsWith(prefix))
+    );
     const mappedTags = displayTags.map(t => this._mapTagToUI(t));
 
     return `

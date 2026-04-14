@@ -183,52 +183,64 @@ export class VNScreen {
 
   _resolveChoice(choice) {
     const currentState = StateManager.getState();
-    const playerTags = currentState.tags || [];
+    const playerTags   = currentState.tags || [];
 
+    // 遍历 variants，找到第一个满足条件的
     let activeVariant = null;
     if (choice.flavor_text_variants && choice.flavor_text_variants.length > 0) {
       for (const variant of choice.flavor_text_variants) {
-        // 【新增】：支持对数值（如中介指数）的条件判定
+        // 条件一：标签检查
+        const tagPass = !variant.required_tag ||
+                        playerTags.includes(variant.required_tag);
+
+        // 条件二：数值范围检查（支持 required_stat: { stat, min, max }）
         let statPass = true;
         if (variant.required_stat) {
-          const val = currentState[variant.required_stat.stat] || 0;
-          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) statPass = false;
-          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) statPass = false;
+          const val = currentState[variant.required_stat.stat] ?? 0;
+          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) {
+            statPass = false;
+          }
+          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) {
+            statPass = false;
+          }
         }
-        // 标签判定
-        let tagPass = !variant.required_tag || playerTags.includes(variant.required_tag);
 
-        if (statPass && tagPass) {
+        if (tagPass && statPass) {
           activeVariant = variant;
           break;
         }
       }
     }
 
+    // 合并 effects 和 tags（基础 + variant 叠加）
     const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
-    const finalTags = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
-    
+    const finalTags    = [
+      ...(choice.tags_added || []),
+      ...(activeVariant?.tags_added || []),
+    ];
+
+    // 拼接最终展示文本
+    // 基础文本（可为空）+ variant 变色文本（可为空）
     let finalFlavorText = choice.flavor_text || '';
-    if (activeVariant && activeVariant.text) {
+    if (activeVariant?.text) {
       let colorClass = 'text-xjtlu-blue';
       if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
       if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
-      const variantHtml = `<br><br><span class="${colorClass} font-bold">${activeVariant.text}</span>`;
-      finalFlavorText += variantHtml;
+      const separator  = finalFlavorText ? '<br><br>' : '';
+      finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
     }
 
+    // 结算数值
     if (Object.keys(finalEffects).length > 0) {
-      const labels = this._buildEffectLabels(finalEffects);
-      StateManager.applyStatDelta(finalEffects, labels);
+      StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
     }
 
+    // 写入标签
     finalTags.forEach(tag => StateManager.addTag(tag));
 
+    // 链式事件入队
     if (choice.next_event_id) {
-      StateManager.enqueueEventFront({
-        eventId: choice.next_event_id,
-        source:  'chain',
-      });
+      StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
     }
 
     StateManager.saveGame();
@@ -237,7 +249,6 @@ export class VNScreen {
       this._updateBackground(choice.bg ?? null);
       this._sceneIndex     = this._sceneIndex + 1;
       this._waitingAdvance = true;
-
       this._dialogBox.show({
         text:         finalFlavorText,
         showHint:     true,
@@ -246,6 +257,8 @@ export class VNScreen {
         effectLabels: this._buildEffectLabels(finalEffects),
       });
     } else {
+      // 没有任何文本展示（既无 flavor_text 也无匹配的 variant）
+      // 直接推进到下一幕，不卡住
       this._playScene(this._sceneIndex + 1);
     }
   }
