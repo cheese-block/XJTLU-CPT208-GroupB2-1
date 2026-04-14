@@ -57,6 +57,7 @@ export const EVENTS = {
           {
             text:       '“确实该开始了，我这周末就去了解一下。”',
             effects:    { Agency_Score: +10 },
+            next_event_id: 'agency_investigation',
             tags_added: ['Agency_Start'],
             flavor_text: '你深吸了一口气，虽然专业课压力很大，但你清楚申研是一场持久战，早起的鸟儿才有虫吃。',
             tip:        '最佳时间：建议在申请季当年的春节后 (2-4月) 开始接触和筛选中介，为后续的背景提升留出充足时间。'
@@ -74,11 +75,9 @@ export const EVENTS = {
   },
 
   // ── 2. 尽职调查 (早鸟线 Month 4) ──
-  'agency_investigation_early': {
-    event_id:       'agency_investigation_early',
-    type:           'scheduled',
-    required_tags:  ['Agency_Start'],
-    forbidden_tags: ['DIY_Applicant'],
+  'agency_investigation': {
+    event_id:       'agency_investigation',
+    type:           'chain',
     title:          '中介风云：尽职调查',
     scenes: [
       {

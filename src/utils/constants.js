@@ -141,11 +141,7 @@ export const CONSTANTS = Object.freeze({
   //   月末结算前按优先级注入 pendingEventQueue
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
-    { month: 3,  eventId: 'agency_part1'                },
-    // 同月多事件时，后注册的先触发（enqueueEventFront 插队头部）
-    // 所以 agency_investigation_early 先注册 = 后触发（在期末后）
-    // sem1_final_exam 后注册 = 先触发
-    { month: 4,  eventId: 'agency_investigation_early'  },
+    { month: 3,  eventId: 'agency_part1'               },
     { month: 4,  eventId: 'sem1_final_exam'             },
     { month: 7,  eventId: 'agency_investigation_late'   },
     { month: 9,  eventId: 'sem2_final_exam'             },
