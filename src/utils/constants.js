@@ -141,14 +141,15 @@ export const CONSTANTS = Object.freeze({
   //   月末结算前按优先级注入 pendingEventQueue
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
+    { month: 3,  eventId: 'agency_part1'                }, // 中介风云：起心动念
+    { month: 4,  eventId: 'agency_investigation_early'  }, // 尽职调查 (早鸟线)
     { month: 4,  eventId: 'sem1_final_exam'             },
-    { month: 6,  eventId: 'agency_part1'                }, // 中介风云 第一部 (起心动念)
-    { month: 7,  eventId: 'agency_part2'                }, // 中介风云 第二部 (质询试探)
-    { month: 8,  eventId: 'agency_part3'                }, // 中介风云 第三部 (合同终局)
+    { month: 7,  eventId: 'agency_investigation_late'   }, // 尽职调查 (拖延线)
     { month: 9,  eventId: 'sem2_final_exam'             },
     { month: 10, eventId: 'summer_internship_decision'  },
     { month: 12, eventId: 'final_application'           },
   ]),
+
 
   // ─────────────────────────────────────────────────────────
   // 【学期末月份（触发 resolveFinalExam）】

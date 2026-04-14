@@ -188,7 +188,17 @@ export class VNScreen {
     let activeVariant = null;
     if (choice.flavor_text_variants && choice.flavor_text_variants.length > 0) {
       for (const variant of choice.flavor_text_variants) {
-        if (!variant.required_tag || playerTags.includes(variant.required_tag)) {
+        // 【新增】：支持对数值（如中介指数）的条件判定
+        let statPass = true;
+        if (variant.required_stat) {
+          const val = currentState[variant.required_stat.stat] || 0;
+          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) statPass = false;
+          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) statPass = false;
+        }
+        // 标签判定
+        let tagPass = !variant.required_tag || playerTags.includes(variant.required_tag);
+
+        if (statPass && tagPass) {
           activeVariant = variant;
           break;
         }
@@ -198,15 +208,11 @@ export class VNScreen {
     const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
     const finalTags = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
     
-    // 【核心修改点】：拼接基础文本与变色条件文本
-    let finalFlavorText = choice.flavor_text || ''; // 基础文本
+    let finalFlavorText = choice.flavor_text || '';
     if (activeVariant && activeVariant.text) {
-      // 根据 type 决定颜色
-      let colorClass = 'text-xjtlu-blue'; // 默认 neutral
+      let colorClass = 'text-xjtlu-blue';
       if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
       if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
-      
-      // 拼接：基础文本 + 换行 + 变色文本
       const variantHtml = `<br><br><span class="${colorClass} font-bold">${activeVariant.text}</span>`;
       finalFlavorText += variantHtml;
     }
@@ -232,9 +238,6 @@ export class VNScreen {
       this._sceneIndex     = this._sceneIndex + 1;
       this._waitingAdvance = true;
 
-      // 注意：由于我们拼接了 HTML 标签 (<br>, <span>)，
-      // DialogBox 的打字机效果需要能兼容 HTML。
-      // 如果 DialogBox 的 _typeText 用的是 textContent，这里需要改成 innerHTML。
       this._dialogBox.show({
         text:         finalFlavorText,
         showHint:     true,
@@ -246,6 +249,7 @@ export class VNScreen {
       this._playScene(this._sceneIndex + 1);
     }
   }
+
 
   // ───────────────────────────────────────────────────────────
   // 【新增】：多选结算逻辑
@@ -345,6 +349,7 @@ export class VNScreen {
       Academic_Ability: '学力',
       English_Ability:  '英语能力',
       AP:               '行动点',
+      Agency_Score:     '中介指数', // 【新增】飘字翻译
     };
     const result = {};
     Object.keys(effects ?? {}).forEach(key => {
@@ -352,6 +357,7 @@ export class VNScreen {
     });
     return result;
   }
+
 
   // ───────────────────────────────────────────────────────────
   // HTML
