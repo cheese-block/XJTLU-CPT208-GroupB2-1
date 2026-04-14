@@ -142,7 +142,9 @@ export const CONSTANTS = Object.freeze({
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
     { month: 4,  eventId: 'sem1_final_exam'             },
-    { month: 6,  eventId: 'agency_selection'            },
+    { month: 6,  eventId: 'agency_part1'                }, // 中介风云 第一部 (起心动念)
+    { month: 7,  eventId: 'agency_part2'                }, // 中介风云 第二部 (质询试探)
+    { month: 8,  eventId: 'agency_part3'                }, // 中介风云 第三部 (合同终局)
     { month: 9,  eventId: 'sem2_final_exam'             },
     { month: 10, eventId: 'summer_internship_decision'  },
     { month: 12, eventId: 'final_application'           },

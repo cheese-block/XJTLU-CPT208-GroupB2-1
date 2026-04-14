@@ -20,6 +20,10 @@ export class VNScreen {
     this._onEventEnd     = null;
     this._bound_onClick  = null;
     this._waitingAdvance = false;
+    
+    // 【新增】：多选队列状态
+    this._multiChoiceQueue  = [];
+    this._isMultiChoiceText = false;
   }
 
   // ───────────────────────────────────────────────────────────
@@ -47,14 +51,16 @@ export class VNScreen {
     this._container?.removeEventListener('click', this._bound_onClick);
     this._dialogBox?.unmount();
     this._choicePanel?.unmount();
-
     this._container      = null;
     this._dialogBox      = null;
     this._choicePanel    = null;
     this._event          = null;
     this._onEventEnd     = null;
     this._waitingAdvance = false;
-
+    
+    // 【新增】：清理多选队列状态
+    this._multiChoiceQueue  = [];
+    this._isMultiChoiceText = false;
     log('info', 'VNScreen', '已卸载');
   }
 
@@ -138,16 +144,25 @@ export class VNScreen {
     const choiceLayer = this._container?.querySelector('#vn-choice-layer');
     if (choiceLayer && !choiceLayer.classList.contains('hidden')) return;
 
+    // 【新增】：处理多选队列的连续点击推进
+    if (this._isMultiChoiceText) {
+      if (this._multiChoiceQueue.length > 0) {
+        this._showNextMultiChoiceItem();
+      } else {
+        this._isMultiChoiceText = false;
+        this._playScene(this._sceneIndex); // 队列播完，进入下一幕
+      }
+      return;
+    }
+
     if (this._waitingAdvance) {
       // flavor_text 已显示完，推进到预设好的下一 scene
-      log('debug', 'VNScreen',
-        `waitingAdvance 模式，推进到 scene ${this._sceneIndex}`);
+      log('debug', 'VNScreen', `waitingAdvance 模式，推进到 scene ${this._sceneIndex}`);
       this._waitingAdvance = false;
       this._playScene(this._sceneIndex);
     } else {
       // 普通旁白推进
-      log('debug', 'VNScreen',
-        `普通推进，推进到 scene ${this._sceneIndex + 1}`);
+      log('debug', 'VNScreen', `普通推进，推进到 scene ${this._sceneIndex + 1}`);
       this._playScene(this._sceneIndex + 1);
     }
   }
@@ -231,6 +246,61 @@ export class VNScreen {
       this._playScene(this._sceneIndex + 1);
     }
   }
+
+  // ───────────────────────────────────────────────────────────
+  // 【新增】：多选结算逻辑
+  // ───────────────────────────────────────────────────────────
+  _resolveMultipleChoices(choices, selectedIndices) {
+    if (!selectedIndices || selectedIndices.length === 0) {
+      // 如果玩家什么都没选直接提交，直接进入下一幕
+      this._playScene(this._sceneIndex + 1);
+      return;
+    }
+
+    const selectedChoices = selectedIndices.map(i => choices[i]);
+
+    // 将选中的选项转化为队列
+    this._multiChoiceQueue = selectedChoices.map(choice => ({
+      text:          choice.flavor_text || '...',
+      tip:           choice.tip || '',
+      effects:       choice.effects || {},
+      tags:          choice.tags_added || [],
+      next_event_id: choice.next_event_id
+    }));
+
+    this._sceneIndex = this._sceneIndex + 1; // 预设好队列播放完毕后的下一幕
+    this._isMultiChoiceText = true;
+    this._showNextMultiChoiceItem();
+  }
+
+  _showNextMultiChoiceItem() {
+    const item = this._multiChoiceQueue.shift();
+
+    // 1. 结算当前选项的数值与标签（触发单次飘字）
+    if (Object.keys(item.effects).length > 0) {
+      const labels = this._buildEffectLabels(item.effects);
+      StateManager.applyStatDelta(item.effects, labels);
+    }
+    item.tags.forEach(tag => StateManager.addTag(tag));
+    
+    if (item.next_event_id) {
+      StateManager.enqueueEventFront({
+        eventId: item.next_event_id,
+        source:  'chain',
+      });
+    }
+    StateManager.saveGame();
+
+    // 2. 展示当前选项的反馈文本与知识点
+    this._dialogBox.show({
+      text:         item.text,
+      tip:          item.tip,
+      showHint:     true,
+      effects:      item.effects,
+      effectLabels: this._buildEffectLabels(item.effects),
+    });
+  }
+
 
   // ───────────────────────────────────────────────────────────
   // 事件结束
