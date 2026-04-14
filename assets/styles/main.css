@@ -14,6 +14,12 @@
   box-sizing: border-box;
 }
 
+html {
+  /* 【新增】：全局等比例放大 15% (16px -> 18.4px) */
+  /* 所有使用 rem 的字体、内边距、卡片宽度都会跟着完美放大，杜绝溢出 */
+  font-size: 115%; 
+}
+
 html, body, #app {
   width: 100%;
   height: 100%;

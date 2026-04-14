@@ -164,7 +164,7 @@ function _switchToPhase(phase) {
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
     ].includes(phase);
-    container.style.paddingTop = needsPadding ? 'var(--status-bar-height, 56px)' : '';
+    container.style.paddingTop = needsPadding ? 'var(--status-bar-height, 3.5rem)' : '';
   }
 
   nextScreen.mount(container, getState());
