@@ -414,26 +414,13 @@ export class VNScreen {
 
   _getMascotSVG() {
     return `
-      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"
-           style="width:180px;height:180px;opacity:0.25;">
-        <ellipse cx="60" cy="78" rx="30" ry="28"
-          fill="#F0F4FF" stroke="#ffffff" stroke-width="3.5"/>
-        <circle cx="60" cy="38" r="20"
-          fill="#F0F4FF" stroke="#ffffff" stroke-width="3.5"/>
-        <rect x="50" y="54" width="20" height="8" fill="#F0F4FF"/>
-        <path d="M72 38 L84 35 L72 42 Z"
-          fill="#FFC200" stroke="#ffffff" stroke-width="2"/>
-        <circle cx="53" cy="36" r="2.5" fill="#003366"/>
-        <circle cx="67" cy="36" r="2.5" fill="#003366"/>
-        <path d="M49 30 Q53 32 57 30" stroke="#ffffff" stroke-width="2.5"
-          fill="none" stroke-linecap="round"/>
-        <path d="M63 30 Q67 32 71 30" stroke="#ffffff" stroke-width="2.5"
-          fill="none" stroke-linecap="round"/>
-        <path d="M30 75 Q20 68 24 58 Q32 65 40 72"
-          fill="#E8EFFF" stroke="#ffffff" stroke-width="3"/>
-        <path d="M90 75 Q100 68 96 58 Q88 65 80 72"
-          fill="#E8EFFF" stroke="#ffffff" stroke-width="3"/>
-      </svg>
+      <img
+        src="assets/images/logo.png"
+        alt=""
+        aria-hidden="true"
+        style="width:220px; height:220px; object-fit:contain; opacity:0.15;"
+        draggable="false"
+      />
     `;
   }
 }

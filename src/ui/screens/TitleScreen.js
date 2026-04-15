@@ -255,44 +255,17 @@ export class TitleScreen {
   }
 
   /**
-   * 吉祥物 SVG（与 main.js 中相同，后续统一从 assets 加载）。
+   * 吉祥物图片
    * @returns {string}
    */
   _getMascotSVG() {
     return `
-      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"
-        role="img" aria-label="疲惫白鹅吉祥物"
-        style="width:100%;height:100%;">
-        <ellipse cx="60" cy="78" rx="30" ry="28"
-          fill="#F0F4FF" stroke="#003366" stroke-width="3.5" stroke-linecap="round"/>
-        <circle cx="60" cy="38" r="20"
-          fill="#F0F4FF" stroke="#003366" stroke-width="3.5"/>
-        <rect x="50" y="54" width="20" height="8" fill="#F0F4FF" stroke="none"/>
-        <path d="M72 38 L84 35 L72 42 Z"
-          fill="#FFC200" stroke="#003366" stroke-width="2" stroke-linejoin="round"/>
-        <ellipse cx="53" cy="36" rx="5" ry="3.5" fill="#003366" opacity="0.18"/>
-        <ellipse cx="67" cy="36" rx="5" ry="3.5" fill="#003366" opacity="0.18"/>
-        <circle cx="53" cy="36" r="2.5" fill="#003366"/>
-        <circle cx="54" cy="35" r="0.8" fill="white"/>
-        <circle cx="67" cy="36" r="2.5" fill="#003366"/>
-        <circle cx="68" cy="35" r="0.8" fill="white"/>
-        <path d="M49 30 Q53 32 57 30" stroke="#003366" stroke-width="2.5"
-          fill="none" stroke-linecap="round"/>
-        <path d="M63 30 Q67 32 71 30" stroke="#003366" stroke-width="2.5"
-          fill="none" stroke-linecap="round"/>
-        <path d="M42 65 Q60 60 78 65" stroke="#004B9B" stroke-width="3"
-          fill="none" stroke-linecap="round"/>
-        <path d="M30 75 Q20 68 24 58 Q32 65 40 72"
-          fill="#E8EFFF" stroke="#003366" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M90 75 Q100 68 96 58 Q88 65 80 72"
-          fill="#E8EFFF" stroke="#003366" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M50 104 L46 112 M46 112 L42 115 M46 112 L50 115"
-          stroke="#FFC200" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M70 104 L74 112 M74 112 L70 115 M74 112 L78 115"
-          stroke="#FFC200" stroke-width="3" fill="none" stroke-linecap="round"/>
-      </svg>
+      <img
+        src="assets/images/logo.png"
+        alt="西浦申研模拟器吉祥物"
+        style="width:100%; height:100%; object-fit:contain;"
+        draggable="false"
+      />
     `;
   }
 
