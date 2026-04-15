@@ -34,15 +34,14 @@ export class StatusBar {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
-  /**
+/**
    * 根据最新 state 更新所有数值显示。
    * 仅更新数字/宽度，不重建 DOM（避免闪烁）。
    * @param {import('../../state/GameState.js').GameState} state
    */
-  render(state) {
+    render(state) {
     if (!this._container) return;
 
-    this._updateMonth(state);
     this._updateAP(state);
     this._updateHealthBar('mental',   state.Mental_Health,   CONSTANTS.MENTAL_HEALTH_WARN);
     this._updateHealthBar('physical', state.Physical_Health, CONSTANTS.PHYSICAL_HEALTH_WARN);
@@ -52,122 +51,95 @@ export class StatusBar {
     this._updateBuffs(state);
   }
 
-  // ───────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────
   // HTML 骨架构建（仅调用一次）
   // ───────────────────────────────────────────────────────────
 
   _buildHTML() {
     return `
-      <div class="status-bar w-full flex items-center gap-3 px-4 py-2
+      <div class="status-bar w-full flex items-center gap-5 px-6 py-3
                   border-b-2 border-xjtlu-navy bg-white
-                  text-xs select-none overflow-x-auto">
+                  select-none overflow-x-auto">
 
-        <!-- ① 月份 / 学期 -->
-        <div class="stat-item shrink-0 flex flex-col gap-0.5 min-w-[72px]">
-          <span class="stat-item__label flex items-center gap-1">
-            <i data-lucide="calendar" class="lucide w-3 h-3"></i>
-            进度
-          </span>
-          <span id="sb-month"
-                class="stat-item__value text-xjtlu-navy font-black text-xs leading-tight">
-            —
-          </span>
-        </div>
-
-        <div class="w-px h-8 bg-gray-200 shrink-0"></div>
-
-        <!-- ② AP 行动点 -->
-        <div class="stat-item shrink-0 flex flex-col gap-1 min-w-[80px]">
-          <span class="stat-item__label flex items-center gap-1">
-            <i data-lucide="zap" class="lucide w-3 h-3"></i>
+        <!-- ① AP 行动点 -->
+        <div class="stat-item shrink-0 flex flex-col gap-1 min-w-[90px]">
+          <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+            <i data-lucide="zap" class="lucide w-4 h-4"></i>
             行动点
           </span>
-          <div id="sb-ap-pips" class="ap-pip-group"></div>
+          <div id="sb-ap-pips" class="ap-pip-group mt-0.5"></div>
         </div>
 
-        <div class="w-px h-8 bg-gray-200 shrink-0"></div>
+        <div class="w-px h-10 bg-gray-200 shrink-0"></div>
 
-        <!-- ③ 心理健康 -->
-        <div class="stat-item flex-1 flex flex-col gap-1 min-w-[80px]">
+        <!-- ② 心理健康 -->
+        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[90px]">
           <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1">
-              <i data-lucide="heart" class="lucide w-3 h-3"></i>
+            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+              <i data-lucide="heart" class="lucide w-4 h-4"></i>
               心理
             </span>
-            <span id="sb-mental-val"
-                  class="stat-item__value text-[0.65rem]">80</span>
+            <span id="sb-mental-val" class="stat-item__value" style="font-size: 1.1rem;">80</span>
           </div>
           <div class="health-bar">
-            <div id="sb-mental-fill"
-                 class="health-bar__fill health-bar__fill--mental"
-                 style="width: 80%"></div>
+            <div id="sb-mental-fill" class="health-bar__fill health-bar__fill--mental" style="width: 80%"></div>
           </div>
         </div>
 
-        <!-- ④ 身体健康 -->
-        <div class="stat-item flex-1 flex flex-col gap-1 min-w-[80px]">
+        <!-- ③ 身体健康 -->
+        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[90px]">
           <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1">
-              <i data-lucide="activity" class="lucide w-3 h-3"></i>
+            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+              <i data-lucide="activity" class="lucide w-4 h-4"></i>
               身体
             </span>
-            <span id="sb-physical-val"
-                  class="stat-item__value text-[0.65rem]">80</span>
+            <span id="sb-physical-val" class="stat-item__value" style="font-size: 1.1rem;">80</span>
           </div>
           <div class="health-bar">
-            <div id="sb-physical-fill"
-                 class="health-bar__fill health-bar__fill--physical"
-                 style="width: 80%"></div>
+            <div id="sb-physical-fill" class="health-bar__fill health-bar__fill--physical" style="width: 80%"></div>
           </div>
         </div>
 
-        <div class="w-px h-8 bg-gray-200 shrink-0"></div>
+        <div class="w-px h-10 bg-gray-200 shrink-0"></div>
 
-        <!-- ⑤ 金钱 -->
-        <div class="stat-item shrink-0 flex flex-col gap-0.5 min-w-[88px]">
-          <span class="stat-item__label flex items-center gap-1">
-            <i data-lucide="banknote" class="lucide w-3 h-3"></i>
+        <!-- ④ 金钱 -->
+        <div class="stat-item shrink-0 flex flex-col gap-1 min-w-[100px]">
+          <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+            <i data-lucide="banknote" class="lucide w-4 h-4"></i>
             资金
           </span>
-          <span id="sb-money"
-                class="stat-item__value font-black text-xs text-xjtlu-navy">
+          <span id="sb-money" class="stat-item__value font-black text-xjtlu-navy mt-0.5" style="font-size: 1.2rem; text-align: left;">
             ¥50,000
           </span>
         </div>
 
-        <div class="w-px h-8 bg-gray-200 shrink-0"></div>
+        <div class="w-px h-10 bg-gray-200 shrink-0"></div>
 
-        <!-- ⑥ 学力 -->
-        <div class="stat-item flex-1 flex flex-col gap-1 min-w-[72px]">
+        <!-- ⑤ 学力 -->
+        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
           <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1">
-              <i data-lucide="book-open" class="lucide w-3 h-3"></i>
+            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+              <i data-lucide="book-open" class="lucide w-4 h-4"></i>
               学力
             </span>
-            <span id="sb-academic-val"
-                  class="stat-item__value text-[0.65rem]">0</span>
+            <span id="sb-academic-val" class="stat-item__value" style="font-size: 1.1rem;">0</span>
           </div>
           <div class="health-bar">
-            <div id="sb-academic-fill"
-                 class="health-bar__fill"
-                 style="width: 0%; background-color: #004B9B;"></div>
+            <div id="sb-academic-fill" class="health-bar__fill" style="width: 0%; background-color: #004B9B;"></div>
           </div>
         </div>
 
-        <!-- ⑦ 英语能力 -->
-        <div class="stat-item flex-1 flex flex-col gap-1 min-w-[72px]">
+        <!-- ⑥ 英语能力 -->
+        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
           <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1">
-              <i data-lucide="languages" class="lucide w-3 h-3"></i>
+            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+              <i data-lucide="languages" class="lucide w-4 h-4"></i>
               英语
             </span>
-            <span id="sb-english-val"
-                  class="stat-item__value text-[0.65rem]">40</span>
+            <span id="sb-english-val" class="stat-item__value" style="font-size: 1.1rem;">40</span>
           </div>
           <div class="health-bar">
-            <div id="sb-english-fill"
-                 class="health-bar__fill"
-                 style="width: 40%; background-color: #7C3AED;"></div>
+            <div id="sb-english-fill" class="health-bar__fill" style="width: 40%; background-color: #7C3AED;"></div>
           </div>
         </div>
 
@@ -179,27 +151,20 @@ export class StatusBar {
   // 局部更新方法
   // ───────────────────────────────────────────────────────────
 
-  /** 更新月份/学期文字 */
-  _updateMonth(state) {
-    const el = this._container?.querySelector('#sb-month');
-    if (!el) return;
-    const monthLabel = CONSTANTS.MONTH_TO_REALWORLD[state.currentMonth] ?? `Month ${state.currentMonth}`;
-    el.textContent = monthLabel;
-  }
-
-  /** 更新 AP 点数方块 */
+/** 更新 AP 点数方块 */
   _updateAP(state) {
     const pips = this._container?.querySelector('#sb-ap-pips');
     if (!pips) return;
 
     const max   = CONSTANTS.AP_MAX_PER_MONTH;
-    const used  = state.AP_used_this_month;
     const remaining = state.AP;
 
     // 重建方块（数量固定为 max，性能可接受）
     pips.innerHTML = Array.from({ length: max }, (_, i) => {
       const filled = i < remaining;
+      // 增加内联样式放大方块尺寸与边框粗细
       return `<div class="ap-pip ${filled ? 'ap-pip--filled' : 'ap-pip--empty'}"
+                   style="width: 14px; height: 14px; border-width: 3px;"
                    title="${filled ? '可用' : '已用'}"></div>`;
     }).join('');
   }

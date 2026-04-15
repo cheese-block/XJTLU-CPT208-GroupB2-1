@@ -164,7 +164,8 @@ function _switchToPhase(phase) {
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
     ].includes(phase);
-    container.style.paddingTop = needsPadding ? 'var(--status-bar-height, 3.5rem)' : '';
+    // 【修改】：将补偿高度从 3.5rem 增加到 4.5rem，以适应变高的状态栏
+    container.style.paddingTop = needsPadding ? '4.5rem' : '';
   }
 
   nextScreen.mount(container, getState());
