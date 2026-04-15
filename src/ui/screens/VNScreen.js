@@ -186,13 +186,15 @@ export class VNScreen {
   // ───────────────────────────────────────────────────────────
 
   _showChoices(choices, isMultiple, playerTags) {
+    // 【修改】：获取完整 state 传递给 ChoicePanel
+    const state = StateManager.getState();
     this._choicePanel.show(choices, (result) => {
       if (Array.isArray(result)) {
         this._resolveMultipleChoices(choices, result);
       } else {
         this._resolveChoice(choices[result]);
       }
-    }, isMultiple, playerTags); // 【修改点】：传入 playerTags
+    }, isMultiple, state); 
   }
 
   _resolveChoice(choice) {

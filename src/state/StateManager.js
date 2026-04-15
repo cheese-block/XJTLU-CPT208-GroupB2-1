@@ -58,7 +58,7 @@ const STAT_BOUNDS = Object.freeze({
   Physical_Health:  { min: CONSTANTS.PHYSICAL_HEALTH_MIN,  max: CONSTANTS.PHYSICAL_HEALTH_MAX  },
   Academic_Ability: { min: CONSTANTS.ACADEMIC_ABILITY_MIN, max: CONSTANTS.ACADEMIC_ABILITY_MAX },
   English_Ability:  { min: CONSTANTS.ENGLISH_ABILITY_MIN,  max: CONSTANTS.ENGLISH_ABILITY_MAX  },
-  // Money 允许为负（超额负债），不做 clamp，但低于 0 时 UI 会警告
+  Money:            { min: CONSTANTS.MONEY_MIN,            max: CONSTANTS.MONEY_MAX            }, // 【新增】将资金限制在 0-100
 });
 
 // ─────────────────────────────────────────────────────────────

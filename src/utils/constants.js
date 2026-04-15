@@ -35,10 +35,12 @@ export const CONSTANTS = Object.freeze({
   PHYSICAL_BAD_ENDING_ID: 'bad_end_hospitalized',
 
   // ─────────────────────────────────────────────────────────
-  // 【金钱】
+  // 【资金/社交 (Lifestyle)】(统一为 0-100 进度条)
   // ─────────────────────────────────────────────────────────
-  MONEY_INIT:           50000,
-  MONEY_WARN_THRESHOLD:  5000,   // 低于此值 → 金钱警告 UI
+  MONEY_INIT:           50,
+  MONEY_MAX:           100,
+  MONEY_MIN:             0,
+  MONEY_WARN_THRESHOLD: 20,   // 低于此值 → 资金警告
 
   // ─────────────────────────────────────────────────────────
   // 【英语能力】

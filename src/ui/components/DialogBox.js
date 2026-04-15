@@ -74,24 +74,40 @@ export class DialogBox {
       if (tip && typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    // 数值得失
+    // 数值得失（选择后显示）
     if (effectsEl) {
       if (effects && Object.keys(effects).length > 0) {
+        // 假设传入了 hasExactBuff 标志（需要在 VNScreen 中传入，此处简化为直接判断）
+        const hasExactBuff = options.hasExactBuff || false;
+
         effectsEl.innerHTML = Object.entries(effects)
           .filter(([, delta]) => delta !== 0)
           .map(([stat, delta]) => {
             const label    = effectLabels[stat] ?? stat;
             const isPos    = delta > 0;
-            const sign     = isPos ? '+' : '';
-            const colorCls = isPos ? 'text-xjtlu-green' : 'text-xjtlu-red';
-            const bgCls    = isPos ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
-            return `
-              <span class="inline-flex items-center gap-1
-                           px-2 py-0.5 rounded-full border text-xs font-black
-                           ${colorCls} ${bgCls}">
-                ${sign}${delta} ${label}
-              </span>
-            `;
+            const isLarge  = Math.abs(delta) >= 15;
+            
+            if (hasExactBuff) {
+              // 透视模式：显示具体数字
+              const sign     = isPos ? '+' : '';
+              const colorCls = isPos ? 'text-xjtlu-green' : 'text-xjtlu-red';
+              const bgCls    = isPos ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+              return `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-black ${colorCls} ${bgCls}">
+                  ${sign}${delta} ${label}
+                </span>
+              `;
+            } else {
+              // 模糊模式：文字描述
+              const colorCls = isPos ? 'text-xjtlu-green' : 'text-xjtlu-red';
+              const bgCls    = isPos ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100';
+              const desc     = `${isLarge ? '大幅' : '小幅'}${isPos ? '提升' : '下降'}`;
+              return `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-bold ${colorCls} ${bgCls}">
+                  ${label} ${desc}
+                </span>
+              `;
+            }
           }).join('');
         effectsEl.classList.remove('hidden');
       } else {

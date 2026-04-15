@@ -28,44 +28,60 @@ export class ChoicePanel {
    * @param {object[]} choices    事件 choices 数组
    * @param {function} onChoose   选择回调
    * @param {boolean}  isMultiple 是否为多选模式
-   * @param {string[]} playerTags 玩家当前持有的标签数组（用于判断解锁）
+   * @param {object}   state      玩家当前状态（用于判断 Buff）
    */
-  show(choices, onChoose, isMultiple = false, playerTags = []) {
+  show(choices, onChoose, isMultiple = false, state = {}) {
     if (!this._container) return;
     this._onChoose = onChoose;
 
+    // 判断是否拥有“透视” Buff（能看到具体数值）
+    // 假设 Buff ID 为 'insight_buff'
+    const hasExactBuff = state.activeBuff?.some(b => b.buffId === 'insight_buff');
+    const playerTags = state.tags || [];
+
     if (isMultiple) {
-      this._renderMultiple(choices, playerTags);
+      this._renderMultiple(choices, playerTags, hasExactBuff);
     } else {
-      this._renderSingle(choices, playerTags);
+      this._renderSingle(choices, playerTags, hasExactBuff);
     }
 
     this._container.classList.remove('hidden');
     this._container.style.pointerEvents = 'auto';
   }
 
-  _renderSingle(choices, playerTags) {
+  _renderSingle(choices, playerTags, hasExactBuff) {
     this._container.innerHTML = `
       <div class="vn-choices">
         ${choices.map((choice, i) => {
-          // 检查是否满足解锁条件
           const isLocked = choice.required_tag && !playerTags.includes(choice.required_tag);
           const btnClass = isLocked 
             ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-80' 
             : 'bg-white/95 border-xjtlu-blue text-xjtlu-navy hover:bg-xjtlu-blue hover:text-white cursor-pointer shadow-lg hover:-translate-y-1';
           
+          // 生成王权式指示器
+          const indicatorsHTML = this._buildIndicators(choice.effects, hasExactBuff);
+
           return `
-            <button class="w-full text-left px-6 py-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between ${btnClass}" 
+            <button class="w-full text-left px-6 py-4 rounded-xl border-2 transition-all duration-200 flex flex-col gap-2 ${btnClass}" 
                     data-index="${i}" 
                     ${isLocked ? 'disabled' : ''}>
-              <div class="flex items-center gap-3">
-                <span class="${isLocked ? 'text-gray-400' : 'text-xjtlu-blue'} font-black text-lg">${String.fromCharCode(65 + i)}.</span>
-                <span class="text-sm font-bold leading-relaxed">${choice.text}</span>
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center gap-3">
+                  <span class="${isLocked ? 'text-gray-400' : 'text-xjtlu-blue'} font-black text-lg">${String.fromCharCode(65 + i)}.</span>
+                  <span class="text-sm font-bold leading-relaxed">${choice.text}</span>
+                </div>
+                ${isLocked ? `
+                  <div class="flex items-center gap-1.5 text-xs font-bold text-xjtlu-red bg-red-50 px-2 py-1 rounded-md border border-red-100 shrink-0">
+                    <i data-lucide="lock" class="lucide w-3 h-3"></i>
+                    需要 [${choice.required_tag}]
+                  </div>
+                ` : ''}
               </div>
-              ${isLocked ? `
-                <div class="flex items-center gap-1.5 text-xs font-bold text-xjtlu-red bg-red-50 px-2 py-1 rounded-md border border-red-100 shrink-0">
-                  <i data-lucide="lock" class="lucide w-3 h-3"></i>
-                  需要 [${choice.required_tag}]
+              
+              <!-- 属性影响指示器 -->
+              ${indicatorsHTML ? `
+                <div class="flex items-center gap-4 mt-1 pl-7 opacity-80">
+                  ${indicatorsHTML}
                 </div>
               ` : ''}
             </button>
@@ -81,6 +97,61 @@ export class ChoicePanel {
         this._onChoose?.(index);
       });
     });
+  }
+
+  /**
+   * 生成《王权》风格的属性指示器
+   */
+  _buildIndicators(effects, hasExactBuff) {
+    if (!effects || Object.keys(effects).length === 0) return '';
+
+    const iconMap = {
+      Mental_Health:    'heart',
+      Physical_Health:  'activity',
+      Money:            'banknote',
+      Academic_Ability: 'book-open',
+      English_Ability:  'languages',
+    };
+
+    const labelMap = {
+      Mental_Health:    '心理',
+      Physical_Health:  '身体',
+      Money:            '资金',
+      Academic_Ability: '学力',
+      English_Ability:  '英语',
+    };
+
+    return Object.entries(effects).map(([stat, delta]) => {
+      if (delta === 0) return '';
+      
+      const icon = iconMap[stat] || 'circle';
+      const isPositive = delta > 0;
+      
+      // 如果有透视 Buff，直接显示具体数字
+      if (hasExactBuff) {
+        const colorCls = isPositive ? 'text-xjtlu-green' : 'text-xjtlu-red';
+        return `
+          <div class="flex items-center gap-1 text-xs font-black ${colorCls}">
+            <i data-lucide="${icon}" class="lucide w-3.5 h-3.5"></i>
+            ${isPositive ? '+' : ''}${delta} ${labelMap[stat]}
+          </div>
+        `;
+      }
+
+      // 否则显示王权式大小球
+      // 设定阈值：绝对值 >= 15 视为大改变
+      const isLarge = Math.abs(delta) >= 15;
+      const dotSize = isLarge ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5';
+      const dotColor = isPositive ? 'bg-xjtlu-green' : 'bg-xjtlu-red';
+      const tooltip = `${labelMap[stat]}将发生${isLarge ? '大幅' : '小幅'}${isPositive ? '提升' : '下降'}`;
+
+      return `
+        <div class="flex flex-col items-center gap-1" title="${tooltip}">
+          <div class="${dotSize} rounded-full ${dotColor} shadow-sm"></div>
+          <i data-lucide="${icon}" class="lucide w-4 h-4 text-gray-500"></i>
+        </div>
+      `;
+    }).join('');
   }
 
   _renderMultiple(choices, playerTags) {

@@ -72,84 +72,66 @@ export class StatusBar {
 
         <div class="w-px h-10 bg-gray-200 shrink-0"></div>
 
-        <!-- ② 心理健康 -->
-        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[90px]">
-          <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
-              <i data-lucide="heart" class="lucide w-4 h-4"></i>
-              心理
-            </span>
-            <span id="sb-mental-val" class="stat-item__value" style="font-size: 1.1rem;">80</span>
-          </div>
-          <div class="health-bar">
-            <div id="sb-mental-fill" class="health-bar__fill health-bar__fill--mental" style="width: 80%"></div>
-          </div>
-        </div>
-
-        <!-- ③ 身体健康 -->
-        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[90px]">
-          <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
-              <i data-lucide="activity" class="lucide w-4 h-4"></i>
-              身体
-            </span>
-            <span id="sb-physical-val" class="stat-item__value" style="font-size: 1.1rem;">80</span>
-          </div>
-          <div class="health-bar">
-            <div id="sb-physical-fill" class="health-bar__fill health-bar__fill--physical" style="width: 80%"></div>
-          </div>
-        </div>
-
+        <!-- 统一的 0-100 状态条组 -->
+        ${this._buildBarHTML('mental', 'heart', '心理', 'bg-xjtlu-blue')}
+        ${this._buildBarHTML('physical', 'activity', '身体', 'bg-xjtlu-green')}
+        ${this._buildBarHTML('money', 'banknote', '资金', 'bg-amber-500')}
+        
         <div class="w-px h-10 bg-gray-200 shrink-0"></div>
-
-        <!-- ④ 金钱 -->
-        <div class="stat-item shrink-0 flex flex-col gap-1 min-w-[100px]">
-          <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
-            <i data-lucide="banknote" class="lucide w-4 h-4"></i>
-            资金
-          </span>
-          <span id="sb-money" class="stat-item__value font-black text-xjtlu-navy mt-0.5" style="font-size: 1.2rem; text-align: left;">
-            ¥50,000
-          </span>
-        </div>
-
-        <div class="w-px h-10 bg-gray-200 shrink-0"></div>
-
-        <!-- ⑤ 学力 -->
-        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
-          <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
-              <i data-lucide="book-open" class="lucide w-4 h-4"></i>
-              学力
-            </span>
-            <span id="sb-academic-val" class="stat-item__value" style="font-size: 1.1rem;">0</span>
-          </div>
-          <div class="health-bar">
-            <div id="sb-academic-fill" class="health-bar__fill" style="width: 0%; background-color: #004B9B;"></div>
-          </div>
-        </div>
-
-        <!-- ⑥ 英语能力 -->
-        <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
-          <div class="flex items-center justify-between">
-            <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
-              <i data-lucide="languages" class="lucide w-4 h-4"></i>
-              英语
-            </span>
-            <span id="sb-english-val" class="stat-item__value" style="font-size: 1.1rem;">40</span>
-          </div>
-          <div class="health-bar">
-            <div id="sb-english-fill" class="health-bar__fill" style="width: 40%; background-color: #7C3AED;"></div>
-          </div>
-        </div>
+        
+        ${this._buildBarHTML('academic', 'book-open', '学力', 'bg-xjtlu-navy')}
+        ${this._buildBarHTML('english', 'languages', '英语', 'bg-purple-600')}
 
       </div>
     `;
   }
 
-  // ───────────────────────────────────────────────────────────
-  // 局部更新方法
-  // ───────────────────────────────────────────────────────────
+  /** 辅助生成纯净版进度条 HTML */
+  _buildBarHTML(id, icon, label, colorClass) {
+    return `
+      <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
+        <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+          <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
+          ${label}
+        </span>
+        <div class="health-bar h-2.5 bg-gray-100 shadow-inner">
+          <div id="sb-${id}-fill" class="health-bar__fill ${colorClass} transition-all duration-500" style="width: 50%"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  render(state) {
+    if (!this._container) return;
+    this._updateAP(state);
+    this._updateGenericBar('mental',   state.Mental_Health,   CONSTANTS.MENTAL_HEALTH_WARN);
+    this._updateGenericBar('physical', state.Physical_Health, CONSTANTS.PHYSICAL_HEALTH_WARN);
+    this._updateGenericBar('money',    state.Money,           CONSTANTS.MONEY_WARN_THRESHOLD);
+    this._updateGenericBar('academic', state.Academic_Ability, 0);
+    this._updateGenericBar('english',  state.English_Ability,  0);
+    this._updateBuffs(state);
+  }
+
+  /** 统一的进度条更新逻辑（不再更新文字） */
+  _updateGenericBar(id, value, warnThreshold) {
+    const fill = this._container?.querySelector(`#sb-${id}-fill`);
+    if (!fill) return;
+
+    const pct = Math.max(0, Math.min(100, value));
+    fill.style.width = `${pct}%`;
+
+    // 危险值变红警告 (仅对生存属性生效)
+    if (warnThreshold > 0) {
+      const isDanger = value <= warnThreshold || value >= (100 - warnThreshold); // 触顶或触底都危险
+      fill.classList.toggle('bg-xjtlu-red', isDanger);
+      if (isDanger) {
+        // 移除原有的颜色类，确保红色生效
+        fill.style.backgroundColor = '#D93025'; 
+      } else {
+        fill.style.backgroundColor = ''; // 恢复默认 class 颜色
+      }
+    }
+  }
 
 /** 更新 AP 点数方块 */
   _updateAP(state) {
