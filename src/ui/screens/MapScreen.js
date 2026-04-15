@@ -128,9 +128,11 @@ export class MapScreen {
     return `
       <div class="w-full h-full flex overflow-hidden bg-gray-50">
 
-        <!-- 左侧：地图区（65%）-->
-        <div class="relative flex-[65] overflow-hidden bg-gray-100">
-          <div id="map-wrap" class="relative w-full h-full">
+        <!-- 左侧：地图区（65%），改为 flex-col 布局 -->
+        <div class="relative flex-[65] flex flex-col overflow-hidden bg-gray-100">
+          
+          <!-- 地图主体占据剩余空间 -->
+          <div id="map-wrap" class="relative flex-1 w-full overflow-hidden">
 
             <img
               id="campus-map-img"
@@ -147,46 +149,46 @@ export class MapScreen {
               ${pinsHTML}
             </div>
 
+            <!-- 结束本月按钮（移入 map-wrap，相对于地图底部定位）-->
+            <div class="absolute bottom-6 right-6 z-40">
+              <button
+                id="btn-end-month"
+                class="xjtlu-btn xjtlu-btn--primary text-sm shadow-lg"
+              >
+                <i data-lucide="skip-forward" class="lucide w-4 h-4"></i>
+                结束本月
+              </button>
+            </div>
+
+            <!-- 调试提示角标（移入 map-wrap） -->
+            ${CONSTANTS.MAP_DEBUG ? `
+              <div id="debug-toolbar"
+                   class="absolute bottom-6 left-6 z-50
+                          flex items-center gap-2">
+                <div class="bg-xjtlu-navy/90 text-white text-xs font-bold
+                            px-3 py-2 rounded-lg flex items-center gap-2">
+                  <i data-lucide="move" class="lucide w-3.5 h-3.5"></i>
+                  拖拽模式：拖动 Pin 调整位置
+                </div>
+                <button
+                  id="btn-export-coords"
+                  class="xjtlu-btn xjtlu-btn--warning text-xs py-2 px-3"
+                >
+                  <i data-lucide="download" class="lucide w-3.5 h-3.5"></i>
+                  导出坐标
+                </button>
+              </div>
+            ` : ''}
+
           </div>
 
-          <!-- 【新增】时间轴层（叠加在地图底部）-->
+          <!-- 【修改】时间轴层：作为 flex-col 的底部元素，不再绝对定位遮挡地图 -->
           <div id="timeline-bar"
-               class="absolute bottom-0 left-0 right-0 z-30
-                      bg-white/90 backdrop-blur-sm
-                      border-t-2 border-xjtlu-navy/20
+               class="relative z-30 shrink-0
+                      bg-white border-t-2 border-xjtlu-navy/20
                       px-4 py-2">
           </div>
 
-          <!-- 结束本月按钮（z-index 需高于时间轴）-->
-          <div class="absolute bottom-14 right-4 z-40">
-            <button
-              id="btn-end-month"
-              class="xjtlu-btn xjtlu-btn--primary text-sm shadow-lg"
-            >
-              <i data-lucide="skip-forward" class="lucide w-4 h-4"></i>
-              结束本月
-            </button>
-          </div>
-
-          <!-- 调试提示角标 -->
-          ${CONSTANTS.MAP_DEBUG ? `
-            <div id="debug-toolbar"
-                 class="absolute bottom-14 left-4 z-50
-                        flex items-center gap-2">
-              <div class="bg-xjtlu-navy/90 text-white text-xs font-bold
-                          px-3 py-2 rounded-lg flex items-center gap-2">
-                <i data-lucide="move" class="lucide w-3.5 h-3.5"></i>
-                拖拽模式：拖动 Pin 调整位置
-              </div>
-              <button
-                id="btn-export-coords"
-                class="xjtlu-btn xjtlu-btn--warning text-xs py-2 px-3"
-              >
-                <i data-lucide="download" class="lucide w-3.5 h-3.5"></i>
-                导出坐标
-              </button>
-            </div>
-          ` : ''}
         </div>
 
         <!-- 右侧：信息面板（35%）-->
