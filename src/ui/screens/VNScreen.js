@@ -105,6 +105,15 @@ export class VNScreen {
 
     this._updateBackground(scene.bg ?? null);
 
+    // 【新增】：scene 级别的数值自动结算（用于纯剧情事件的数值扰动）
+    // 在渲染文本前结算，飘字会在对话框出现的同时弹出，增强沉浸感
+    if (scene.effects && Object.keys(scene.effects).length > 0) {
+      StateManager.applyStatDelta(
+        scene.effects,
+        this._buildEffectLabels(scene.effects)
+      );
+    }
+
     if (scene.choices && scene.choices.length > 0) {
       this._dialogBox.show({
         text:       scene.text,
@@ -112,7 +121,6 @@ export class VNScreen {
         tip:        scene.tip ?? '',
         showHint:   false,
         onComplete: () => {
-          // 【修改点】：获取当前 tags 并传入
           const playerTags = StateManager.getState().tags || [];
           this._showChoices(scene.choices, scene.choice_type === 'multiple', playerTags);
         },
@@ -123,7 +131,13 @@ export class VNScreen {
         text:     scene.text,
         speaker:  scene.speaker ?? '',
         tip:      scene.tip ?? '',
+        tip:      scene.tip ?? '',
         showHint: true,
+        // 【新增】：若 scene 有 effects，在对话框中同步展示数值变化标签
+        effects:      scene.effects ?? null,
+        effectLabels: scene.effects
+          ? this._buildEffectLabels(scene.effects)
+          : {},
       });
     }
   }

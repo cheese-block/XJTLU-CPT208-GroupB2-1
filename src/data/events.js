@@ -512,4 +512,172 @@ export const EVENTS = {
     ],
   },
 
+  // ════════════════════════════════════════════════════════
+  // 新增随机事件：纯剧情事件（无选项，仅作数值扰动和氛围渲染）
+  // ════════════════════════════════════════════════════════
+  'random_canteen_encounter': {
+    event_id:         'random_canteen_encounter',
+    type:             'random',
+    title:            '食堂偶遇',
+    available_months: [1, 2, 3, 6, 7, 8, 9],
+    forbidden_tags:   [],
+    weight:           1.2,
+    scenes: [
+      {
+        text: '食堂午饭高峰期，你端着托盘找座位，发现整个一楼只剩下一个空位，就在一个陌生同学对面。',
+        bg:   null,
+      },
+      {
+        text: '你们沉默地吃了五分钟饭。然后他突然抬起头问："你是 SAT 的吗？你们专业申研一般去哪？"',
+        bg:   null,
+      },
+      {
+        text: '你们就这样聊了整整一顿饭的时间。他告诉你他在备考 GRE，打算申美国。你第一次意识到，原来不是所有人都去英国。',
+        bg:   null,
+        effects: { Mental_Health: +8 },
+      },
+    ],
+  },
+  'random_offer_news': {
+    event_id:         'random_offer_news',
+    type:             'random',
+    title:            '朋友圈的 Offer',
+    available_months: [10, 11, 12],
+    forbidden_tags:   [],
+    weight:           1.3,
+    scenes: [
+      {
+        text: '你在刷朋友圈，看到一个大三的学长晒出了 UCL 的 Offer，配文是"早申请早安心，祝大家都能拿到梦校"。',
+        bg:   null,
+      },
+      {
+        text: '你数了数他发布的时间——他是在大三的暑假就开始准备的，比你早了整整一年。',
+        bg:   null,
+        effects: { Mental_Health: -12 },
+      },
+      {
+        text: '你关掉朋友圈，打开了雅思题库。\n\n有些焦虑，但也有些清醒。',
+        bg:   null,
+      },
+    ],
+  },
+  'random_power_outage': {
+    event_id:         'random_power_outage',
+    type:             'random',
+    title:            '突然停电',
+    available_months: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12],
+    forbidden_tags:   [],
+    weight:           0.7,
+    scenes: [
+      {
+        text: '晚上九点，宿舍楼突然停电。整栋楼陷入黑暗，走廊里传来一阵骚动和笑声。',
+        bg:   null,
+      },
+      {
+        text: '你摸黑找到了手机，打开手电筒。室友们开始用手机刷短视频，有人提议打牌。\n\n你看了眼手机里没做完的雅思模拟题，又看了看室友们。',
+        bg:   null,
+      },
+      {
+        text: '电一个小时后恢复了。你没有打牌，但也没有做题——你就这样坐在黑暗里发了一个小时的呆，脑子里什么都没想，又好像什么都想了。',
+        bg:   null,
+        effects: { Mental_Health: +12, Physical_Health: +5 },
+      },
+    ],
+  },
+  'random_rainy_day': {
+    event_id:         'random_rainy_day',
+    type:             'random',
+    title:            '梅雨季',
+    available_months: [7, 8, 9],
+    forbidden_tags:   [],
+    weight:           1.0,
+    scenes: [
+      {
+        text: '苏州的梅雨季说来就来。连续一周，天空像是破了个洞，雨水没有停过一刻。',
+        bg:   null,
+      },
+      {
+        text: '你的书包湿了，鞋子湿了，连放在桌上的教材角都翘起来了。\n\n图书馆的暖气让空气里弥漫着一股潮湿的霉味，你坐在那里，感觉连思维都变得黏糊糊的。',
+        bg:   null,
+        effects: { Mental_Health: -8, Physical_Health: -5 },
+      },
+      {
+        text: '但也有一件好事：雨天路上没有人，你第一次在上课路上戴着耳机听完了一整套雅思听力真题，没有任何干扰。',
+        bg:   null,
+        effects: { English_Ability: +3 },
+      },
+    ],
+  },
+  'random_late_night_eb': {
+    event_id:         'random_late_night_eb',
+    type:             'random',
+    title:            'EB 深夜的灯光',
+    available_months: [3, 4, 8, 9, 10, 11, 12],
+    forbidden_tags:   [],
+    weight:           0.9,
+    scenes: [
+      {
+        text: '凌晨十二点，你从 EB 的机房走出来，发现外面的天空意外地清澈，能看到几颗星星。',
+        bg:   null,
+      },
+      {
+        text: '你回头看了看 EB 的楼，三楼的灯还亮着，那是另一个课题组的实验室。你不知道里面的人在做什么，但你突然觉得，此刻整个校园里，有很多人和你一样，正在为某件事情拼命。',
+        bg:   null,
+        effects: { Mental_Health: +10 },
+      },
+      {
+        text: '你骑上单车，往宿舍方向踏去。夜风很凉，但不冷。',
+        bg:   null,
+      },
+    ],
+  },
+  'random_gym_encounter': {
+    event_id:         'random_gym_encounter',
+    type:             'random',
+    title:            '健身房的对话',
+    available_months: [1, 2, 6, 7, 10, 11],
+    forbidden_tags:   [],
+    weight:           0.8,
+    scenes: [
+      {
+        text: '你在 GYM 跑步机上跑步，旁边的人突然摘下耳机问你："你是大几的？"',
+        bg:   null,
+      },
+      {
+        speaker: '陌生人',
+        text:    '"大四了？那你应该快申请了吧。我去年这时候也是这样，每天跑步就是为了发泄压力。后来拿到 Edinburgh 的 Offer，现在回来交流。"',
+        bg:     null,
+      },
+      {
+        text: '他重新戴上耳机，继续跑步。你看着他的侧脸，心里涌起一种奇怪的情绪——不是羡慕，更像是某种遥远的希望。',
+        bg:   null,
+        effects: { Mental_Health: +15 },
+      },
+    ],
+  },
+  'random_deadline_panic': {
+    event_id:         'random_deadline_panic',
+    type:             'random',
+    title:            'DDL 前的崩溃',
+    available_months: [3, 4, 8, 9, 11, 12],
+    forbidden_tags:   [],
+    weight:           1.1,
+    scenes: [
+      {
+        text: '距离 Assignment 提交截止还有六小时，你盯着屏幕，突然发现自己完全不知道该写什么。',
+        bg:   null,
+        effects: { Mental_Health: -10 },
+      },
+      {
+        text: '你去洗了把脸，喝了杯水，在宿舍楼道里来回走了十分钟。\n\n然后你重新坐下，打开文档，从结论开始倒着写。',
+        bg:   null,
+      },
+      {
+        text: '凌晨四点，你提交了那份作业。它不完美，但它完成了。\n\n你关上电脑，倒头就睡，连牙都没刷。',
+        bg:   null,
+        effects: { Physical_Health: -8 },
+      },
+    ],
+  },
+
 };
