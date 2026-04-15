@@ -57,8 +57,14 @@ export function initGameLoop(vnScreen) {
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
 
-  // ── 【M10 新增】：计算真实的 AP 消耗 ──
-  const apMod = BuffEngine.getAPCostModifier(state, actionId);
+  // 【修复】：互斥锁，防止在事件处理期间重复触发行动
+  if (state.isProcessing) {
+    log('warn', 'GameLoop', '行动被拦截：当前有事件正在处理中');
+    return false;
+  }
+
+  // ── 计算真实的 AP 消耗 ──
+  const apMod       = BuffEngine.getAPCostModifier(state, actionId);
   const finalApCost = Math.max(0, action.apCost + apMod);
 
   // AP 检查
@@ -67,33 +73,39 @@ export function executeAction(actionId, action, onEvent) {
     return false;
   }
 
-  // ── 【M10 新增】：计算真实的数值收益 ──
+  // ── 计算真实的数值收益 ──
   const finalEffects = BuffEngine.applyBuffModifiers(state, actionId, action.baseEffects);
   StateManager.applyStatDelta(finalEffects, action.labels ?? {});
 
-  // 科研进度追踪（research_ir 累计 3 次获得标签）
+  // 科研进度追踪
   if (action.tagsProgress) {
     _trackProgressTag(action.tagsProgress);
   }
 
-  // ── 【修复点】：每次行动后立即检查状态 Debuff ──
   _checkStatusDebuffs();
 
   // Bad Ending 检查
   const badEnd = checkBadEndings();
   if (badEnd) return true;
 
-  // 存档
   StateManager.saveGame();
 
-  // 随机事件判定
+  // 【修复】：随机事件判定前，检查队列是否已有待处理事件
+  // 若队列不为空（如月末特殊事件已入队），则跳过本次随机判定
   const fresh = StateManager.getState();
+  if (fresh.pendingEventQueue.length > 0) {
+    log('info', 'GameLoop', '队列已有事件，跳过本次随机事件判定');
+    return true;
+  }
+
   const hitId = EventEngine.rollRandomEvent(fresh);
-  
+
   if (hitId) {
-    // 短暂延迟，让飘字动画先播完
+    // 【修复】：加锁，防止在 VN 播放期间再次触发行动
+    StateManager.setProcessing(true);
     setTimeout(() => {
       processEventQueue(() => {
+        StateManager.setProcessing(false);
         StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
         if (onEvent) onEvent();
       });
@@ -173,12 +185,12 @@ export function resolveMonthEnd(onMonthEnd) {
   const state = StateManager.getState();
   log('info', 'GameLoop', `📅 月末结算开始：Month ${state.currentMonth}`);
 
-  // 1. 注入特殊事件（插入队列头部）
+  // 【修复】：月末结算期间加锁
+  StateManager.setProcessing(true);
+
   EventEngine.checkScheduledEvents(state);
 
-  // 2. 处理事件队列
   processEventQueue(() => {
-    // 3. 队列清空后的结算
     _resolveEndOfMonth(onMonthEnd);
   });
 }
@@ -198,15 +210,18 @@ function _resolveEndOfMonth(onMonthEnd) {
   _tickBuffDurations();
   _checkStatusDebuffs();
 
-  // ── 【修复点】：如果触发了 Bad End，直接 return 中断所有后续流程！ ──
   const badEnd = checkBadEndings();
   if (badEnd) {
-    StateManager.saveGame(); // 保存一下死因
-    return; // 彻底中断，不要推进月份，也不要正常结算
+    StateManager.saveGame();
+    StateManager.setProcessing(false); // 【修复】：即使 bad end 也要解锁
+    return;
   }
 
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
   StateManager.saveGame();
+
+  // 【修复】：月末流程结束，解锁
+  StateManager.setProcessing(false);
 
   if (isGameEnd) {
     triggerEnding();
