@@ -19,7 +19,7 @@ import * as StateManager  from '../../state/StateManager.js';
 import { CONSTANTS }      from '../../utils/constants.js';
 import { BUILDINGS }      from '../../data/buildings.js';
 import { ACTIONS }        from '../../data/actions.js';
-import { executeAction, resolveMonthEnd } from '../../engine/GameLoop.js';
+import { executeAction, resolveMonthEnd, processEventQueue } from '../../engine/GameLoop.js';
 import { MapDebugTool }   from '../MapHotspot.js';
 import { log }            from '../../utils/helpers.js';
 import { showConfirm }    from '../components/ConfirmModal.js'; 
@@ -66,13 +66,17 @@ export class MapScreen {
     this._bindMapClick();
     this._bindEndMonthButton();
     this._renderInfoPanel(null);
-    this._renderPlayerStatus(state); // 【新增】初始化个人状态面板
+    this._renderPlayerStatus(state);
 
     if (CONSTANTS.MAP_DEBUG) {
       this._mountDebugTool();
     }
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // 【新增】：首次进入游戏时触发新手引导
+    this._tryTriggerTutorial();
+
     log('info', 'MapScreen', '✅ 已挂载');
   }
 
@@ -288,6 +292,44 @@ export class MapScreen {
         .forEach(pin => pin.classList.remove('map-pin--selected'));
       this._renderInfoPanel(null);
     });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 新手引导
+  // ───────────────────────────────────────────────────────────
+
+  /**
+   * 检查是否需要触发新手引导剧情。
+   * 条件：Month 1 且从未触发过（不持有 __TUTORIAL_DONE__ 标签）。
+   * 引导结束后写入标签，确保续档不会重复播放。
+   */
+  _tryTriggerTutorial() {
+    const state = StateManager.getState();
+
+    // 非 Month 1，或已经看过引导，直接跳过
+    if (state.currentMonth !== 1 ||
+        state.tags.includes('__TUTORIAL_DONE__')) {
+      return;
+    }
+
+    log('info', 'MapScreen', '🎓 触发新手引导');
+
+    // 将引导事件注入队列头部
+    StateManager.enqueueEventFront({
+      eventId: 'tutorial_intro',
+      source:  'chain',
+    });
+
+    // 短暂延迟，确保地图 DOM 完全渲染后再切换到 VN 模式
+    setTimeout(() => {
+      processEventQueue(() => {
+        // 引导结束后：写入"已看过"标签，返回地图
+        StateManager.addTag('__TUTORIAL_DONE__');
+        StateManager.saveGame();
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+        log('info', 'MapScreen', '✅ 新手引导完成');
+      });
+    }, 500);
   }
 
   // ───────────────────────────────────────────────────────────
