@@ -89,10 +89,9 @@ export class VNScreen {
   // 场景推进
   // ───────────────────────────────────────────────────────────
 
-  _playScene(index) {
+_playScene(index) {
     const scenes = this._event?.scenes;
-    log('debug', 'VNScreen',
-      `_playScene(${index})，共 ${scenes?.length} 个场景`);
+    log('debug', 'VNScreen', `_playScene(${index})，共 ${scenes?.length} 个场景`);
 
     if (!scenes || index >= scenes.length) {
       log('debug', 'VNScreen', '所有场景播放完毕，调用 _endEvent()');
@@ -105,8 +104,7 @@ export class VNScreen {
 
     this._updateBackground(scene.bg ?? null);
 
-    // 【新增】：scene 级别的数值自动结算（用于纯剧情事件的数值扰动）
-    // 在渲染文本前结算，飘字会在对话框出现的同时弹出，增强沉浸感
+    // scene 级别的数值自动结算
     if (scene.effects && Object.keys(scene.effects).length > 0) {
       StateManager.applyStatDelta(
         scene.effects,
@@ -126,18 +124,19 @@ export class VNScreen {
         },
       });
     } else {
+      // 【新增】：获取透视 Buff 状态
+      const currentState = StateManager.getState();
+      const hasExactBuff = currentState.activeBuff?.some(b => b.buffId === 'insight_buff');
+
       // 普通旁白：打印完等待点击
       this._dialogBox.show({
         text:     scene.text,
         speaker:  scene.speaker ?? '',
         tip:      scene.tip ?? '',
-        tip:      scene.tip ?? '',
         showHint: true,
-        // 【新增】：若 scene 有 effects，在对话框中同步展示数值变化标签
         effects:      scene.effects ?? null,
-        effectLabels: scene.effects
-          ? this._buildEffectLabels(scene.effects)
-          : {},
+        effectLabels: scene.effects ? this._buildEffectLabels(scene.effects) : {},
+        hasExactBuff: hasExactBuff, // 【传入透视状态】
       });
     }
   }
@@ -200,27 +199,20 @@ export class VNScreen {
   _resolveChoice(choice) {
     const currentState = StateManager.getState();
     const playerTags   = currentState.tags || [];
+    // 【新增】：获取透视 Buff 状态
+    const hasExactBuff = currentState.activeBuff?.some(b => b.buffId === 'insight_buff');
 
     // 遍历 variants，找到第一个满足条件的
     let activeVariant = null;
     if (choice.flavor_text_variants && choice.flavor_text_variants.length > 0) {
       for (const variant of choice.flavor_text_variants) {
-        // 条件一：标签检查
-        const tagPass = !variant.required_tag ||
-                        playerTags.includes(variant.required_tag);
-
-        // 条件二：数值范围检查（支持 required_stat: { stat, min, max }）
+        const tagPass = !variant.required_tag || playerTags.includes(variant.required_tag);
         let statPass = true;
         if (variant.required_stat) {
           const val = currentState[variant.required_stat.stat] ?? 0;
-          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) {
-            statPass = false;
-          }
-          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) {
-            statPass = false;
-          }
+          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) statPass = false;
+          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) statPass = false;
         }
-
         if (tagPass && statPass) {
           activeVariant = variant;
           break;
@@ -228,15 +220,9 @@ export class VNScreen {
       }
     }
 
-    // 合并 effects 和 tags（基础 + variant 叠加）
     const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
-    const finalTags    = [
-      ...(choice.tags_added || []),
-      ...(activeVariant?.tags_added || []),
-    ];
+    const finalTags    = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
 
-    // 拼接最终展示文本
-    // 基础文本（可为空）+ variant 变色文本（可为空）
     let finalFlavorText = choice.flavor_text || '';
     if (activeVariant?.text) {
       let colorClass = 'text-xjtlu-blue';
@@ -246,19 +232,13 @@ export class VNScreen {
       finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
     }
 
-    // 结算数值
     if (Object.keys(finalEffects).length > 0) {
       StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
     }
-
-    // 写入标签
     finalTags.forEach(tag => StateManager.addTag(tag));
-
-    // 链式事件入队
     if (choice.next_event_id) {
       StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
     }
-
     StateManager.saveGame();
 
     if (finalFlavorText) {
@@ -271,10 +251,9 @@ export class VNScreen {
         tip:          choice.tip ?? '',
         effects:      finalEffects,
         effectLabels: this._buildEffectLabels(finalEffects),
+        hasExactBuff: hasExactBuff, // 【传入透视状态】
       });
     } else {
-      // 没有任何文本展示（既无 flavor_text 也无匹配的 variant）
-      // 直接推进到下一幕，不卡住
       this._playScene(this._sceneIndex + 1);
     }
   }
@@ -308,8 +287,11 @@ export class VNScreen {
 
   _showNextMultiChoiceItem() {
     const item = this._multiChoiceQueue.shift();
+    
+    // 【新增】：获取透视 Buff 状态
+    const currentState = StateManager.getState();
+    const hasExactBuff = currentState.activeBuff?.some(b => b.buffId === 'insight_buff');
 
-    // 1. 结算当前选项的数值与标签（触发单次飘字）
     if (Object.keys(item.effects).length > 0) {
       const labels = this._buildEffectLabels(item.effects);
       StateManager.applyStatDelta(item.effects, labels);
@@ -324,13 +306,13 @@ export class VNScreen {
     }
     StateManager.saveGame();
 
-    // 2. 展示当前选项的反馈文本与知识点
     this._dialogBox.show({
       text:         item.text,
       tip:          item.tip,
       showHint:     true,
       effects:      item.effects,
       effectLabels: this._buildEffectLabels(item.effects),
+      hasExactBuff: hasExactBuff, // 【传入透视状态】
     });
   }
 

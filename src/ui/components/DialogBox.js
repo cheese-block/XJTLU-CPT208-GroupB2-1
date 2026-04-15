@@ -32,10 +32,11 @@ export class DialogBox {
    * @param {string}   options.text
    * @param {string}   [options.speaker]
    * @param {string}   [options.tip]
-   * @param {object}   [options.effects]   数值得失，如 { Money: -30000, Mental_Health: +5 }
-   * @param {object}   [options.effectLabels] 显示名称，如 { Money: '资金' }
+   * @param {object}   [options.effects]   数值得失
+   * @param {object}   [options.effectLabels] 显示名称
    * @param {boolean}  [options.showHint]
    * @param {function} [options.onComplete]
+   * @param {boolean}  [options.hasExactBuff] 是否拥有透视 Buff
    */
   show({
     text,
@@ -45,6 +46,7 @@ export class DialogBox {
     effectLabels = {},
     showHint     = true,
     onComplete   = null,
+    hasExactBuff = false, // 【修复】：正确接收透视 Buff 标志
   }) {
     this._stopTyping();
     this._fullText   = text;
@@ -74,12 +76,10 @@ export class DialogBox {
       if (tip && typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    // 数值得失（选择后显示）
+    // 数值得失（选择后或纯剧情触发后显示）
     if (effectsEl) {
       if (effects && Object.keys(effects).length > 0) {
-        // 假设传入了 hasExactBuff 标志（需要在 VNScreen 中传入，此处简化为直接判断）
-        const hasExactBuff = options.hasExactBuff || false;
-
+        // 【修复】：直接使用解构出来的 hasExactBuff
         effectsEl.innerHTML = Object.entries(effects)
           .filter(([, delta]) => delta !== 0)
           .map(([stat, delta]) => {
@@ -118,9 +118,9 @@ export class DialogBox {
 
     // 隐藏提示，清空文本
     if (hintEl) hintEl.classList.add('hidden');
-    textEl.innerHTML = ''; // 改为 innerHTML
+    textEl.innerHTML = ''; 
 
-    // 【修改点】：如果是包含 HTML 标签的文本（如拼接了 span），直接显示，跳过打字机
+    // 如果是包含 HTML 标签的文本（如拼接了 span），直接显示，跳过打字机
     if (text.includes('<span') || text.includes('<br>')) {
       textEl.innerHTML = text;
       if (hintEl && showHint) hintEl.classList.remove('hidden');
