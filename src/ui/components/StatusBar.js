@@ -51,7 +51,7 @@ export class StatusBar {
     this._updateBuffs(state);
   }
 
-// ───────────────────────────────────────────────────────────
+  // ───────────────────────────────────────────────────────────
   // HTML 骨架构建（仅调用一次）
   // ───────────────────────────────────────────────────────────
 
@@ -62,12 +62,12 @@ export class StatusBar {
                   select-none overflow-x-auto">
 
         <!-- ① AP 行动点 -->
-        <div class="stat-item shrink-0 flex flex-col gap-1 min-w-[90px]">
-          <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+        <div class="shrink-0 flex flex-col justify-center min-w-[90px]">
+          <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
             <i data-lucide="zap" class="lucide w-4 h-4"></i>
             行动点
           </span>
-          <div id="sb-ap-pips" class="ap-pip-group mt-0.5"></div>
+          <div id="sb-ap-pips" class="ap-pip-group"></div>
         </div>
 
         <div class="w-px h-10 bg-gray-200 shrink-0"></div>
@@ -89,13 +89,15 @@ export class StatusBar {
   /** 辅助生成纯净版进度条 HTML */
   _buildBarHTML(id, icon, label, colorClass) {
     return `
-      <div class="stat-item flex-1 flex flex-col gap-1.5 min-w-[80px]">
-        <span class="stat-item__label flex items-center gap-1.5" style="font-size: 0.8rem;">
+      <div class="flex-1 flex flex-col justify-center min-w-[80px]">
+        <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
         </span>
-        <div class="health-bar h-2.5 bg-gray-100 shadow-inner">
-          <div id="sb-${id}-fill" class="health-bar__fill ${colorClass} transition-all duration-500" style="width: 50%"></div>
+        <!-- 纯 Tailwind 进度条轨道 -->
+        <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+          <!-- 进度条填充 -->
+          <div id="sb-${id}-fill" class="h-full ${colorClass} transition-all duration-500" style="width: 50%"></div>
         </div>
       </div>
     `;

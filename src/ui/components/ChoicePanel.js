@@ -49,7 +49,7 @@ export class ChoicePanel {
     this._container.style.pointerEvents = 'auto';
   }
 
-  _renderSingle(choices, playerTags, hasExactBuff) {
+_renderSingle(choices, playerTags, hasExactBuff) {
     this._container.innerHTML = `
       <div class="vn-choices">
         ${choices.map((choice, i) => {
@@ -62,7 +62,7 @@ export class ChoicePanel {
           const indicatorsHTML = this._buildIndicators(choice.effects, hasExactBuff);
 
           return `
-            <button class="w-full text-left px-6 py-4 rounded-xl border-2 transition-all duration-200 flex flex-col gap-2 ${btnClass}" 
+            <button class="w-full text-left px-6 py-4 rounded-xl border-2 transition-all duration-200 flex flex-col gap-3 ${btnClass}" 
                     data-index="${i}" 
                     ${isLocked ? 'disabled' : ''}>
               <div class="flex items-center justify-between w-full">
@@ -80,7 +80,7 @@ export class ChoicePanel {
               
               <!-- 属性影响指示器 -->
               ${indicatorsHTML ? `
-                <div class="flex items-center gap-4 mt-1 pl-7 opacity-80">
+                <div class="flex items-center gap-5 pl-7 opacity-90">
                   ${indicatorsHTML}
                 </div>
               ` : ''}
@@ -97,6 +97,11 @@ export class ChoicePanel {
         this._onChoose?.(index);
       });
     });
+
+    // 【关键修复】：动态插入 HTML 后，必须调用 Lucide 渲染图标
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons({ root: this._container });
+    }
   }
 
   /**
@@ -191,6 +196,12 @@ export class ChoicePanel {
       this.hide();
       this._onChoose?.(selectedIndices);
     });
+
+    // 【关键修复】：动态插入 HTML 后，必须调用 Lucide 渲染图标
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons({ root: this._container });
+    }
+
   }
 
   /** 隐藏选项面板 */
