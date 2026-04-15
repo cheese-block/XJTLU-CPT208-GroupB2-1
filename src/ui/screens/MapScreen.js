@@ -67,6 +67,7 @@ export class MapScreen {
     this._bindEndMonthButton();
     this._renderInfoPanel(null);
     this._renderPlayerStatus(state);
+    this._renderTimeline(state); // 【新增】
 
     if (CONSTANTS.MAP_DEBUG) {
       this._mountDebugTool();
@@ -93,14 +94,13 @@ export class MapScreen {
   onStateChange(state) {
     this._state = state;
     
-    // 更新建筑面板（如果当前有选中）
     if (this._selectedId) {
       const building = BUILDINGS.find(b => b.id === this._selectedId);
       if (building) this._renderInfoPanel(building);
     }
 
-    // 每次状态改变，都重新渲染下方的个人状态面板
     this._renderPlayerStatus(state);
+    this._renderTimeline(state); // 【新增】
   }
 
   // ───────────────────────────────────────────────────────────
@@ -149,8 +149,16 @@ export class MapScreen {
 
           </div>
 
-          <!-- 结束本月按钮 -->
-          <div class="absolute bottom-4 right-4 z-40">
+          <!-- 【新增】时间轴层（叠加在地图底部）-->
+          <div id="timeline-bar"
+               class="absolute bottom-0 left-0 right-0 z-30
+                      bg-white/90 backdrop-blur-sm
+                      border-t-2 border-xjtlu-navy/20
+                      px-4 py-2">
+          </div>
+
+          <!-- 结束本月按钮（z-index 需高于时间轴）-->
+          <div class="absolute bottom-14 right-4 z-40">
             <button
               id="btn-end-month"
               class="xjtlu-btn xjtlu-btn--primary text-sm shadow-lg"
@@ -163,7 +171,7 @@ export class MapScreen {
           <!-- 调试提示角标 -->
           ${CONSTANTS.MAP_DEBUG ? `
             <div id="debug-toolbar"
-                 class="absolute bottom-4 left-4 z-50
+                 class="absolute bottom-14 left-4 z-50
                         flex items-center gap-2">
               <div class="bg-xjtlu-navy/90 text-white text-xs font-bold
                           px-3 py-2 rounded-lg flex items-center gap-2">
@@ -191,7 +199,7 @@ export class MapScreen {
           <div id="info-panel" class="flex-1 flex flex-col overflow-hidden border-b-2 border-gray-100">
           </div>
 
-          <!-- 下半部：个人简历与状态 (固定高度或按比例) -->
+          <!-- 下半部：个人简历与状态 -->
           <div id="player-status-panel" class="h-[42%] shrink-0 flex flex-col bg-gray-50 overflow-hidden">
           </div>
 
@@ -396,6 +404,119 @@ export class MapScreen {
         this._handleAction(btn.dataset.actionId);
       });
     });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 时间轴
+  // ───────────────────────────────────────────────────────────
+
+  /**
+   * 渲染底部时间轴，高亮当前月份，标出关键节点。
+   * 由 mount() 初始调用，onStateChange() 时重新渲染。
+   * @param {object} state
+   */
+  _renderTimeline(state) {
+    const bar = this._container?.querySelector('#timeline-bar');
+    if (!bar) return;
+
+    const current = state.currentMonth;
+
+    // 关键节点定义：month → { label, color }
+    // color 对应 Tailwind 的文字色与背景色语义
+    const MILESTONES = {
+      4:  { label: '期末①', theme: 'exam'    },
+      5:  { label: '寒假',   theme: 'holiday' },
+      9:  { label: '期末②', theme: 'exam'    },
+      10: { label: '暑假',   theme: 'holiday' },
+      11: { label: '暑假',   theme: 'holiday' },
+      12: { label: '申请季', theme: 'danger'  },
+    };
+
+    // 月份 → 现实月份简写（从 constants 截取前 2-3 字）
+    const MONTH_SHORT = {
+      1:  '9月',  2:  '10月', 3:  '11月', 4:  '12月',
+      5:  '寒假', 6:  '3月',  7:  '4月',  8:  '5月',
+      9:  '6月',  10: '7月',  11: '8月',  12: '9月↑',
+    };
+
+    // 主题 → CSS 类映射
+    const THEME_CLASSES = {
+      exam:    { dot: 'bg-xjtlu-amber',  text: 'text-xjtlu-amber'  },
+      holiday: { dot: 'bg-xjtlu-green',  text: 'text-xjtlu-green'  },
+      danger:  { dot: 'bg-xjtlu-red',    text: 'text-xjtlu-red'    },
+    };
+
+    const ticksHTML = Array.from({ length: 12 }, (_, i) => {
+      const month     = i + 1;
+      const isCurrent = month === current;
+      const isPast    = month < current;
+      const milestone = MILESTONES[month];
+
+      // 刻度点样式
+      const dotClass = isCurrent
+        ? 'w-3 h-3 rounded-full bg-xjtlu-blue ring-2 ring-xjtlu-blue ring-offset-1 ring-offset-white'
+        : isPast
+          ? 'w-2 h-2 rounded-full bg-gray-300'
+          : milestone
+            ? `w-2.5 h-2.5 rounded-full ${THEME_CLASSES[milestone.theme].dot}`
+            : 'w-2 h-2 rounded-full bg-gray-300';
+
+      // 月份文字样式
+      const monthTextClass = isCurrent
+        ? 'font-black text-xjtlu-blue'
+        : isPast
+          ? 'text-gray-300'
+          : milestone
+            ? `font-bold ${THEME_CLASSES[milestone.theme].text}`
+            : 'text-gray-400';
+
+      // 关键节点标签（显示在月份文字上方）
+      const milestoneHTML = milestone && !isPast ? `
+        <span class="absolute -top-4 left-1/2 -translate-x-1/2
+                     text-[0.55rem] font-black whitespace-nowrap
+                     ${THEME_CLASSES[milestone.theme].text}">
+          ${milestone.label}
+        </span>
+      ` : '';
+
+      // 当前月份指示箭头
+      const arrowHTML = isCurrent ? `
+        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2
+                     text-xjtlu-blue text-[0.6rem] font-black leading-none">
+          ▼
+        </span>
+      ` : '';
+
+      return `
+        <div class="relative flex flex-col items-center gap-1 flex-1">
+          ${milestoneHTML}
+          ${arrowHTML}
+          <div class="${dotClass} shrink-0"></div>
+          <span class="text-[0.6rem] ${monthTextClass} leading-none">
+            ${MONTH_SHORT[month]}
+          </span>
+        </div>
+      `;
+    }).join('');
+
+    // 连接线（绝对定位，穿过所有刻度点的中心）
+    bar.innerHTML = `
+      <div class="relative flex items-center w-full pt-5 pb-1">
+        <!-- 背景连接线 -->
+        <div class="absolute left-[calc(100%/24)] right-[calc(100%/24)]
+                    top-[calc(1.25rem+0.375rem)]
+                    h-px bg-gray-200 z-0">
+        </div>
+        <!-- 已过去的进度线 -->
+        <div class="absolute left-[calc(100%/24)]
+                    top-[calc(1.25rem+0.375rem)]
+                    h-px bg-xjtlu-blue/40 z-0 transition-all duration-500"
+             style="width: calc((${current - 1} / 11) * (100% - 100%/12))">
+        </div>
+        <!-- 刻度组 -->
+        ${ticksHTML}
+      </div>
+    `;
   }
 
   // ───────────────────────────────────────────────────────────
