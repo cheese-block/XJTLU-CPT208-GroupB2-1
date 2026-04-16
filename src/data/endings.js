@@ -4,24 +4,60 @@
  */
 
 export const ENDINGS = [
-  // ── 0. 强制 Bad Endings (中途触发) ──
+  // ── 0. 强制 Bad Endings (走钢丝死亡结局) ──
   {
-    id: 'bad_end_depression',
+    id: 'bad_end_mental_0',
     priority: 0,
     title: '抑郁退学',
-    condition: (tags) => tags.includes('__BAD_END_DEPRESSION__'),
+    condition: (tags) => tags.includes('__BAD_END_MENTAL_0__'),
     description: '长期的焦虑和高压彻底击垮了你的心理防线。你不得不办理了休学手续，回家休养。申研？那已经是上辈子的事了。',
-    tip: '心理健康永远是第一位的。不要为了卷履历而透支自己，适时的休息和求助至关重要。',
+    tip: '心理健康归零。在内卷的同时，也要注意排解压力。',
     theme: 'danger'
   },
   {
-    id: 'bad_end_hospitalized',
+    id: 'bad_end_mental_100',
     priority: 0,
-    title: '停学住院',
-    condition: (tags) => tags.includes('__BAD_END_HOSPITALIZED__'),
+    title: '看破红尘',
+    condition: (tags) => tags.includes('__BAD_END_MENTAL_100__'),
+    description: '你的心态实在太好了。你突然觉得“人生苦短，何必卷学历”，于是你果断放弃申研，买了一张去大理的单程票，成为了一名快乐的数字游民。',
+    tip: '心理健康触顶。申研需要适度的焦虑感作为驱动力，太佛系是拿不到 Offer 的。',
+    theme: 'warning'
+  },
+  {
+    id: 'bad_end_physical_0',
+    priority: 0,
+    title: '积劳成疾',
+    condition: (tags) => tags.includes('__BAD_END_PHYSICAL_0__'),
     description: '连续的熬夜和缺乏锻炼让你的身体发出了最后的警告。你在医院的病床上醒来，错过了所有的申请季 DDL。',
-    tip: '身体是革命的本钱。每周去几次 GYM 或者早点睡觉，比多刷两套雅思题更有价值。',
+    tip: '身体健康归零。身体是革命的本钱，不要为了赶 Due 连命都不要了。',
     theme: 'danger'
+  },
+  {
+    id: 'bad_end_physical_100',
+    priority: 0,
+    title: '沉迷举铁',
+    condition: (tags) => tags.includes('__BAD_END_PHYSICAL_100__'),
+    description: '你沉迷健身无法自拔，不仅练出了八块腹肌，还能深蹲 200kg。你被星探发掘去做了全职健身教练兼模特，觉得读书没意思，申研计划无限期搁置。',
+    tip: '身体健康触顶。四肢发达是好事，但别忘了你来大学是干什么的。',
+    theme: 'warning'
+  },
+  {
+    id: 'bad_end_money_0',
+    priority: 0,
+    title: '破产老赖',
+    condition: (tags) => tags.includes('__BAD_END_MONEY_0__'),
+    description: '你花光了所有的积蓄，交不起雅思考试费，付不起中介费，甚至连饭都吃不起了。你被迫终止申请，开始全职打工还债。',
+    tip: '资金归零。申研是一场极其烧钱的战争，请合理规划你的财务。',
+    theme: 'danger'
+  },
+  {
+    id: 'bad_end_money_100',
+    priority: 0,
+    title: '搞钱狂魔',
+    condition: (tags) => tags.includes('__BAD_END_MONEY_100__'),
+    description: '你在兼职和倒卖二手书中发现了搞钱的乐趣，月入十万。你看着那点微薄的研究生起薪，决定直接创业，放弃申研。',
+    tip: '资金触顶。你已经掌握了财富密码，研究生学历对你来说确实不重要了。',
+    theme: 'warning'
   },
 
   // ── 1. 顶级结局 (G5 / 顶尖名校) ──
@@ -29,8 +65,6 @@ export const ENDINGS = [
     id: 'offer_g5',
     priority: 10,
     title: 'G5 梦校 Offer',
-    // 条件：GPA 极高（3.8）+ 雅思达标 + 软背景极佳 + 没被黑中介坑
-    // 【修复 B】：新增 GPA_Top 标签区分 3.3 与 3.8
     condition: (tags, softScore) =>
       tags.includes('GPA_Top') &&
       (tags.includes('IELTS_7.0') || tags.includes('IELTS_7.5')) &&
@@ -57,8 +91,6 @@ export const ENDINGS = [
     id: 'offer_top50',
     priority: 30,
     title: '百强名校 Offer',
-    // 条件：GPA 达标（High 或 Mid）+ 雅思达标（6.5 及以上）
-    // GPA_Mid + IELTS_6.5 是现实中申请 Top 50 的合理下限
     condition: (tags) =>
       (tags.includes('GPA_Top') || tags.includes('GPA_High') || tags.includes('GPA_Mid')) &&
       (tags.includes('IELTS_6.5') || tags.includes('IELTS_7.0') || tags.includes('IELTS_7.5')),
@@ -72,8 +104,6 @@ export const ENDINGS = [
     id: 'offer_presessional',
     priority: 40,
     title: '带条件录取 (配语言班)',
-    // 【修复 A】：必须同时满足"GPA 达标"且"雅思未达到 6.5 的直录线"
-    // 雅思 6.0 或 5.5 才会被要求读语言班；没有雅思标签说明根本没考
     condition: (tags) =>
       (tags.includes('GPA_Top') || tags.includes('GPA_High') || tags.includes('GPA_Mid')) &&
       (tags.includes('IELTS_6.0') || tags.includes('IELTS_5.5') ||

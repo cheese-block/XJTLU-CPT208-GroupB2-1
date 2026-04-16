@@ -14,44 +14,30 @@ export const CONSTANTS = Object.freeze({
   // ─────────────────────────────────────────────────────────
   // 【AP（行动点）】
   // ─────────────────────────────────────────────────────────
-  AP_MAX_PER_MONTH: 5,
+  AP_MAX_PER_MONTH: 3, // 【重构】：压缩行动点，提升单次决策权重
 
   // ─────────────────────────────────────────────────────────
-  // 【心理健康】
+  // 【生存属性 A类：心理、身体、资金】(0-100 走钢丝，两端皆死)
   // ─────────────────────────────────────────────────────────
-  MENTAL_HEALTH_INIT:       80,
+  MENTAL_HEALTH_INIT:       50,
   MENTAL_HEALTH_MAX:       100,
   MENTAL_HEALTH_MIN:         0,
-  MENTAL_HEALTH_WARN:       20,   // 低于此值 → 危险警告 + "焦虑" Buff
-  MENTAL_BAD_ENDING_ID: 'bad_end_depression',
 
-  // ─────────────────────────────────────────────────────────
-  // 【身体健康】
-  // ─────────────────────────────────────────────────────────
-  PHYSICAL_HEALTH_INIT:     80,
+  PHYSICAL_HEALTH_INIT:     50,
   PHYSICAL_HEALTH_MAX:     100,
   PHYSICAL_HEALTH_MIN:       0,
-  PHYSICAL_HEALTH_WARN:     20,   // 低于此值 → 危险警告 + "生病" Buff
-  PHYSICAL_BAD_ENDING_ID: 'bad_end_hospitalized',
+
+  MONEY_INIT:               50,
+  MONEY_MAX:               100,
+  MONEY_MIN:                 0,
 
   // ─────────────────────────────────────────────────────────
-  // 【资金/社交 (Lifestyle)】(统一为 0-100 进度条)
-  // ─────────────────────────────────────────────────────────
-  MONEY_INIT:           50,
-  MONEY_MAX:           100,
-  MONEY_MIN:             0,
-  MONEY_WARN_THRESHOLD: 20,   // 低于此值 → 资金警告
-
-  // ─────────────────────────────────────────────────────────
-  // 【英语能力】
+  // 【目标属性 B类：英语、学力】(积累型，越高越好)
   // ─────────────────────────────────────────────────────────
   ENGLISH_ABILITY_INIT:  40,
   ENGLISH_ABILITY_MAX:  100,
   ENGLISH_ABILITY_MIN:    0,
 
-  // ─────────────────────────────────────────────────────────
-  // 【学力（每学期清零）】
-  // ─────────────────────────────────────────────────────────
   ACADEMIC_ABILITY_INIT: 0,
   ACADEMIC_ABILITY_MAX:  100,
   ACADEMIC_ABILITY_MIN:  0,
@@ -78,7 +64,7 @@ export const CONSTANTS = Object.freeze({
   //   Academic_Ability → GPA 数值 + 标签
   // ─────────────────────────────────────────────────────────
   GPA_THRESHOLDS: [
-    { minAbility: 80, gpa: 3.8, tag: 'GPA_Top'  }, // 【修复 B】：3.8 单独标记
+    { minAbility: 80, gpa: 3.8, tag: 'GPA_Top'  },
     { minAbility: 60, gpa: 3.3, tag: 'GPA_High' },
     { minAbility: 40, gpa: 2.8, tag: 'GPA_Mid'  },
     { minAbility:  0, gpa: 2.2, tag: 'GPA_Low'  }, // 兜底
@@ -126,7 +112,6 @@ export const CONSTANTS = Object.freeze({
 
   // ─────────────────────────────────────────────────────────
   // 【gamePhase 枚举】
-  //   控制 UIManager 显示哪个 Screen
   // ─────────────────────────────────────────────────────────
   GAME_PHASE: Object.freeze({
     TITLE:         'TITLE',
@@ -140,7 +125,6 @@ export const CONSTANTS = Object.freeze({
 
   // ─────────────────────────────────────────────────────────
   // 【特殊（强制）事件时间表】
-  //   月末结算前按优先级注入 pendingEventQueue
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
     { month: 3,  eventId: 'agency_part1'               },
@@ -151,19 +135,14 @@ export const CONSTANTS = Object.freeze({
     { month: 12, eventId: 'final_application'           },
   ]),
 
-
   // ─────────────────────────────────────────────────────────
-  // 【学期末月份（触发 resolveFinalExam）】
+  // 【学期末/初月份】
   // ─────────────────────────────────────────────────────────
   SEMESTER_END_MONTHS: Object.freeze([4, 9]),
-
-  // ─────────────────────────────────────────────────────────
-  // 【学期初月份（Academic_Ability 清零）】
-  // ─────────────────────────────────────────────────────────
   SEMESTER_START_MONTHS: Object.freeze([1, 6]),
 
   // ─────────────────────────────────────────────────────────
-  // 【屏幕 ID → DOM id 映射（UIManager 使用）】
+  // 【屏幕 ID → DOM id 映射】
   // ─────────────────────────────────────────────────────────
   SCREEN_IDS: Object.freeze({
     TITLE:         'screen-title',
@@ -173,13 +152,13 @@ export const CONSTANTS = Object.freeze({
     MONTH_SUMMARY: 'screen-month-summary',
     TAG_SHOWCASE:  'screen-tag-showcase',
     ENDING:        'screen-ending',
-    BOOT:          'screen-boot',        // M0 验证专用
+    BOOT:          'screen-boot',
   }),
 
   // ─────────────────────────────────────────────────────────
   // 【调试模式】
   // ─────────────────────────────────────────────────────────
-  MAP_DEBUG: false,    // true → 地图热区坐标叠层可见 + 控制台打印点击坐标
-  LOG_LEVEL: 'debug', // 'debug' | 'info' | 'warn' | 'error'
+  MAP_DEBUG: false,
+  LOG_LEVEL: 'debug',
 
 });

@@ -6,9 +6,6 @@
  *   - 管理"执行行动 → 触发随机事件 → 月末结算 → 推进月份"的完整流程
  *   - 持有 VNScreen 引用，负责启动事件播放
  *   - 检查 Bad Ending 触发条件
- *
- * 单向数据流：
- *   玩家操作 → GameLoop → Engine → StateManager → UI 响应
  */
 
 import { CONSTANTS }             from '../utils/constants.js';
@@ -33,11 +30,6 @@ let _onQueueEmpty = null;
 // 初始化
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 初始化 GameLoop，注入 VNScreen 引用。
- * 在 main.js 启动时调用一次。
- * @param {object} vnScreen
- */
 export function initGameLoop(vnScreen) {
   _vnScreen = vnScreen;
   log('info', 'GameLoop', '✅ 初始化完成');
@@ -47,17 +39,9 @@ export function initGameLoop(vnScreen) {
 // 行动执行（由 MapScreen 调用）
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 执行一个建筑行动：消耗 AP → 结算数值 → 检查 Bad Ending → 触发随机事件。
- * @param {string}   actionId
- * @param {object}   action    来自 actions.js 的行动配置
- * @param {function} onEvent   随机事件触发时的回调（切换到 VN 模式）
- * @returns {boolean}  是否成功执行（AP 不足返回 false）
- */
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
 
-  // 【修复】：互斥锁，防止在事件处理期间重复触发行动
   if (state.isProcessing) {
     log('warn', 'GameLoop', '行动被拦截：当前有事件正在处理中');
     return false;
@@ -67,22 +51,18 @@ export function executeAction(actionId, action, onEvent) {
   const apMod       = BuffEngine.getAPCostModifier(state, actionId);
   const finalApCost = Math.max(0, action.apCost + apMod);
 
-  // AP 检查
   if (!StateManager.consumeAP(finalApCost)) {
     log('info', 'GameLoop', 'AP 不足，行动取消');
     return false;
   }
 
-  // ── 计算真实的数值收益 ──
+  // ── 计算真实的数值收益（后续 Phase 3 改造为抽卡后，此处将移除）──
   const finalEffects = BuffEngine.applyBuffModifiers(state, actionId, action.baseEffects);
   StateManager.applyStatDelta(finalEffects, action.labels ?? {});
 
-  // 科研进度追踪
   if (action.tagsProgress) {
     _trackProgressTag(action.tagsProgress);
   }
-
-  _checkStatusDebuffs();
 
   // Bad Ending 检查
   const badEnd = checkBadEndings();
@@ -90,8 +70,6 @@ export function executeAction(actionId, action, onEvent) {
 
   StateManager.saveGame();
 
-  // 【修复】：随机事件判定前，检查队列是否已有待处理事件
-  // 若队列不为空（如月末特殊事件已入队），则跳过本次随机判定
   const fresh = StateManager.getState();
   if (fresh.pendingEventQueue.length > 0) {
     log('info', 'GameLoop', '队列已有事件，跳过本次随机事件判定');
@@ -101,7 +79,6 @@ export function executeAction(actionId, action, onEvent) {
   const hitId = EventEngine.rollRandomEvent(fresh);
 
   if (hitId) {
-    // 【修复】：加锁，防止在 VN 播放期间再次触发行动
     StateManager.setProcessing(true);
     setTimeout(() => {
       processEventQueue(() => {
@@ -119,11 +96,6 @@ export function executeAction(actionId, action, onEvent) {
 // 事件队列处理
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 从 pendingEventQueue 依次取出事件并通过 VNScreen 播放。
- * 队列清空后调用 onEmpty 回调。
- * @param {function} onEmpty  队列清空回调（通常是返回地图或进入月末结算）
- */
 export function processEventQueue(onEmpty) {
   _onQueueEmpty = onEmpty;
   _playNextEvent();
@@ -139,26 +111,14 @@ function _playNextEvent() {
     return;
   }
 
-  // ── 【修改点 2】：M9 动态事件内容注入拦截 ──
   if (eventData.event_id === 'ielts_exam_result') {
-    // 深拷贝，避免污染 events.js 中的原始数据模板
     eventData = deepClone(eventData); 
-    
-    // 调用 ExamEngine 计算出分结果（此函数内部会自动修改 state 中的标签和心理健康）
     const result = resolveIeltsExam(StateManager.getState());
-    
-    // 将计算出的文案注入到第二个场景中替换占位符
     eventData.scenes[1].text = result.summary;
-    
-    // 因为 resolveIeltsExam 修改了内部状态，需要触发一次存档
     StateManager.saveGame();
   }
-  // ──────────────────────────────────────────
 
-  // 从队列移除（在播放前移除，防止重复触发）
-  StateManager.startEvent(eventData);  // 内部已有 shift() 逻辑
-
-  // 切换到 VN 模式（带淡入过渡）
+  StateManager.startEvent(eventData);
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.VN);
 
   setTimeout(() => {
@@ -167,27 +127,18 @@ function _playNextEvent() {
       StateManager.saveGame();
       _playNextEvent();
     });
-  }, 700);  // 等待淡入动画
+  }, 700);
 }
 
 // ─────────────────────────────────────────────────────────────
 // 月末结算
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 月末总结算流程：
- *   1. 注入特殊事件
- *   2. 处理事件队列
- *   3. 队列清空后：期末考试结算（如有）→ Buff 生命周期 → 推进月份
- * @param {function} onMonthEnd  月份推进完成后的回调
- */
 export function resolveMonthEnd(onMonthEnd) {
   const state = StateManager.getState();
   log('info', 'GameLoop', `📅 月末结算开始：Month ${state.currentMonth}`);
 
-  // 【修复】：月末结算期间加锁
   StateManager.setProcessing(true);
-
   EventEngine.checkScheduledEvents(state);
 
   processEventQueue(() => {
@@ -195,9 +146,6 @@ export function resolveMonthEnd(onMonthEnd) {
   });
 }
 
-/**
- * 事件处理完毕后的月末内部结算。
- */
 function _resolveEndOfMonth(onMonthEnd) {
   const state = StateManager.getState();
 
@@ -208,19 +156,16 @@ function _resolveEndOfMonth(onMonthEnd) {
   }
 
   _tickBuffDurations();
-  _checkStatusDebuffs();
 
   const badEnd = checkBadEndings();
   if (badEnd) {
     StateManager.saveGame();
-    StateManager.setProcessing(false); // 【修复】：即使 bad end 也要解锁
+    StateManager.setProcessing(false);
     return;
   }
 
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
   StateManager.saveGame();
-
-  // 【修复】：月末流程结束，解锁
   StateManager.setProcessing(false);
 
   if (isGameEnd) {
@@ -231,41 +176,42 @@ function _resolveEndOfMonth(onMonthEnd) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Bad Ending 检查
+// Bad Ending 检查 (走钢丝机制)
 // ─────────────────────────────────────────────────────────────
 
 /**
- * 检查是否触发 Bad Ending。
- * @returns {string|null}  触发的 ending_id，或 null
+ * 检查是否触发走钢丝 Bad Ending。
+ * 心理、身体、资金 任何一项 <=0 或 >=100 都会触发。
+ * @returns {boolean} 是否触发了死亡结局
  */
 export function checkBadEndings() {
   const state = StateManager.getState();
 
-  if (state.Mental_Health <= 0) {
-    log('warn', 'GameLoop', '💀 Bad Ending：抑郁 Gap Year');
-    StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
-    // 将结局 ID 写入 state 供 EndingScreen 读取
-    StateManager.addTag('__BAD_END_DEPRESSION__');
-    return CONSTANTS.MENTAL_BAD_ENDING_ID;
+  const deathChecks = [
+    { condition: state.Mental_Health <= 0,   tag: '__BAD_END_MENTAL_0__' },
+    { condition: state.Mental_Health >= 100, tag: '__BAD_END_MENTAL_100__' },
+    { condition: state.Physical_Health <= 0,   tag: '__BAD_END_PHYSICAL_0__' },
+    { condition: state.Physical_Health >= 100, tag: '__BAD_END_PHYSICAL_100__' },
+    { condition: state.Money <= 0,   tag: '__BAD_END_MONEY_0__' },
+    { condition: state.Money >= 100, tag: '__BAD_END_MONEY_100__' },
+  ];
+
+  for (const check of deathChecks) {
+    if (check.condition) {
+      log('warn', 'GameLoop', `💀 走钢丝失败，触发结局：${check.tag}`);
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      StateManager.addTag(check.tag);
+      return true; // 拦截后续流程
+    }
   }
 
-  if (state.Physical_Health <= 0) {
-    log('warn', 'GameLoop', '💀 Bad Ending：停学住院');
-    StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
-    StateManager.addTag('__BAD_END_HOSPITALIZED__');
-    return CONSTANTS.PHYSICAL_BAD_ENDING_ID;
-  }
-
-  return null;
+  return false;
 }
 
 // ─────────────────────────────────────────────────────────────
 // 结局触发
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 游戏结束后触发结局流程（Month 12 结束后调用）。
- */
 export function triggerEnding() {
   log('info', 'GameLoop', '🎬 触发结局流程');
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TAG_SHOWCASE);
@@ -275,14 +221,10 @@ export function triggerEnding() {
 // 内部工具
 // ─────────────────────────────────────────────────────────────
 
-/**
- * 科研进度标签追踪（累计 3 次 research_ir 获得 Research_Exp 标签）。
- */
 function _trackProgressTag(tagKey) {
   const countKey = `__progress_${tagKey}__`;
   const state    = StateManager.getState();
 
-  // 用 tags 数组存储进度计数（临时方案）
   const countTag = state.tags.find(t => t.startsWith(countKey));
   const count    = countTag ? parseInt(countTag.replace(countKey, ''), 10) : 0;
   const newCount = count + 1;
@@ -298,9 +240,6 @@ function _trackProgressTag(tagKey) {
   }
 }
 
-/**
- * Buff 持续时间递减，过期移除。
- */
 function _tickBuffDurations() {
   const state = StateManager.getState();
   state.activeBuff.forEach(buff => {
@@ -309,7 +248,6 @@ function _tickBuffDurations() {
         StateManager.removeBuff(buff.buffId);
         log('info', 'GameLoop', `Buff 过期：${buff.label}`);
       } else {
-        // 直接修改（StateManager 暂无 updateBuff，用 addBuff 覆盖）
         StateManager.addBuff({
           ...buff,
           remainingMonths: buff.remainingMonths - 1,
@@ -317,55 +255,4 @@ function _tickBuffDurations() {
       }
     }
   });
-}
-
-/**
- * 检查心理/身体健康阈值，自动添加/移除状态 Debuff。
- */
-function _checkStatusDebuffs() {
-  const state = StateManager.getState();
-
-  // 焦虑
-  if (state.Mental_Health < CONSTANTS.MENTAL_HEALTH_WARN) {
-    if (!StateManager.hasTag('Anxious')) {
-      StateManager.addTag('Anxious');
-      StateManager.addBuff({
-        buffId:          'anxious_debuff',
-        label:           '焦虑',
-        icon:            'frown',
-        durationType:    'permanent',
-        remainingMonths: null,
-        effects:         { event_prob_modifier: -0.05 },
-        source_event_id: 'system',
-      });
-      log('info', 'GameLoop', '⚠️ 获得焦虑状态');
-    }
-  } else {
-    if (StateManager.hasTag('Anxious')) {
-      StateManager.removeTag('Anxious');
-      StateManager.removeBuff('anxious_debuff');
-    }
-  }
-
-  // 生病
-  if (state.Physical_Health < CONSTANTS.PHYSICAL_HEALTH_WARN) {
-    if (!StateManager.hasTag('Sick')) {
-      StateManager.addTag('Sick');
-      StateManager.addBuff({
-        buffId:          'sick_debuff',
-        label:           '生病',
-        icon:            'thermometer',
-        durationType:    'permanent',
-        remainingMonths: null,
-        effects:         { event_prob_modifier: -0.05 },
-        source_event_id: 'system',
-      });
-      log('info', 'GameLoop', '⚠️ 获得生病状态');
-    }
-  } else {
-    if (StateManager.hasTag('Sick')) {
-      StateManager.removeTag('Sick');
-      StateManager.removeBuff('sick_debuff');
-    }
-  }
 }
