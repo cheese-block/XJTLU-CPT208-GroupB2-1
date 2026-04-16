@@ -42,12 +42,13 @@ export function initGameLoop(vnScreen) {
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
 
+  // 互斥锁，防止重复点击
   if (state.isProcessing) {
     log('warn', 'GameLoop', '行动被拦截：当前有事件正在处理中');
     return false;
   }
 
-  // ── 计算真实的 AP 消耗 ──
+  // 1. 计算真实的 AP 消耗并扣除
   const apMod       = BuffEngine.getAPCostModifier(state, actionId);
   const finalApCost = Math.max(0, action.apCost + apMod);
 
@@ -56,37 +57,42 @@ export function executeAction(actionId, action, onEvent) {
     return false;
   }
 
-  // ── 计算真实的数值收益（后续 Phase 3 改造为抽卡后，此处将移除）──
-  const finalEffects = BuffEngine.applyBuffModifiers(state, actionId, action.baseEffects);
-  StateManager.applyStatDelta(finalEffects, action.labels ?? {});
-
+  // 2. 进度标签追踪 (如：科研积累)
   if (action.tagsProgress) {
     _trackProgressTag(action.tagsProgress);
   }
 
-  // Bad Ending 检查
-  const badEnd = checkBadEndings();
-  if (badEnd) return true;
-
-  StateManager.saveGame();
-
-  const fresh = StateManager.getState();
-  if (fresh.pendingEventQueue.length > 0) {
-    log('info', 'GameLoop', '队列已有事件，跳过本次随机事件判定');
-    return true;
+  // 3. 核心机制改变：从建筑卡池中抽卡
+  let hitEventId = null;
+  if (action.eventPool && action.eventPool.length > 0) {
+    // 简单随机抽取（MVP 阶段暂不加权重干预）
+    const randomIndex = Math.floor(Math.random() * action.eventPool.length);
+    hitEventId = action.eventPool[randomIndex];
   }
 
-  const hitId = EventEngine.rollRandomEvent(fresh);
+  // 4. 将抽到的地点事件推入队列头部
+  if (hitEventId) {
+    StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
+    log('info', 'GameLoop', `🎯 抽卡命中：${hitEventId}`);
+  }
 
-  if (hitId) {
-    StateManager.setProcessing(true);
+  // 5. 判定是否触发全局随机突发事件（推入队列尾部，地点事件处理完后再处理）
+  const fresh = StateManager.getState();
+  EventEngine.rollRandomEvent(fresh); 
+
+  // 6. 存档并启动事件队列
+  StateManager.saveGame();
+
+  const newState = StateManager.getState();
+  if (newState.pendingEventQueue.length > 0) {
+    StateManager.setProcessing(true); // 加锁
     setTimeout(() => {
       processEventQueue(() => {
-        StateManager.setProcessing(false);
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+        StateManager.setProcessing(false); // 解锁
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP); // 返回地图
         if (onEvent) onEvent();
       });
-    }, 800);
+    }, 500); // 短暂延迟让 UI 反应
   }
 
   return true;

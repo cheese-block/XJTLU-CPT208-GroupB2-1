@@ -680,4 +680,323 @@ export const EVENTS = {
     ],
   },
 
+  // ════════════════════════════════════════════════════════
+  // 地点抽卡事件 (Location Events) - 资源置换与走钢丝
+  // ════════════════════════════════════════════════════════
+
+  'loc_fb_lecture': {
+    event_id: 'loc_fb_lecture', type: 'location', title: '催眠的专业课',
+    scenes: [{
+      text: '教授的 PPT 密密麻麻全是字，语调平缓得像是在念经。你的眼皮越来越沉，但你清楚这门课的期末均分极低。',
+      bg: 'assets/images/events/classroom.png',
+      choices: [
+        {
+          text: '猛灌咖啡，死磕到底',
+          effects: { Academic_Ability: +20, Mental_Health: -15, Physical_Health: -10, Money: -5 },
+          flavor_text: '你强撑着记下了所有考点，感觉大脑在燃烧，心脏也因为摄入过多咖啡因而狂跳。'
+        },
+        {
+          text: '后排摸鱼，闭目养神',
+          effects: { Mental_Health: +15, Physical_Health: +10, Academic_Ability: -5 },
+          flavor_text: '你睡了一个极其香甜的觉。虽然错过了一些知识点，但你感觉自己又活过来了。'
+        }
+      ]
+    }]
+  },
+
+  'loc_fb_group_work': {
+    event_id: 'loc_fb_group_work', type: 'location', title: '小组作业的灾难',
+    scenes: [{
+      text: '到了 Group Work 环节，你发现你的队友一个在打游戏，另一个说自己生病了无法参与。',
+      bg: 'assets/images/events/classroom.png',
+      choices: [
+        {
+          text: '一个人扛下所有 (Carry)',
+          effects: { Academic_Ability: +25, Mental_Health: -25, Physical_Health: -15 },
+          flavor_text: '你熬了两个通宵做完了四个人的工作量。你学到了很多，但也对人类失去了信任。'
+        },
+        {
+          text: '摆烂，大家一起死',
+          effects: { Mental_Health: +5, Academic_Ability: -15 },
+          flavor_text: '你决定不惯着他们。最终你们交了一份垃圾上去，你的心态很平稳，但成绩单不会好看。'
+        }
+      ]
+    }]
+  },
+
+  'loc_cb_ielts_mock': {
+    event_id: 'loc_cb_ielts_mock', type: 'location', title: '雅思听力地狱',
+    scenes: [{
+      text: '你在图书馆做剑桥雅思听力模考。旁边的人一直在疯狂抖腿，还时不时发出啧啧声。',
+      bg: 'assets/images/events/library.png',
+      choices: [
+        {
+          text: '戴上降噪耳机，强行专注',
+          effects: { English_Ability: +15, Mental_Health: -15 },
+          flavor_text: '你屏蔽了外界的干扰，完成了一套极难的试卷。你的英语水平有所提升，但心情非常烦躁。'
+        },
+        {
+          text: '拍桌子让他安静',
+          effects: { Mental_Health: +10, English_Ability: -5 },
+          flavor_text: '你大声斥责了他，他灰溜溜地走了。你觉得非常解气，但接下来的时间你都在回味刚才的争吵，一个字也没看进去。'
+        }
+      ]
+    }]
+  },
+
+  'loc_cb_seat_war': {
+    event_id: 'loc_cb_seat_war', type: 'location', title: '占座风波',
+    scenes: [{
+      text: '期末周的图书馆一座难求。你发现一个座位上只放了一包干瘪的纸巾，显然已经很久没人了。',
+      bg: 'assets/images/events/library.png',
+      choices: [
+        {
+          text: '把纸巾推开，直接坐下学',
+          effects: { Academic_Ability: +15, Mental_Health: -10 },
+          flavor_text: '你学了两个小时后，纸巾的主人回来了并冷嘲热讽。你硬着头皮没理他，但心里一阵添堵。'
+        },
+        {
+          text: '算了，去星巴克花钱买座',
+          effects: { Money: -15, Mental_Health: +10, Academic_Ability: +10 },
+          flavor_text: '你花 40 块买了一杯星冰乐，在舒适的沙发上学了一下午。金钱确实能换来体面和效率。'
+        }
+      ]
+    }]
+  },
+
+  'loc_pb_coffee_chat': {
+    event_id: 'loc_pb_coffee_chat', type: 'location', title: '同辈压力',
+    scenes: [{
+      text: '在 PB 喝咖啡时，你遇到了隔壁专业的卷王。他无意间向你透露，他已经拿到了两段大厂实习和一段牛剑暑研。',
+      bg: 'assets/images/events/pb.png',
+      choices: [
+        {
+          text: '虚心请教他的时间管理方法',
+          effects: { Academic_Ability: +10, Mental_Health: -25 },
+          flavor_text: '他给你展示了他精确到分钟的日程表。你学到了一些技巧，但随之而来的是铺天盖地的焦虑和自我怀疑。'
+        },
+        {
+          text: '敷衍两句，迅速逃离',
+          effects: { Mental_Health: +5 },
+          flavor_text: '你选择捂住耳朵不听。只要我跑得够快，同辈压力就追不上我。'
+        }
+      ]
+    }]
+  },
+
+  'loc_pb_club_activity': {
+    event_id: 'loc_pb_club_activity', type: 'location', title: '社团聚餐',
+    scenes: [{
+      text: '社团今晚在 PB 聚餐，大家提议去吃一顿人均 200 的日料，然后去唱 K。',
+      bg: 'assets/images/events/pb.png',
+      choices: [
+        {
+          text: '去！难得放松一下',
+          effects: { Mental_Health: +30, Money: -25, Physical_Health: -10 },
+          flavor_text: '你们玩到了凌晨两点。你彻底忘记了申研的烦恼，但干瘪的钱包和第二天宿醉的头痛提醒了你现实的残酷。'
+        },
+        {
+          text: '婉拒，说自己要回去赶 Due',
+          effects: { Money: +0, Mental_Health: -10, Academic_Ability: +10 },
+          flavor_text: '看着朋友圈里他们热闹的合影，你独自在台灯下啃着冷面包。孤独，是申研人的必修课。'
+        }
+      ]
+    }]
+  },
+
+  'loc_eb_debug_night': {
+    event_id: 'loc_eb_debug_night', type: 'location', title: '无尽的 Bug',
+    scenes: [{
+      text: '你在 EB 机房做 Final Project。代码跑不通，报错信息你连看都看不懂。此时已经是晚上 11 点了。',
+      bg: 'assets/images/events/lab.png',
+      choices: [
+        {
+          text: '通宵！不调出来不回宿舍',
+          effects: { Academic_Ability: +25, Physical_Health: -25, Mental_Health: -15 },
+          flavor_text: '凌晨四点，你终于发现只是少了一个分号。你看着正常运行的程序，感觉自己像个神，但你的心脏正在抗议。'
+        },
+        {
+          text: '放弃挣扎，花钱找淘宝代做',
+          effects: { Money: -30, Academic_Ability: -10, Mental_Health: +15 },
+          flavor_text: '你花了 500 块钱买了个现成的代码交了上去。你获得了充足的睡眠，但你的良心和专业能力都在隐隐作痛。'
+        }
+      ]
+    }]
+  },
+
+  'loc_eb_equipment_fail': {
+    event_id: 'loc_eb_equipment_fail', type: 'location', title: '设备故障',
+    scenes: [{
+      text: '你正准备导出跑了三天的实验数据，实验室的电脑突然蓝屏了。',
+      bg: 'assets/images/events/lab.png',
+      choices: [
+        {
+          text: '深呼吸，从头再跑一次',
+          effects: { Academic_Ability: +15, Mental_Health: -20 },
+          flavor_text: '你强压下砸电脑的冲动，重新配置环境。你的抗压能力得到了极大的锻炼。'
+        },
+        {
+          text: '崩溃大哭，直接回宿舍',
+          effects: { Mental_Health: +10, Academic_Ability: -15 },
+          flavor_text: '你把键盘一推，直接罢工。大哭一场后心情好多了，但这个项目的进度彻底完蛋了。'
+        }
+      ]
+    }]
+  },
+
+  'loc_ir_data_clean': {
+    event_id: 'loc_ir_data_clean', type: 'location', title: '廉价劳动力',
+    scenes: [{
+      text: '教授丢给你一个包含十万条脏数据的 Excel 表格，让你周末前清理干净。这活毫无技术含量。',
+      bg: 'assets/images/events/research.png',
+      choices: [
+        {
+          text: '老老实实当黑工',
+          effects: { Mental_Health: -20, Physical_Health: -10 },
+          flavor_text: '你点鼠标点到手抽筋。虽然没学到什么新知识，但教授对你的服从性非常满意，这也许对要推荐信有帮助。'
+        },
+        {
+          text: '花钱买个脚本自动处理',
+          effects: { Money: -15, Mental_Health: +10 },
+          flavor_text: '你在闲鱼上花钱找人写了个 Python 脚本，五分钟搞定。你用省下的时间看了一部电影。'
+        }
+      ]
+    }]
+  },
+
+  'loc_ir_professor_meeting': {
+    event_id: 'loc_ir_professor_meeting', type: 'location', title: '组会拷问',
+    scenes: [{
+      text: '在周度组会上，教授突然点名让你汇报最近阅读的文献。你其实只看了个摘要。',
+      bg: 'assets/images/events/research.png',
+      choices: [
+        {
+          text: '硬着头皮瞎编',
+          effects: { Mental_Health: -25, Academic_Ability: -5 },
+          flavor_text: '教授一眼看穿了你的窘迫，当着全组的面把你批评了一顿。你恨不得找个地缝钻进去。'
+        },
+        {
+          text: '坦诚道歉，保证下次补上',
+          effects: { Mental_Health: -10, Academic_Ability: +5 },
+          flavor_text: '你诚恳地承认了错误。教授虽然不悦，但也没有过多刁难。你暗下决心今晚回去把文献读完。'
+        }
+      ]
+    }]
+  },
+
+  'loc_ia_anxiety_talk': {
+    event_id: 'loc_ia_anxiety_talk', type: 'location', title: '残酷的现实',
+    scenes: [{
+      text: 'IA 的老师给你看了一份往届录取数据：“以你目前的背景，想申 G5 几乎是不可能的，建议降低预期。”',
+      bg: 'assets/images/events/office.png',
+      choices: [
+        {
+          text: '不信邪，偏要头铁冲刺',
+          effects: { Mental_Health: -15, Academic_Ability: +15, English_Ability: +15 },
+          flavor_text: '这句话激起了你的斗志。你把目标院校的 Logo 设为壁纸，开始了破釜沉舟的复习。'
+        },
+        {
+          text: '接受现实，调整选校策略',
+          effects: { Mental_Health: +15, Academic_Ability: -5 },
+          flavor_text: '你叹了口气，把目标从 UCL 换成了排名 100 开外的学校。虽然不甘心，但焦虑感确实减轻了不少。'
+        }
+      ]
+    }]
+  },
+
+  'loc_ia_alumni_share': {
+    event_id: 'loc_ia_alumni_share', type: 'location', title: '校友分享会',
+    scenes: [{
+      text: '你参加了一场优秀校友的申研分享会。门票需要 50 元。',
+      bg: 'assets/images/events/office.png',
+      choices: [
+        {
+          text: '买票入场，认真做笔记',
+          effects: { Money: -5, Academic_Ability: +10, Mental_Health: -10 },
+          flavor_text: '干货很多，但校友光鲜亮丽的履历让你深感自己的不足，压力倍增。'
+        },
+        {
+          text: '太贵了，不如回宿舍睡觉',
+          effects: { Money: +0, Mental_Health: +10, Physical_Health: +5 },
+          flavor_text: '你省下了 50 块钱，并在宿舍度过了一个惬意的下午。'
+        }
+      ]
+    }]
+  },
+
+  'loc_gym_heavy_lift': {
+    event_id: 'loc_gym_heavy_lift', type: 'location', title: '极限重量',
+    scenes: [{
+      text: '你在健身房挑战深蹲个人极限。还差最后一下，但你的腿已经开始发抖了。',
+      bg: 'assets/images/events/gym.png',
+      choices: [
+        {
+          text: '咬牙硬蹲！',
+          effects: { Physical_Health: +25, Mental_Health: +15, Academic_Ability: -10 },
+          flavor_text: '你成功突破了极限！多巴胺疯狂分泌，你感觉自己无所不能，但接下来的三天你连楼梯都下不了。'
+        },
+        {
+          text: '安全第一，放弃',
+          effects: { Physical_Health: +10, Mental_Health: -5 },
+          flavor_text: '你把杠铃放回了架子上。虽然没受伤，但隐隐有些挫败感。'
+        }
+      ]
+    }]
+  },
+
+  'loc_gym_yoga': {
+    event_id: 'loc_gym_yoga', type: 'location', title: '冥想与拉伸',
+    scenes: [{
+      text: '你报了一节瑜伽课。教练让你闭上眼睛，清空大脑里所有的 DDL 和雅思单词。',
+      bg: 'assets/images/events/gym.png',
+      choices: [
+        {
+          text: '彻底放空自己',
+          effects: { Mental_Health: +25, Physical_Health: +15, Money: -10 },
+          flavor_text: '伴随着舒缓的音乐，你感受到了久违的宁静。这 100 块钱的课时费花得值。'
+        },
+        {
+          text: '闭着眼睛偷偷背单词',
+          effects: { English_Ability: +10, Mental_Health: -15, Physical_Health: +0 },
+          flavor_text: '即便在瑜伽垫上，你的大脑依然在高速运转。你记住了几个词根，但下课后感觉比上课前还累。'
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_gaming': {
+    event_id: 'loc_dorm_gaming', type: 'location', title: '罪恶的连败',
+    scenes: [{
+      text: '晚上 10 点，你打开游戏准备“只玩一把就睡”。结果遭遇了史诗级的三连败，队友的嘲讽让你血压飙升。',
+      bg: 'assets/images/events/dorm.png',
+      choices: [
+        {
+          text: '怒开下一把，赢了才睡！',
+          effects: { Mental_Health: -25, Physical_Health: -20, Academic_Ability: -10 },
+          flavor_text: '你一直打到天亮，最终以一波七连败结束了战斗。你不仅没复习，还感觉身体被掏空。'
+        },
+        {
+          text: '强行关机，深呼吸睡觉',
+          effects: { Mental_Health: +10, Physical_Health: +15 },
+          flavor_text: '你凭借极强的自制力按下了电源键。虽然带着不甘入睡，但第二天醒来时，你庆幸自己做出了正确的决定。'
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_sleep': {
+    event_id: 'loc_dorm_sleep', type: 'location', title: '保底的港湾',
+    scenes: [{
+      text: '外面狂风暴雨，你躺在温暖的被窝里，听着雨声。你现在什么都不想干。',
+      bg: 'assets/images/events/dorm.png',
+      choices: [
+        {
+          text: '就这样躺平一天',
+          effects: { Mental_Health: +25, Physical_Health: +20, Academic_Ability: -15, English_Ability: -10 },
+          flavor_text: '你睡了整整 14 个小时。你的身体和心灵都得到了极大的修复，代价是你的学习进度被别人远远甩开。'
+        }
+      ]
+    }]
+  },
+
 };
