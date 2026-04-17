@@ -197,6 +197,10 @@ _playScene(index) {
   }
 
   _resolveChoice(choice) {
+    // 【修复】：单选结算时强制重置多选状态，防止状态污染
+    this._isMultiChoiceText = false;
+    this._multiChoiceQueue = [];
+
     const currentState = StateManager.getState();
     const playerTags   = currentState.tags || [];
     // 【新增】：获取透视 Buff 状态
@@ -322,6 +326,10 @@ _playScene(index) {
   // ───────────────────────────────────────────────────────────
 
   _endEvent() {
+    // 【修复】：事件结束时重置多选状态
+    this._isMultiChoiceText = false;
+    this._multiChoiceQueue = [];
+    
     log('info', 'VNScreen', `✅ 事件结束：${this._event?.event_id}`);
 
     if (this._event?.event_id) {
