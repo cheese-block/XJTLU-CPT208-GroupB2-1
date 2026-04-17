@@ -118,13 +118,27 @@ function _playNextEvent() {
     return;
   }
 
-  // 雅思特殊处理保留...
-  if (eventData.event_id === 'ielts_exam_result') { /* 略，原样保留 */ }
+  // 雅思考试特殊处理：动态注入出分结果
+  if (eventData.event_id === 'ielts_exam_result') {
+    const result = resolveIeltsExam(state);
+    
+    if (eventData.scenes && eventData.scenes.length > 1) {
+      const band = result.band;
+      let evaluation = '';
+      if (band === '7.5') evaluation = '远超预期！';
+      else if (band === '7.0') evaluation = '达到了目标！';
+      else if (band === '6.5') evaluation = '勉强够用。';
+      else if (band === '6.0') evaluation = '不太理想。';
+      else evaluation = '需要继续努力。';
+      
+      eventData.scenes[1].text = `雅思成绩：${band} 分。\n\n${evaluation}\n\n${result.summary}`;
+    }
+  }
 
   StateManager.startEvent(eventData);
   
-  // 智能路由：新手引导、特殊长剧情走 VN，地点抽卡和普通随机事件走 EVENT_CARD
-  const useVN = ['tutorial_intro', 'sem1_final_exam', 'sem2_final_exam'].includes(eventData.event_id);
+  const useVN = ['tutorial_intro_1', 'tutorial_intro_2', 'sem1_final_exam', 'sem2_final_exam']
+    .includes(eventData.event_id);
   const targetPhase = useVN ? CONSTANTS.GAME_PHASE.VN : CONSTANTS.GAME_PHASE.EVENT_CARD;
   const targetScreen = useVN ? _vnScreen : _eventCardScreen;
 
@@ -134,9 +148,9 @@ function _playNextEvent() {
     targetScreen.startEvent(eventData, () => {
       StateManager.markEventTriggered(eventData.event_id);
       StateManager.saveGame();
-      _playNextEvent(); // 递归处理队列下一个
+      _playNextEvent();
     });
-  }, 100); // 缩短延迟，让出现更丝滑
+  }, 100);
 }
 
 // ─────────────────────────────────────────────────────────────

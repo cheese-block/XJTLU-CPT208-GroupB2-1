@@ -367,6 +367,35 @@ export const EVENTS = {
     ],
   },
 
+  'ielts_guarantee': {
+    event_id:      'ielts_guarantee',
+    type:          'scheduled',
+    trigger_month: 8,
+    required_tags: [],
+    forbidden_tags: ['IELTS_5.5', 'IELTS_6.0', 'IELTS_6.5', 'IELTS_7.0', 'IELTS_7.5'],
+    title:         '最后的考位',
+    scenes: [
+      {
+        text: '八月了，你还没有考出雅思成绩。你刷了整整两天官网，终于抢到了一个别人退掉的考位。这是暑假结束前最后的机会了。',
+        tip:  '语言成绩是申请的硬门槛。如果这次还考不出来，申请季将非常被动。',
+        choices: [
+          {
+            text:    '立刻报名，背水一战',
+            effects: { Money: -20 },
+            flavor_text: '你咬咬牙交了报名费。没有退路了。',
+            next_event_id: 'ielts_exam_result',
+          },
+          {
+            text:    '算了，等开学再说',
+            effects: { Mental_Health: +5 },
+            flavor_text: '你关掉了报名页面。开学后考位会更紧张，但你实在没有勇气面对又一次考试。',
+            tip:     '拖延是雅思备考最大的敌人。越往后拖，压力越大，出分越难。',
+          },
+        ],
+      },
+    ],
+  },
+
   'final_application': {
     event_id:      'final_application',
     type:          'scheduled',
@@ -395,7 +424,7 @@ export const EVENTS = {
     type:             'random',
     title:            '雅思考位放出',
     available_months: [2, 3, 5, 7, 8, 10, 11],
-    forbidden_tags:   ['IELTS_7.0', 'IELTS_7.5'],
+    forbidden_tags:   ['IELTS_7.5'],  // 改为只有7.5才禁止触发，允许6.0/6.5重考
     weight:           1.2,
     scenes: [
       {
