@@ -78,20 +78,92 @@ export class StatusBar {
   }
 
   _buildBarHTML(id, icon, label) {
-    // 进度条常态统一为 bg-xjtlu-navy，加入 transition-colors 实现平滑变色
     return `
       <div class="flex-1 flex flex-col justify-center min-w-[80px]">
         <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
         </span>
-        <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-          <div id="sb-${id}-fill" 
-               class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" 
-               style="width: 50%"></div>
+        <div class="relative w-full flex items-center">
+          <!-- 左侧预览点 (代表减少) -->
+          <div id="sb-${id}-preview-left" 
+               class="absolute -left-3 w-2 h-2 rounded-full bg-gray-800 opacity-0 transition-all duration-200 z-10"></div>
+          
+          <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
+            <div id="sb-${id}-fill" 
+                 class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" 
+                 style="width: 50%"></div>
+          </div>
+
+          <!-- 右侧预览点 (代表增加) -->
+          <div id="sb-${id}-preview-right" 
+               class="absolute -right-3 w-2 h-2 rounded-full bg-white border border-gray-300 shadow-sm opacity-0 transition-all duration-200 z-10"></div>
+          
+          <!-- 悬浮时的具体数值飘字 (透视Buff专用) -->
+          <div id="sb-${id}-preview-text"
+               class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black opacity-0 transition-all duration-200"></div>
         </div>
       </div>
     `;
+  }
+
+  // 【新增方法】：展示王权式预览
+  showPreview(effects, hasExactBuff) {
+    if (!this._container || !effects) return;
+
+    const statMap = {
+      Mental_Health: 'mental',
+      Physical_Health: 'physical',
+      Money: 'money',
+      Academic_Ability: 'academic',
+      English_Ability: 'english'
+    };
+
+    Object.entries(effects).forEach(([stat, delta]) => {
+      if (delta === 0) return;
+      const id = statMap[stat];
+      if (!id) return;
+
+      const isPos = delta > 0;
+      const isLarge = Math.abs(delta) >= 15;
+      
+      // 控制圆点大小
+      const dotSize = isLarge ? 'scale-150' : 'scale-100';
+
+      if (isPos) {
+        const rightDot = this._container.querySelector(`#sb-${id}-preview-right`);
+        if (rightDot) {
+          rightDot.style.opacity = '1';
+          rightDot.className = `absolute -right-3 w-2 h-2 rounded-full bg-white border border-gray-300 shadow-sm transition-all duration-200 z-10 opacity-100 ${dotSize}`;
+        }
+      } else {
+        const leftDot = this._container.querySelector(`#sb-${id}-preview-left`);
+        if (leftDot) {
+          leftDot.style.opacity = '1';
+          leftDot.className = `absolute -left-3 w-2 h-2 rounded-full bg-gray-800 transition-all duration-200 z-10 opacity-100 ${dotSize}`;
+        }
+      }
+
+      // 透视 Buff 逻辑：显示具体数字
+      if (hasExactBuff) {
+        const textEl = this._container.querySelector(`#sb-${id}-preview-text`);
+        if (textEl) {
+          textEl.textContent = isPos ? `+${delta}` : delta;
+          textEl.className = `absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black transition-all duration-200 opacity-100 ${isPos ? 'text-xjtlu-green' : 'text-xjtlu-red'}`;
+        }
+      }
+    });
+  }
+
+  // 【新增方法】：清除所有预览
+  clearPreview() {
+    if (!this._container) return;
+    const dots = this._container.querySelectorAll('[id*="-preview-"]');
+    dots.forEach(dot => {
+      dot.style.opacity = '0';
+      // 恢复默认大小
+      dot.classList.remove('scale-150', 'scale-100');
+    });
   }
 
   // ───────────────────────────────────────────────────────────

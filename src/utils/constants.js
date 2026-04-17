@@ -118,6 +118,7 @@ export const CONSTANTS = Object.freeze({
     SCHOOL_SELECT: 'SCHOOL_SELECT',
     MAP:           'MAP',
     VN:            'VN',
+    EVENT_CARD:    'EVENT_CARD', // 【新增】事件卡片阶段
     MONTH_SUMMARY: 'MONTH_SUMMARY',
     TAG_SHOWCASE:  'TAG_SHOWCASE',
     ENDING:        'ENDING',
@@ -149,6 +150,7 @@ export const CONSTANTS = Object.freeze({
     SCHOOL_SELECT: 'screen-school-select',
     MAP:           'screen-map',
     VN:            'screen-vn',
+    EVENT_CARD:    'screen-event-card', // 【新增】
     MONTH_SUMMARY: 'screen-month-summary',
     TAG_SHOWCASE:  'screen-tag-showcase',
     ENDING:        'screen-ending',

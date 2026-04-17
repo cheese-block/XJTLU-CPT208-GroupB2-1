@@ -11,9 +11,11 @@ import { VNScreen }           from './src/ui/screens/VNScreen.js';
 import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
 import { initTooltipManager } from './src/ui/components/TooltipManager.js';
 import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
-import { EndingScreen }       from './src/ui/screens/EndingScreen.js'; 
+import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
+import { EventCardScreen }    from './src/ui/screens/EventCardScreen.js';
 
 let _vnScreen = null;
+let _eventCardScreen = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -23,16 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 【新增调用】：初始化全局 Tooltip
   initTooltipManager();
 
+  // 【修改 2】：在 initGameLoop 调用时传入两个 Screen
   _vnScreen = new VNScreen();
+  _eventCardScreen = new EventCardScreen();
 
-  // 初始化 GameLoop（注入 VNScreen）
-  initGameLoop(_vnScreen);
+  initGameLoop(_vnScreen, _eventCardScreen);
 
   registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
   registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
   registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
   registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
   registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.EVENT_CARD,  _eventCardScreen);
 
   const placeholder = (label) => ({
     mount(container) {

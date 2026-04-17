@@ -142,14 +142,20 @@ export class MapScreen {
               draggable="false"
             />
 
-            <!-- Pin 层 -->
+            <!-- Pin 层 (悬浮气泡也挂载在此层内部保证坐标统一) -->
             <div id="hotspot-layer"
                  class="absolute pointer-events-none"
-                 style="left:0;top:0;width:0;height:0;">
+                 style="left:0;top:0;width:0;height:0;z-index:40;">
               ${pinsHTML}
+              
+              <!-- 动态悬浮动作气泡 (新增) -->
+              <div id="action-popover" 
+                   class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none origin-bottom-left"
+                   style="transform: translate(15px, -100%);">
+              </div>
             </div>
 
-            <!-- 结束本月按钮（移入 map-wrap，相对于地图底部定位）-->
+            <!-- 结束本月按钮 -->
             <div class="absolute bottom-6 right-6 z-40">
               <button
                 id="btn-end-month"
@@ -160,7 +166,7 @@ export class MapScreen {
               </button>
             </div>
 
-            <!-- 调试提示角标（移入 map-wrap） -->
+            <!-- 调试提示角标 -->
             ${CONSTANTS.MAP_DEBUG ? `
               <div id="debug-toolbar"
                    class="absolute bottom-6 left-6 z-50
@@ -182,7 +188,7 @@ export class MapScreen {
 
           </div>
 
-          <!-- 【修改】时间轴层：作为 flex-col 的底部元素，不再绝对定位遮挡地图 -->
+          <!-- 时间轴层 -->
           <div id="timeline-bar"
                class="relative z-30 shrink-0
                       bg-white border-t-2 border-xjtlu-navy/20
@@ -288,6 +294,10 @@ export class MapScreen {
     });
 
     this._renderInfoPanel(building);
+    
+    // 【新增】渲染并弹出气泡
+    this._renderActionPopover(building);
+    
     log('debug', 'MapScreen', `选中建筑：${building.name}`);
   }
 
@@ -295,12 +305,18 @@ export class MapScreen {
     const mapWrap = this._container?.querySelector('#map-wrap');
     if (!mapWrap) return;
     mapWrap.addEventListener('click', (e) => {
-      if (e.target.closest('.map-pin')) return;
+      // 忽略点击 引脚 和 气泡内部
+      if (e.target.closest('.map-pin') || e.target.closest('#action-popover')) return;
       if (CONSTANTS.MAP_DEBUG) return;
+      
       this._selectedId = null;
       this._container?.querySelectorAll('.map-pin')
         .forEach(pin => pin.classList.remove('map-pin--selected'));
+      
       this._renderInfoPanel(null);
+      
+      // 【新增】点击空白处隐藏气泡
+      this._hideActionPopover();
     });
   }
 
@@ -683,7 +699,6 @@ export class MapScreen {
 
   _buildBuildingPanel(building) {
     const isAction = building.type === 'B';
-    const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
 
     return `
       <div class="flex-1 flex flex-col overflow-hidden">
@@ -736,61 +751,7 @@ export class MapScreen {
           </div>
         </div>
 
-        <!-- 行动按钮区 -->
-        <div class="shrink-0 border-t-2 border-gray-100 px-5 py-4
-                    flex flex-col gap-2">
-          ${isAction && actions.length > 0 ? `
-            <p class="text-[0.65rem] font-bold text-xjtlu-gray
-                      tracking-wider uppercase mb-1">可执行的行动</p>
-            ${actions.map(a => this._buildActionButton(a)).join('')}
-          ` : `
-            <p class="text-xs text-xjtlu-gray text-center py-1">
-              此建筑无可执行行动
-            </p>
-          `}
-        </div>
-
       </div>
-    `;
-  }
-
-  _buildActionButton(action) {
-    const canAfford = (this._state?.AP ?? 0) >= action.apCost;
-    const apRemain  = this._state?.AP ?? 0;
-
-    return `
-      <button
-        class="action-btn w-full text-left
-               flex items-center gap-3 px-4 py-3 rounded-xl
-               border-2 transition-all duration-150
-               ${canAfford
-                 ? 'border-xjtlu-blue bg-xjtlu-blue/5 hover:bg-xjtlu-blue hover:text-white cursor-pointer'
-                 : 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'}"
-        data-action-id="${action.id}"
-        ${!canAfford ? 'disabled' : ''}
-      >
-        <div class="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center
-                    ${canAfford ? 'bg-xjtlu-blue/10' : 'bg-gray-200'}">
-          <i data-lucide="${action.icon}"
-             class="lucide w-4 h-4
-                    ${canAfford ? 'text-xjtlu-blue' : 'text-gray-400'}">
-          </i>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-bold leading-tight
-                    ${canAfford ? 'text-xjtlu-navy' : 'text-gray-400'}">
-            ${action.label}
-          </p>
-          <p class="text-[0.65rem] mt-0.5
-                    ${canAfford ? 'text-xjtlu-gray' : 'text-gray-400'}">
-            消耗 ${action.apCost} AP · 剩余 ${apRemain} AP
-          </p>
-        </div>
-        <i data-lucide="chevron-right"
-           class="lucide w-4 h-4 shrink-0
-                  ${canAfford ? 'text-xjtlu-blue' : 'text-gray-300'}">
-        </i>
-      </button>
     `;
   }
 
@@ -806,6 +767,91 @@ export class MapScreen {
       // 随机事件触发时 GameLoop 内部已切换到 VN 模式
       // 此回调暂时留空
     });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 新增：地图引脚气泡 (Action Popover)
+  // ───────────────────────────────────────────────────────────
+
+  _renderActionPopover(building) {
+    const popover = this._container?.querySelector('#action-popover');
+    if (!popover) return;
+
+    const isAction = building.type === 'B';
+    const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
+    const apRemain = this._state?.AP ?? 0;
+
+    // 如果不是可行动建筑或无行动，隐藏气泡
+    if (!isAction || actions.length === 0) {
+      this._hideActionPopover();
+      return;
+    }
+
+    // 构建按钮组 HTML
+    const buttonsHTML = actions.map(action => {
+      const canAfford = apRemain >= action.apCost;
+      return `
+        <button class="action-btn w-44 text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 ${canAfford ? 'bg-white hover:bg-xjtlu-blue hover:text-white text-xjtlu-navy border border-gray-200 hover:border-xjtlu-blue shadow-sm cursor-pointer hover:translate-x-1' : 'bg-gray-100 text-gray-400 border border-transparent cursor-not-allowed'}"
+          data-action-id="${action.id}" ${!canAfford ? 'disabled' : ''}>
+          <div class="flex items-center justify-center w-6 h-6 rounded bg-gray-100/50 shrink-0">
+            <i data-lucide="${action.icon}" class="lucide w-4 h-4"></i>
+          </div>
+          <span class="font-bold text-sm flex-1 leading-none tracking-wide">${action.label}</span>
+          <span class="text-[0.65rem] font-black opacity-60 shrink-0">-${action.apCost} AP</span>
+        </button>
+      `;
+    }).join('');
+
+    // 填充气泡内容，带有一个指向左下角的小尾巴指示器
+    popover.innerHTML = `
+      <div class="bg-white/95 backdrop-blur-sm p-1.5 rounded-xl shadow-xl border border-gray-200 flex flex-col gap-1.5 relative">
+        ${buttonsHTML}
+        <!-- 小尾巴 -->
+        <div class="absolute -bottom-2 left-4 w-4 h-4 bg-white/95 border-b border-r border-gray-200 transform rotate-45"></div>
+      </div>
+    `;
+
+    // 绑定执行事件
+    popover.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this._hideActionPopover();
+        this._handleAction(btn.dataset.actionId);
+      });
+    });
+
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: popover });
+
+    // 定位气泡：使用与 Pin 完全一致的百分比坐标
+    const pos = this._hotspotPositions[building.id];
+    popover.style.left = `${pos.x}%`;
+    popover.style.top  = `${pos.y}%`;
+    
+    // 移除隐藏类，加上动画类
+    popover.classList.remove('hidden');
+    popover.style.pointerEvents = 'auto';
+    
+    // 强制触发 DOM 重绘以确保动画生效
+    void popover.offsetWidth; 
+    
+    popover.classList.remove('opacity-0', 'scale-95');
+    popover.classList.add('opacity-100', 'scale-100');
+  }
+
+  _hideActionPopover() {
+    const popover = this._container?.querySelector('#action-popover');
+    if (!popover) return;
+    
+    popover.classList.remove('opacity-100', 'scale-100');
+    popover.classList.add('opacity-0', 'scale-95');
+    popover.style.pointerEvents = 'none';
+    
+    // 等待过渡动画结束后隐藏 DOM
+    setTimeout(() => {
+      if (popover.classList.contains('opacity-0')) {
+        popover.classList.add('hidden');
+        popover.innerHTML = ''; // 清空内容
+      }
+    }, 150);
   }
 
   // ───────────────────────────────────────────────────────────

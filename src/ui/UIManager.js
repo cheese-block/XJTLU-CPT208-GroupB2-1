@@ -176,3 +176,12 @@ export function switchScreen(phase) {
   _currentPhase = phase;
   _switchToPhase(phase);
 }
+
+// 【修改】：在文件末尾追加以下导出函数
+export function previewEffects(effects, hasExactBuff) {
+  _statusBar?.showPreview(effects, hasExactBuff);
+}
+
+export function clearPreview() {
+  _statusBar?.clearPreview();
+}
