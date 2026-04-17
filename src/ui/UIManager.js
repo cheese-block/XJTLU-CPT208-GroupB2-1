@@ -133,6 +133,10 @@ function _switchToPhase(phase) {
   }
 
   Object.values(CONSTANTS.SCREEN_IDS).forEach((id) => {
+    // 【核心修复】：当切入 EVENT_CARD 时，不隐藏 MAP 容器，使其作为底层背景透出
+    if (phase === CONSTANTS.GAME_PHASE.EVENT_CARD && id === CONSTANTS.SCREEN_IDS.MAP) {
+      return; 
+    }
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
@@ -160,11 +164,13 @@ function _switchToPhase(phase) {
       });
     });
 
+    // 【修改】：EVENT_CARD 自带居中排版，不需要像其他界面那样硬塞顶部 Padding
     const needsPadding = ![
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
+      CONSTANTS.GAME_PHASE.EVENT_CARD, 
     ].includes(phase);
-    // 【修改】：将补偿高度从 3.5rem 增加到 4.5rem，以适应变高的状态栏
+    
     container.style.paddingTop = needsPadding ? '4.5rem' : '';
   }
 
