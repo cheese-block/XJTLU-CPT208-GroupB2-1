@@ -326,34 +326,48 @@ export class MapScreen {
 
   /**
    * 检查是否需要触发新手引导剧情。
-   * 条件：Month 1 且从未触发过（不持有 __TUTORIAL_DONE__ 标签）。
-   * 引导结束后写入标签，确保续档不会重复播放。
+   * 根据全局游玩次数（playCount）决定触发哪个版本的引导。
    */
   _tryTriggerTutorial() {
     const state = StateManager.getState();
 
-    // 非 Month 1，或已经看过引导，直接跳过
-    if (state.currentMonth !== 1 ||
-        state.tags.includes('__TUTORIAL_DONE__')) {
+    // 只有在 Month 1，且单局内未触发过引导时才执行
+    if (state.currentMonth !== 1 || state.tags.includes('__TUTORIAL_DONE__')) {
       return;
     }
 
-    log('info', 'MapScreen', '🎓 触发新手引导');
+    const playCount = StateManager.getPlayCount();
+    let tutorialEventId = null;
+
+    if (playCount <= 1) {
+      tutorialEventId = 'tutorial_intro_1'; // 一周目详细引导
+    } else if (playCount === 2) {
+      tutorialEventId = 'tutorial_intro_2'; // 二周目简短警告
+    } else {
+      // 三周目及以上，直接跳过引导，写入标记
+      StateManager.addTag('__TUTORIAL_DONE__');
+      StateManager.saveGame();
+      return;
+    }
+
+    log('info', 'MapScreen', `🎓 触发轮回引导（第 ${playCount} 周目）`);
 
     // 将引导事件注入队列头部
     StateManager.enqueueEventFront({
-      eventId: 'tutorial_intro',
+      eventId: tutorialEventId,
       source:  'chain',
     });
 
-    // 短暂延迟，确保地图 DOM 完全渲染后再切换到 VN 模式
+    // 短暂延迟，确保地图 DOM 完全渲染后再切换到事件卡片模式
     setTimeout(() => {
-      processEventQueue(() => {
-        // 引导结束后：写入"已看过"标签，返回地图
-        StateManager.addTag('__TUTORIAL_DONE__');
-        StateManager.saveGame();
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-        log('info', 'MapScreen', '✅ 新手引导完成');
+      import('../../engine/GameLoop.js').then(({ processEventQueue }) => {
+        processEventQueue(() => {
+          // 引导结束后：写入"已看过"标签，返回地图
+          StateManager.addTag('__TUTORIAL_DONE__');
+          StateManager.saveGame();
+          StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+          log('info', 'MapScreen', '✅ 引导完成');
+        });
       });
     }, 500);
   }

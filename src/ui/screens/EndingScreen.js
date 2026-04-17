@@ -13,6 +13,9 @@ export class EndingScreen {
     // 结算结局
     const ending = determineEnding(state);
     
+    // 【新增】：将达成的结局写入全局图鉴
+    StateManager.unlockEnding(ending.id);
+    
     container.innerHTML = this._buildHTML(ending);
     if (typeof lucide !== 'undefined') lucide.createIcons();
     this._bindEvents();

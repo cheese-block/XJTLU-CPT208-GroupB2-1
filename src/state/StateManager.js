@@ -24,6 +24,13 @@ import { clamp, deepClone, formatTimestamp, log } from '../utils/helpers.js';
 /** @type {import('./GameState.js').GameState} */
 let _state = null;
 
+// 【新增】：全局持久化状态（独立于单局游戏）
+let _globalState = {
+  playCount: 0,           // 历史开局次数
+  unlockedEndings: [],    // 已解锁的结局 ID 列表
+  unlockedAchievements: []// 预留成就系统
+};
+
 /**
  * 变更监听器列表。
  * UI 层通过 StateManager.subscribe() 注册回调，
@@ -62,6 +69,41 @@ const STAT_BOUNDS = Object.freeze({
 });
 
 // ─────────────────────────────────────────────────────────────
+// 全局持久化数据 (Meta-progression)
+// ─────────────────────────────────────────────────────────────
+
+function _loadGlobalState() {
+  try {
+    const raw = localStorage.getItem(CONSTANTS.GLOBAL_SAVE_KEY);
+    if (raw) {
+      _globalState = { ..._globalState, ...JSON.parse(raw) };
+    }
+  } catch (e) {
+    log('error', 'StateManager', '读取全局存档失败', e);
+  }
+}
+
+function _saveGlobalState() {
+  try {
+    localStorage.setItem(CONSTANTS.GLOBAL_SAVE_KEY, JSON.stringify(_globalState));
+  } catch (e) {
+    log('error', 'StateManager', '保存全局存档失败', e);
+  }
+}
+
+export function getPlayCount() {
+  return _globalState.playCount;
+}
+
+export function unlockEnding(endingId) {
+  if (!_globalState.unlockedEndings.includes(endingId)) {
+    _globalState.unlockedEndings.push(endingId);
+    _saveGlobalState();
+    log('info', 'StateManager', `🏆 解锁新结局图鉴：${endingId}`);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
 // 初始化 / 获取状态
 // ─────────────────────────────────────────────────────────────
 
@@ -72,6 +114,8 @@ const STAT_BOUNDS = Object.freeze({
  * @returns {import('./GameState.js').GameState} 当前状态快照
  */
 export function initStateManager() {
+  _loadGlobalState(); // 【新增】应用启动时加载全局数据
+
   const saved = loadGame();
   if (saved) {
     const { valid, errors } = validateState(saved);
@@ -84,6 +128,7 @@ export function initStateManager() {
     }
   } else {
     _state = createInitialState();
+    // 【修改】：如果没有单局存档，说明是首次打开或刚通关，不在这里加 playCount，在进入游戏时加
     log('info', 'StateManager', '✅ 创建全新游戏状态');
   }
   return deepClone(_state);
@@ -614,7 +659,12 @@ export function getSavePreview() {
 export function resetGame() {
   clearSave();
   _state = createInitialState();
-  log('info', 'StateManager', '🔄 游戏已重置');
+  
+  // 【新增】：每次重新开始新游戏，游玩次数 +1
+  _globalState.playCount += 1;
+  _saveGlobalState();
+  
+  log('info', 'StateManager', `🔄 游戏已重置，当前是第 ${_globalState.playCount} 周目`);
   _notifyChange();
   return deepClone(_state);
 }

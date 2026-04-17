@@ -9,6 +9,7 @@ export const CONSTANTS = Object.freeze({
   // 【存档系统】
   // ─────────────────────────────────────────────────────────
   SAVE_KEY:     'xjtlu_sim_save',   // localStorage key
+  GLOBAL_SAVE_KEY: 'xjtlu_sim_global_data', // 【新增】全局持久化存档（多周目、图鉴）
   SAVE_VERSION: '1.0.0',           // 存档版本（迁移兼容用）
 
   // ─────────────────────────────────────────────────────────
