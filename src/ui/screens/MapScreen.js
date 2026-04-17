@@ -765,6 +765,21 @@ export class MapScreen {
           </div>
         </div>
 
+        // 在 _buildBuildingPanel 方法内，lore 卡片之后追加：
+        ${building.tendency ? `
+          <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <i data-lucide="trending-up"
+                class="lucide w-3 h-3 text-xjtlu-blue"></i>
+              <span class="text-[0.6rem] font-bold text-xjtlu-blue
+                          tracking-wider uppercase">行动倾向</span>
+            </div>
+            <p class="text-xs text-blue-700 leading-relaxed">
+              ${building.tendency}
+            </p>
+          </div>
+        ` : ''}
+
       </div>
     `;
   }
