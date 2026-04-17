@@ -69,7 +69,7 @@ export class EventCardScreen {
       choicesContainer.querySelector('button').addEventListener('click', () => {
         // 纯文本如果有影响，直接结算
         if (scene.effects && Object.keys(scene.effects).length > 0) {
-           StateManager.applyStatDelta(scene.effects);
+           StateManager.applyStatDelta(scene.effects, this._buildEffectLabels(scene.effects));
         }
         this._playScene(index + 1);
       });
@@ -111,7 +111,7 @@ export class EventCardScreen {
       
       btn.addEventListener('click', () => {
         clearPreview();
-        if (choice.effects) StateManager.applyStatDelta(choice.effects);
+        if (choice.effects) StateManager.applyStatDelta(choice.effects, this._buildEffectLabels(choice.effects));
         if (choice.tags_added) choice.tags_added.forEach(tag => StateManager.addTag(tag));
         if (choice.next_event_id) StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
         StateManager.saveGame();
@@ -123,6 +123,22 @@ export class EventCardScreen {
         this._playScene(this._sceneIndex + 1);
       });
     });
+  }
+
+  _buildEffectLabels(effects) {
+    const labelMap = {
+      Mental_Health:    '心理健康',
+      Physical_Health:  '身体健康',
+      Money:            '资金',
+      Academic_Ability: '学力',
+      English_Ability:  '英语能力',
+      AP:               '行动点',
+    };
+    const result = {};
+    Object.keys(effects ?? {}).forEach(key => {
+      result[key] = labelMap[key] ?? key;
+    });
+    return result;
   }
 
   _buildHTML() {

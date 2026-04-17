@@ -84,10 +84,11 @@ export class StatusBar {
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
         </span>
-        <div class="relative w-full flex items-center">
+        <!-- 【修改】：增加 px-3 为左右圆点腾出空间，防止被裁剪 -->
+        <div class="relative w-full flex items-center px-3">
           <!-- 左侧预览点 (代表减少) -->
           <div id="sb-${id}-preview-left" 
-               class="absolute -left-3 w-2 h-2 rounded-full bg-gray-800 opacity-0 transition-all duration-200 z-10"></div>
+               class="absolute left-0 w-2 h-2 rounded-full bg-xjtlu-navy opacity-0 transition-all duration-200 z-10"></div>
           
           <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
             <div id="sb-${id}-fill" 
@@ -97,9 +98,9 @@ export class StatusBar {
 
           <!-- 右侧预览点 (代表增加) -->
           <div id="sb-${id}-preview-right" 
-               class="absolute -right-3 w-2 h-2 rounded-full bg-white border border-gray-300 shadow-sm opacity-0 transition-all duration-200 z-10"></div>
+               class="absolute right-0 w-2 h-2 rounded-full bg-xjtlu-navy opacity-0 transition-all duration-200 z-10"></div>
           
-          <!-- 悬浮时的具体数值飘字 (透视Buff专用) -->
+          <!-- 悬浮时的具体数值飘字 -->
           <div id="sb-${id}-preview-text"
                class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black opacity-0 transition-all duration-200"></div>
         </div>
@@ -107,7 +108,6 @@ export class StatusBar {
     `;
   }
 
-  // 【新增方法】：展示王权式预览
   showPreview(effects, hasExactBuff) {
     if (!this._container || !effects) return;
 
@@ -126,25 +126,22 @@ export class StatusBar {
 
       const isPos = delta > 0;
       const isLarge = Math.abs(delta) >= 15;
-      
-      // 控制圆点大小
       const dotSize = isLarge ? 'scale-150' : 'scale-100';
 
       if (isPos) {
         const rightDot = this._container.querySelector(`#sb-${id}-preview-right`);
         if (rightDot) {
           rightDot.style.opacity = '1';
-          rightDot.className = `absolute -right-3 w-2 h-2 rounded-full bg-white border border-gray-300 shadow-sm transition-all duration-200 z-10 opacity-100 ${dotSize}`;
+          rightDot.className = `absolute right-0 w-2 h-2 rounded-full bg-xjtlu-navy transition-all duration-200 z-10 opacity-100 ${dotSize}`;
         }
       } else {
         const leftDot = this._container.querySelector(`#sb-${id}-preview-left`);
         if (leftDot) {
           leftDot.style.opacity = '1';
-          leftDot.className = `absolute -left-3 w-2 h-2 rounded-full bg-gray-800 transition-all duration-200 z-10 opacity-100 ${dotSize}`;
+          leftDot.className = `absolute left-0 w-2 h-2 rounded-full bg-xjtlu-navy transition-all duration-200 z-10 opacity-100 ${dotSize}`;
         }
       }
 
-      // 透视 Buff 逻辑：显示具体数字
       if (hasExactBuff) {
         const textEl = this._container.querySelector(`#sb-${id}-preview-text`);
         if (textEl) {

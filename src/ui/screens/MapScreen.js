@@ -148,10 +148,10 @@ export class MapScreen {
                  style="left:0;top:0;width:0;height:0;z-index:40;">
               ${pinsHTML}
               
-              <!-- 动态悬浮动作气泡 (新增) -->
+              <!-- 动态悬浮动作气泡 (修复居中与位置) -->
               <div id="action-popover" 
-                   class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none origin-bottom-left"
-                   style="transform: translate(15px, -100%);">
+                   class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none"
+                   style="transform: translate(-50%, calc(-100% - 12px));">
               </div>
             </div>
 
@@ -781,17 +781,16 @@ export class MapScreen {
     const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
     const apRemain = this._state?.AP ?? 0;
 
-    // 如果不是可行动建筑或无行动，隐藏气泡
     if (!isAction || actions.length === 0) {
       this._hideActionPopover();
       return;
     }
 
-    // 构建按钮组 HTML
     const buttonsHTML = actions.map(action => {
       const canAfford = apRemain >= action.apCost;
+      // 移除了 hover:translate-x-1 防止溢出
       return `
-        <button class="action-btn w-44 text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 ${canAfford ? 'bg-white hover:bg-xjtlu-blue hover:text-white text-xjtlu-navy border border-gray-200 hover:border-xjtlu-blue shadow-sm cursor-pointer hover:translate-x-1' : 'bg-gray-100 text-gray-400 border border-transparent cursor-not-allowed'}"
+        <button class="action-btn w-44 text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors duration-150 ${canAfford ? 'bg-white hover:bg-xjtlu-blue hover:text-white text-xjtlu-navy border border-gray-200 hover:border-xjtlu-blue shadow-sm cursor-pointer' : 'bg-gray-100 text-gray-400 border border-transparent cursor-not-allowed'}"
           data-action-id="${action.id}" ${!canAfford ? 'disabled' : ''}>
           <div class="flex items-center justify-center w-6 h-6 rounded bg-gray-100/50 shrink-0">
             <i data-lucide="${action.icon}" class="lucide w-4 h-4"></i>
@@ -802,16 +801,14 @@ export class MapScreen {
       `;
     }).join('');
 
-    // 填充气泡内容，带有一个指向左下角的小尾巴指示器
     popover.innerHTML = `
       <div class="bg-white/95 backdrop-blur-sm p-1.5 rounded-xl shadow-xl border border-gray-200 flex flex-col gap-1.5 relative">
         ${buttonsHTML}
-        <!-- 小尾巴 -->
-        <div class="absolute -bottom-2 left-4 w-4 h-4 bg-white/95 border-b border-r border-gray-200 transform rotate-45"></div>
+        <!-- 小尾巴绝对居中 -->
+        <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 border-b border-r border-gray-200 transform rotate-45"></div>
       </div>
     `;
 
-    // 绑定执行事件
     popover.querySelectorAll('.action-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this._hideActionPopover();
@@ -821,18 +818,13 @@ export class MapScreen {
 
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: popover });
 
-    // 定位气泡：使用与 Pin 完全一致的百分比坐标
     const pos = this._hotspotPositions[building.id];
     popover.style.left = `${pos.x}%`;
     popover.style.top  = `${pos.y}%`;
     
-    // 移除隐藏类，加上动画类
     popover.classList.remove('hidden');
     popover.style.pointerEvents = 'auto';
-    
-    // 强制触发 DOM 重绘以确保动画生效
     void popover.offsetWidth; 
-    
     popover.classList.remove('opacity-0', 'scale-95');
     popover.classList.add('opacity-100', 'scale-100');
   }

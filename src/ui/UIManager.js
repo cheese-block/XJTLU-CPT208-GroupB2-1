@@ -69,9 +69,9 @@ function _mountStatusBarContainer() {
 
   const root = document.createElement('div');
   root.id        = 'status-bar-root';
-  root.className = 'absolute top-0 left-0 right-0 z-50';
+  // 【修改】：将 z-50 改为 z-[300]，确保在事件卡片之上
+  root.className = 'absolute top-0 left-0 right-0 z-[300]';
 
-  // 插入到 app 最前面（其他 Screen 容器之前）
   app.insertBefore(root, app.firstChild);
 }
 
