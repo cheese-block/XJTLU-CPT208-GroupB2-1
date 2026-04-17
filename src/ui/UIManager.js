@@ -127,20 +127,32 @@ export function registerScreen(phase, screenInstance) {
   log('debug', 'UIManager', `Screen 注册：${phase}`);
 }
 
+/**
+ * 切换游戏阶段（Screen 切换核心逻辑）
+ * @param {string} phase 目标阶段 ID
+ */
 function _switchToPhase(phase) {
+  // 1. 卸载当前正在显示的 Screen（清理事件监听等）
   if (_currentScreen?.unmount) {
     _currentScreen.unmount();
   }
 
+  // 2. 隐藏所有 Screen 容器
   Object.values(CONSTANTS.SCREEN_IDS).forEach((id) => {
-    // 【核心修复】：当切入 EVENT_CARD 时，不隐藏 MAP 容器，使其作为底层背景透出
+    /**
+     * 【核心修复点 A】：
+     * 如果目标是 EVENT_CARD（事件卡片），我们【不隐藏】MAP（地图）容器。
+     * 这样地图就会留在底层，作为事件卡片的半透明背景。
+     */
     if (phase === CONSTANTS.GAME_PHASE.EVENT_CARD && id === CONSTANTS.SCREEN_IDS.MAP) {
       return; 
     }
+    
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
 
+  // 3. 获取目标 Screen 实例
   const nextScreen = _screens.get(phase);
   if (!nextScreen) {
     log('warn', 'UIManager', `未注册的 Screen：${phase}`);
@@ -149,22 +161,34 @@ function _switchToPhase(phase) {
 
   _currentScreen = nextScreen;
 
+  // 4. 获取目标容器并显示
   const containerId = CONSTANTS.SCREEN_IDS[phase];
   const container   = document.getElementById(containerId);
 
   if (container) {
     container.classList.remove('hidden');
 
-    // 淡入动画
-    container.style.opacity = '0';
-    container.style.transition = 'opacity 0.6s ease';
-    requestAnimationFrame(() => {
+    /**
+     * 【核心修复点 B】：动画同步
+     * - 如果是普通界面：执行 0.6s 的渐变淡入。
+     * - 如果是 EVENT_CARD：立即显示（opacity=1），不设 transition。
+     *   这是为了让卡片弹出的瞬间，背景模糊效果能同步出现，不产生视觉延迟。
+     */
+    if (phase !== CONSTANTS.GAME_PHASE.EVENT_CARD) {
+      container.style.opacity = '0';
+      container.style.transition = 'opacity 0.6s ease';
       requestAnimationFrame(() => {
-        container.style.opacity = '1';
+        requestAnimationFrame(() => {
+          container.style.opacity = '1';
+        });
       });
-    });
+    } else {
+      container.style.opacity = '1';
+      container.style.transition = 'none';
+    }
 
-    // 【修改】：EVENT_CARD 自带居中排版，不需要像其他界面那样硬塞顶部 Padding
+    // 5. 处理顶部状态栏占位（Padding）
+    // TITLE、SCHOOL_SELECT 和 EVENT_CARD 不需要顶部留白
     const needsPadding = ![
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
@@ -174,6 +198,7 @@ function _switchToPhase(phase) {
     container.style.paddingTop = needsPadding ? '4.5rem' : '';
   }
 
+  // 6. 正式挂载目标 Screen
   nextScreen.mount(container, getState());
   log('info', 'UIManager', `切换至 Screen：${phase}`);
 }

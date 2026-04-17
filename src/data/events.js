@@ -1015,4 +1015,220 @@ export const EVENTS = {
     }]
   },
 
+  // ── FB 基础楼扩充 ──
+  'loc_fb_aircon': {
+    event_id: 'loc_fb_aircon', type: 'location', title: '冰窖教室',
+    scenes: [{
+      text: 'FB 的空调开得像冰窖一样。你穿着短袖冻得瑟瑟发抖，但黑板上的微积分推导正讲到关键处。',
+      choices: [
+        { text: '咬牙硬抗，死记硬背', effects: { Academic_Ability: +15, Physical_Health: -15 } },
+        { text: '溜回宿舍拿外套', effects: { Mental_Health: +10, Academic_Ability: -10 } }
+      ]
+    }]
+  },
+  'loc_fb_quiz': {
+    event_id: 'loc_fb_quiz', type: 'location', title: '突击测验',
+    scenes: [{
+      text: '教授突然宣布进行 Pop Quiz（突击小测），占总成绩的 5%。你昨晚完全没复习这门课。',
+      choices: [
+        { text: '凭直觉瞎蒙', effects: { Academic_Ability: -5, Mental_Health: -10 } },
+        { text: '偷偷瞄一眼同桌的答案', effects: { Academic_Ability: +10, Mental_Health: -20 } }
+      ]
+    }]
+  },
+  'loc_fb_front_row': {
+    event_id: 'loc_fb_front_row', type: 'location', title: '学霸专座',
+    scenes: [{
+      text: '你难得早到一次，发现第一排正中间的“学霸专座”空着。坐在那里，教授的唾沫星子都能溅到你脸上。',
+      choices: [
+        { text: '勇敢坐下，和教授对视', effects: { Academic_Ability: +20, Mental_Health: -15 } },
+        { text: '还是去最后一排摸鱼吧', effects: { Mental_Health: +15, Academic_Ability: -10 } }
+      ]
+    }]
+  },
+
+  // ── CB 图书馆扩充 ──
+  'loc_cb_couple': {
+    event_id: 'loc_cb_couple', type: 'location', title: '情侣的噪音',
+    scenes: [{
+      text: '一对情侣坐在你对面，一边看书一边互相喂零食，还发出咯咯的笑声。你正在做雅思阅读。',
+      choices: [
+        { text: '怒视他们，让他们安静', effects: { Mental_Health: +10, English_Ability: -5 } },
+        { text: '买副昂贵的降噪耳机', effects: { Money: -25, English_Ability: +15, Mental_Health: +5 } }
+      ]
+    }]
+  },
+  'loc_cb_close_time': {
+    event_id: 'loc_cb_close_time', type: 'location', title: '闭馆音乐',
+    scenes: [{
+      text: '晚上十点，图书馆响起了萨克斯名曲《回家》。但你的雅思作文还差最后一段没写完。',
+      choices: [
+        { text: '无视保安，死皮赖脸写完', effects: { English_Ability: +15, Mental_Health: -10 } },
+        { text: '收拾书包，明天再说', effects: { Physical_Health: +10, English_Ability: -5 } }
+      ]
+    }]
+  },
+  'loc_cb_lost_found': {
+    event_id: 'loc_cb_lost_found', type: 'location', title: '遗落的秘籍',
+    scenes: [{
+      text: '你在书架缝隙里捡到一本学长遗落的《雅思口语当季题库》，里面密密麻麻写满了高分素材。',
+      choices: [
+        { text: '据为己有，疯狂背诵', effects: { English_Ability: +20, Mental_Health: -10 } },
+        { text: '交到失物招领处', effects: { Mental_Health: +15, Academic_Ability: +5 } }
+      ]
+    }]
+  },
+
+  // ── PB 公共楼扩充 ──
+  'loc_pb_subway': {
+    event_id: 'loc_pb_subway', type: 'location', title: '赛百味长龙',
+    scenes: [{
+      text: '中午 12 点的 PB 赛百味排起了长龙。你下午还有课，肚子饿得咕咕叫。',
+      choices: [
+        { text: '排队！为了金枪鱼三明治！', effects: { Physical_Health: +15, Mental_Health: -10 } },
+        { text: '去便利店买个冷饭团对付', effects: { Money: +5, Physical_Health: -10, Academic_Ability: +5 } }
+      ]
+    }]
+  },
+  'loc_pb_gossip': {
+    event_id: 'loc_pb_gossip', type: 'location', title: '申研焦虑传播',
+    scenes: [{
+      text: '你在买奶茶时，听到前面两个人在讨论：“听说今年 UCL 计算机线又涨了，均分 85 都被拒了。”',
+      choices: [
+        { text: '偷听细节，疯狂对标自己', effects: { Mental_Health: -20, Academic_Ability: +10 } },
+        { text: '戴上耳机，拒绝制造焦虑', effects: { Mental_Health: +15 } }
+      ]
+    }]
+  },
+  'loc_pb_promotion': {
+    event_id: 'loc_pb_promotion', type: 'location', title: '健身房推销',
+    scenes: [{
+      text: 'PB 门口有校外健身房在做地推：“同学，游泳健身了解一下？现在办卡打五折！”',
+      choices: [
+        { text: '脑子一热，办了张年卡', effects: { Money: -30, Physical_Health: +20 } },
+        { text: '冷酷拒绝，快步走开', effects: { Money: +10, Physical_Health: -5 } }
+      ]
+    }]
+  },
+
+  // ── EB 工科楼扩充 ──
+  'loc_eb_server_crash': {
+    event_id: 'loc_eb_server_crash', type: 'location', title: '服务器崩溃',
+    scenes: [{
+      text: '学校的 GPU 服务器突然崩溃了，你跑了一半的深度学习模型数据全部丢失。',
+      choices: [
+        { text: '花钱租云服务器重新跑', effects: { Money: -20, Academic_Ability: +15 } },
+        { text: '心态爆炸，回宿舍摆烂', effects: { Mental_Health: -15, Academic_Ability: -15 } }
+      ]
+    }]
+  },
+  'loc_eb_genius_help': {
+    event_id: 'loc_eb_genius_help', type: 'location', title: '大神的指点',
+    scenes: [{
+      text: '隔壁桌的编程大神看你抓耳挠腮，主动凑过来说：“你这个算法复杂度太高了，我教你个捷径。”',
+      choices: [
+        { text: '虚心请教，重构代码', effects: { Academic_Ability: +25, Mental_Health: -10 } },
+        { text: '死要面子，拒绝帮助', effects: { Mental_Health: +10, Academic_Ability: -10 } }
+      ]
+    }]
+  },
+  'loc_eb_stolen_code': {
+    event_id: 'loc_eb_stolen_code', type: 'location', title: '查重危机',
+    scenes: [{
+      text: '你的朋友快到 DDL 了，求你把代码借他“参考”一下。如果被查重系统抓到，两人都会挂科。',
+      choices: [
+        { text: '严词拒绝，保全自己', effects: { Mental_Health: -15, Academic_Ability: +5 } },
+        { text: '心软发给他，提心吊胆', effects: { Mental_Health: -25, Physical_Health: -10 } }
+      ]
+    }]
+  },
+
+  // ── IR 科研中心扩充 ──
+  'loc_ir_paper_publish': {
+    event_id: 'loc_ir_paper_publish', type: 'location', title: '论文署名',
+    scenes: [{
+      text: '课题组准备投一篇顶级会议论文。教授暗示你，如果愿意包揽所有繁琐的排版和校对工作，可以给你挂个四作。',
+      choices: [
+        { text: '接下苦差事！为了简历！', effects: { Academic_Ability: +20, Physical_Health: -20, Mental_Health: -10 } },
+        { text: '太累了，婉拒', effects: { Physical_Health: +15, Academic_Ability: -10 } }
+      ]
+    }]
+  },
+  'loc_ir_equipment_booking': {
+    event_id: 'loc_ir_equipment_booking', type: 'location', title: '抢占仪器',
+    scenes: [{
+      text: '实验室的高精度显微镜这周只剩下一个深夜时段可以预约了，而你明天早上还有早八的课。',
+      choices: [
+        { text: '预约！大不了通宵', effects: { Academic_Ability: +15, Physical_Health: -20 } },
+        { text: '放弃，等下周再做', effects: { Mental_Health: +10, Academic_Ability: -10 } }
+      ]
+    }]
+  },
+
+  // ── IA 学术交流中心扩充 ──
+  'loc_ia_visa_rumor': {
+    event_id: 'loc_ia_visa_rumor', type: 'location', title: '政策风波',
+    scenes: [{
+      text: 'IA 门口的布告栏贴出了关于英国签证政策收紧的传闻，很多同学在围观，人心惶惶。',
+      choices: [
+        { text: '加入讨论，陷入集体焦虑', effects: { Mental_Health: -20, English_Ability: -5 } },
+        { text: '去官网查证真实文件', effects: { Academic_Ability: +15, Mental_Health: +5 } }
+      ]
+    }]
+  },
+  'loc_ia_agency_flyer': {
+    event_id: 'loc_ia_agency_flyer', type: 'location', title: '中介的诱惑',
+    scenes: [{
+      text: '一个自称“G5 保录资深顾问”的人在 IA 门口给你塞了一张传单，说只要交钱，背景再差也能逆袭。',
+      choices: [
+        { text: '心动了，加个微信看看', effects: { Money: -10, Mental_Health: +15 } },
+        { text: '扔进垃圾桶，坚信硬实力', effects: { Academic_Ability: +10, Mental_Health: -5 } }
+      ]
+    }]
+  },
+
+  // ── GYM 体育馆扩充 ──
+  'loc_gym_treadmill_race': {
+    event_id: 'loc_gym_treadmill_race', type: 'location', title: '暗中较劲',
+    scenes: [{
+      text: '你旁边跑步机上的哥们突然调高了速度。男人的胜负欲让你也不自觉地按下了加速键。',
+      choices: [
+        { text: '跑赢他！冲刺！', effects: { Physical_Health: +20, Mental_Health: +10, Academic_Ability: -10 } },
+        { text: '认怂，保持自己的配速', effects: { Physical_Health: +10, Mental_Health: -5 } }
+      ]
+    }]
+  },
+  'loc_gym_protein_shake': {
+    event_id: 'loc_gym_protein_shake', type: 'location', title: '蛋白粉推销',
+    scenes: [{
+      text: '练完后肌肉酸痛。前台向你推销一款进口的高级分离乳清蛋白粉，说能加速恢复，但价格不菲。',
+      choices: [
+        { text: '买！身体是革命的本钱', effects: { Money: -20, Physical_Health: +15 } },
+        { text: '太贵了，回去吃两个鸡蛋', effects: { Money: +10, Physical_Health: +5 } }
+      ]
+    }]
+  },
+
+  // ── DORM 宿舍扩充 ──
+  'loc_dorm_takeaway': {
+    event_id: 'loc_dorm_takeaway', type: 'location', title: '外卖失窃',
+    scenes: [{
+      text: '你在宿舍楼下等了半个小时，发现自己点的豪华烧烤外卖被别人拿走了。',
+      choices: [
+        { text: '气炸了，查监控追责！', effects: { Mental_Health: -20, Money: +10 } },
+        { text: '自认倒霉，泡碗面吃', effects: { Physical_Health: -10, Mental_Health: -10 } }
+      ]
+    }]
+  },
+  'loc_dorm_noise': {
+    event_id: 'loc_dorm_noise', type: 'location', title: '楼上的蹦迪',
+    scenes: [{
+      text: '凌晨一点，楼上的宿舍突然开始大声放音乐，甚至还有人在跳绳。你明天还要早起背单词。',
+      choices: [
+        { text: '上去敲门对线', effects: { Mental_Health: -15, English_Ability: +10 } },
+        { text: '戴上耳塞强行睡觉', effects: { Physical_Health: -10, Mental_Health: -5 } }
+      ]
+    }]
+  }
+
 };

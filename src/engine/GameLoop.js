@@ -88,13 +88,12 @@ export function executeAction(actionId, action, onEvent) {
   const newState = StateManager.getState();
   if (newState.pendingEventQueue.length > 0) {
     StateManager.setProcessing(true); // 加锁
-    setTimeout(() => {
-      processEventQueue(() => {
-        StateManager.setProcessing(false); // 解锁
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP); // 返回地图
-        if (onEvent) onEvent();
-      });
-    }, 500); // 短暂延迟让 UI 反应
+    // 【修复】：移除原本的 500ms 延迟，直接处理队列，消除卡顿感
+    processEventQueue(() => {
+      StateManager.setProcessing(false); // 解锁
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP); // 返回地图
+      if (onEvent) onEvent();
+    });
   }
 
   return true;
