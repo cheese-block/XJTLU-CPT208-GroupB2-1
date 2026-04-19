@@ -541,15 +541,15 @@ export const EVENTS = {
   'loc_sb_001': {
     event_id: 'loc_sb_001', type: 'location', title: '蓝屏的制裁',
     scenes: [{
-      text: '你在 SD 楼的机房跑了一下午的数据。进度条到 99% 时，电脑风扇发出一声惨叫，屏幕变成了纯粹的蓝色。你没按过保存。',
+      text: '你在 SD 楼的机房跑了一下午的数据。进度条到 99% 时，电脑风扇发出一声惨叫，屏幕变成了纯粹之蓝。不幸的是你没按过保存。',
       choices: [
         {
-          text: '猛砸一下鼠标，双手抱头盯着蓝屏发呆',
-          effects: { Mental_Health: -20, Academic_Ability: -2 }
+          text: '不接受现实，盯着蓝屏发呆',
+          effects: { Mental_Health: -15, Academic_Ability: -2 }
         },
         {
-          text: '面无表情地拔下 U 盘，下楼去买两根烤肠',
-          effects: { Money: -10, Mental_Health: +10 }
+          text: '事已至此，先吃饭吧',
+          effects: { Money: -10, Mental_Health: -5 }
         }
       ]
     }]
@@ -561,13 +561,13 @@ export const EVENTS = {
       text: '物理实验课上，你们组随便测了一次，数据点竟然完美贴合了理论曲线。连教授路过都点了点头。',
       choices: [
         {
-          text: '赶紧截图保存，提前一小时下课去打游戏！',
-          effects: { Mental_Health: +20, Academic_Ability: +6 }
+          text: '就这样吧，提前一小时下课去打游戏',
+          effects: { Mental_Health: +20, Academic_Ability: +4 }
         },
         {
           text: '觉得这数据好得不真实，坚持换个仪器重测',
-          effects: { Academic_Ability: +12, Mental_Health: -10 },
-          flavor_text: '第二组数据烂得像一坨泥。你陷入了深深的自我怀疑。'
+          effects: { Academic_Ability: +8, Mental_Health: -10 },
+          flavor_text: '第二组数据烂得像一坨泥。你完全不能理解发生了什么。'
         }
       ]
     }]
@@ -576,14 +576,14 @@ export const EVENTS = {
   'loc_sb_003': {
     event_id: 'loc_sb_003', type: 'location', title: '留学生的问路',
     scenes: [{
-      text: '一个看起来很着急的留学生在 SA 楼梯口拦住你：“Excuse me, do you know where the lab SA314 is?”',
+      text: '一个看起来很着急的留学生在 SA 楼梯口拦住你：“Excuse me, do you know where the lab SA214 is?”',
       choices: [
         {
-          text: '热情拉满，亲自带他上楼并用英语闲聊',
+          text: '热情待人，亲自带他上楼，顺带聊了聊',
           effects: { English_Ability: +3, Physical_Health: -5 }
         },
         {
-          text: '往上指了指："Go straight, then turn left."',
+          text: '比划了一通："Go straight, then turn left."',
           effects: { English_Ability: +1 }
         }
       ]
@@ -593,15 +593,16 @@ export const EVENTS = {
   'loc_sb_004': {
     event_id: 'loc_sb_004', type: 'location', title: '讲座后排的披萨',
     scenes: [{
-      text: 'SD 楼有一场冗长的学术讲座。你完全听不懂台上的大佬在讲什么，但教室后排摆着三大盒免费的披萨。',
+      text: 'SD 楼有一场冗长的学术讲座。你完全听不懂台上的老师在讲什么，但教室后排摆着三大盒免费的山姆零食。',
       choices: [
         {
-          text: '偷偷溜到后排连吃三块，然后低头刷手机',
-          effects: { Money: +15, Physical_Health: +10, Academic_Ability: -2 }
+          text: '溜到后排偷吃零食，血糖过山车后放弃理解讲座内容，开始低头刷手机',
+          effects: { Money: +10, Mental_Health: +10, Physical_Health: -10, Academic_Ability: -2 }
         },
         {
-          text: '强忍饥饿，把大佬 PPT 上的专有名词全抄下来',
-          effects: { Academic_Ability: +8, English_Ability: +2, Physical_Health: -10 }
+          text: '强打精神，尝试理解讲座内容',
+          effects: { Academic_Ability: +8, English_Ability: +2, Mental_Health: -10 },
+          flavor_text: '讲座老师开始重新组织自己的语言，也许是因为注意到了你呆滞的表情'
         }
       ]
     }]
@@ -610,7 +611,7 @@ export const EVENTS = {
   'loc_sb_005': {
     event_id: 'loc_sb_005', type: 'location', title: '降噪耳机的背叛',
     scenes: [{
-      text: '自习室里，你旁边的哥们正在用青轴机械键盘疯狂输出。就在这时，你的降噪耳机提示“Battery Low”，然后彻底关机。',
+      text: '自习室里，你旁边的哥们正在用青轴机械键盘疯狂输出。就在这时，你的降噪耳机在播报“Battery Low”后彻底关机。',
       choices: [
         {
           text: '靠意志力硬抗青轴的物理超度',
@@ -645,15 +646,16 @@ export const EVENTS = {
   'loc_sb_007': {
     event_id: 'loc_sb_007', type: 'location', title: '消失的雨伞',
     scenes: [{
-      text: '晚课结束，外面下起了暴雨。你放在 SA 一楼伞架上的透明雨伞不见了，而旁边还剩下一把别人落下的黑伞。',
+      text: '晚课结束，外面下起了暴雨。你放在 SA 一楼伞架上的透明雨伞不见了，而旁边放着一把不知道是谁的黑伞。',
       choices: [
         {
           text: '顺走那把黑伞，撑回宿舍',
-          effects: { Mental_Health: -20, Physical_Health: +10 }
+          effects: { Mental_Health: -10, Physical_Health: +10 },
+          flavor_text: '人不犯我我不犯人，要怪，就怪这乱世吧。'
         },
         {
           text: '认命了，把书包顶在头上冲进暴雨里',
-          effects: { Physical_Health: -25, Mental_Health: +10 },
+          effects: { Physical_Health: -25, Mental_Health: +10, Money: -5 },
           flavor_text: '你在雨中狂奔，突然觉得这种电影主角般的悲惨经历还挺解压的。'
         }
       ]
@@ -663,15 +665,17 @@ export const EVENTS = {
   'loc_sb_008': {
     event_id: 'loc_sb_008', type: 'location', title: '迟到的签到表',
     scenes: [{
-      text: '你睡过了头，迟到了整整半小时。当你从后门溜进教室时，发现教授正在前排传阅一张签到表。',
+      text: '你睡过了头，迟到了整整五十分钟。当你从后门溜进教室时，发现教授正在前排传阅一张签到表。你有点紧张，不想有一丝在两百人面前被老师训斥的可能。',
       choices: [
         {
           text: '弯着腰像特工一样潜行到前排去签字',
-          effects: { Mental_Health: -15, Academic_Ability: +4 }
+          effects: { Mental_Health: -15, Academic_Ability: +4 },
+          flavor_text: '很多学生看到了你奇异搞笑的行为。'
         },
         {
-          text: '放弃签到，心安理得地坐在最后一排开始补觉',
-          effects: { Mental_Health: +10, Physical_Health: +10, Academic_Ability: -4 }
+          text: '摆烂放弃签到，坐在最后一排开始补觉',
+          effects: { Mental_Health: +10, Physical_Health: +10, Academic_Ability: -4 },
+          flavor_text: '“就当我没来上课吧。”'
         }
       ]
     }]
@@ -680,17 +684,17 @@ export const EVENTS = {
   'loc_sb_009': {
     event_id: 'loc_sb_009', type: 'location', title: '自动贩卖机的嘲讽',
     scenes: [{
-      text: '你在 SD 楼一楼的自动贩卖机买无糖可乐。扫码，付款，机械臂动了一下，然后卡住了。你的可乐悬停在半空中。',
+      text: '你在 SD 楼一楼的自动贩卖机买罐装百事可乐。扫码，付款，机械臂动了一下，然后卡住了。你的可乐悬停在半空中。',
       choices: [
         {
           text: '左右观察无人，对着机器狠狠踹了一脚',
           effects: { Physical_Health: -5, Mental_Health: +15 },
-          flavor_text: '可乐没掉下来，而你的脚趾隐隐作痛。但至少你觉得没那么郁闷了。'
+          flavor_text: '可乐没掉下来，而你的脚趾隐隐作痛。但至少你的郁闷减轻了一些。'
         },
         {
           text: '不信邪，再买一瓶，试图用第二瓶把第一瓶砸下来',
           effects: { Money: -15, Mental_Health: -20 },
-          flavor_text: '恭喜你，现在你有两瓶可乐卡在半空中了。'
+          flavor_text: '现在有两瓶可乐卡在半空中。'
         }
       ]
     }]
@@ -703,7 +707,7 @@ export const EVENTS = {
       choices: [
         {
           text: '咬牙转账',
-          effects: { Money: -25, Academic_Ability: +12 }
+          effects: { Money: -15, Academic_Ability: +12 }
         },
         {
           text: '决定靠自己啃 PPT',
@@ -725,7 +729,7 @@ export const EVENTS = {
           flavor_text: '查重率降到了 15%。但你交上去的已经不是一篇论文，而是一堆毫无逻辑的单词拼盘。'
         },
         {
-          text: '花钱秒开一个 AI 降重软件的高级会员',
+          text: '花钱开一个 AI 降重软件的高级会员',
           effects: { Money: -15, Mental_Health: -10, Academic_Ability: +5 }
         }
       ]
@@ -753,12 +757,12 @@ export const EVENTS = {
   'loc_sb_013': {
     event_id: 'loc_sb_013', type: 'location', title: 'Grammarly 的诱惑',
     scenes: [{
-      text: '你在写报告，免费版的 Grammarly 提示你的文章里有 48 个“高级语法错误”，并不断诱惑你升级 Premium。',
+      text: '你在写报告，免费版的 Grammarly 提示你的文章里有 48 个“高级语法错误”，但要求你升级到 Premium 套餐后才能查看。',
       choices: [
         {
           text: '冲一个礼拜高级会员，一键全部自动修改',
           effects: { Money: -15, Academic_Ability: +10, English_Ability: -2 },
-          flavor_text: '文章看起来非常地道。你完全不知道它帮你改了什么，你的语感甚至退化了。'
+          flavor_text: '文章看起来非常地道。不过你完全不知道它帮你改了什么，你的语感甚至退化了。'
         },
         {
           text: '坚决不充钱，自己对着词典一个个扒出来改掉',
@@ -771,7 +775,7 @@ export const EVENTS = {
   'loc_sb_014': {
     event_id: 'loc_sb_014', type: 'location', title: '走错教室的旁听',
     scenes: [{
-      text: '你提前十分钟走进 SA 的教室，坐下听了一会儿才发现，台上讲的是隔壁专业的课。但教授讲的一个模型刚好能解决你最近的疑惑。',
+      text: '你提前十分钟走进 SA 的教室，坐下听了一会儿才发现，台上讲的是隔壁专业的课。但教授讲的一个理论似乎能解决你最近的疑惑。',
       choices: [
         {
           text: '假装自己就是这个专业的，津津有味地听完',
@@ -788,7 +792,7 @@ export const EVENTS = {
   'loc_sb_015': {
     event_id: 'loc_sb_015', type: 'location', title: '遗落的“武功秘籍”',
     scenes: [{
-      text: '你在空教室自习，发现桌洞里有一本被人遗忘的课本。随便翻开一页，是密密麻麻的用三种颜色笔做的超级学霸笔记。',
+      text: '你在空教室自习，发现桌洞里有一本被人遗忘的课本。随便翻开一页，是密密麻麻的用三种颜色笔做的学霸笔记。',
       choices: [
         {
           text: '据为己有，有便宜不占王八蛋',
@@ -1186,7 +1190,7 @@ export const EVENTS = {
   // ════════════════════════════════════════════════════════
 
   'loc_dorm_001': {
-    event_id: 'loc_dorm_001', type: 'location', title: '闲不住？上咸鱼',
+    event_id: 'loc_dorm_001', type: 'location', title: '闲不住？上咸鱼！',
     scenes: [{
       text: '你看着桌上那摞几乎全新的雅思剑桥真题。自从买回来后，它们唯一的价值就是用来垫显示器。',
       choices: [
@@ -1209,14 +1213,14 @@ export const EVENTS = {
       text: '月底了，你的微信零钱只剩两位数。室友从床底摸出一个违规电煮锅：“今晚别点外卖了，我煮泡面加淀粉肠，来点不？”',
       choices: [
         {
-          text: '加入室友的赛博盛宴，连汤都喝干净',
+          text: '加入这场盛宴，连汤都喝干净',
           effects: { Money: +15, Physical_Health: -10, Mental_Health: +15 },
           flavor_text: '高钠碳水带来的快乐是无与伦比的，哪怕第二天早上你肿得像个发面馒头。'
         },
         {
           text: '坚守健康底线，花钱点一份轻食沙拉',
           effects: { Money: -10, Mental_Health: -5 },
-          flavor_text: '仔细想想花钱吃草何意味，你觉得自己既破财又憋屈。'
+          flavor_text: '仔细想想花钱吃草何意味，看着室友们大快朵颐，你觉得自己既破财又憋屈。'
         }
       ]
     }]
@@ -1225,7 +1229,7 @@ export const EVENTS = {
   'loc_dorm_003': {
     event_id: 'loc_dorm_003', type: 'location', title: '深夜的 CS2',
     scenes: [{
-      text: '凌晨一点，室友戴着耳机在打机，正在激情指挥：“A小！A小！他残了！特么的你会不会玩！”',
+      text: '凌晨一点，室友戴着耳机在打 CS2，正在激情指挥：“A小！A小！他残了！特么的你会不会玩！”',
       choices: [
         {
           text: '戴上降噪耳机，在床上背单词',
@@ -1246,7 +1250,7 @@ export const EVENTS = {
       text: '你本来打算复习，但推送让你点开了一个“清华学霸 4 小时沉浸式学习 VLOG”。视频里的桌搭很精致，笔记很漂亮。',
       choices: [
         {
-          text: '看了两小时，感觉也被精英氛围净化了',
+          text: '看了半小时，感觉自己似乎也成为清华的一份子了',
           effects: { Mental_Health: +10, Academic_Ability: -3 },
           flavor_text: '看着别人学习，你的大脑分泌了虚假的成就感。你今天什么都没学，但至少睡得很香。'
         },
@@ -1285,7 +1289,7 @@ export const EVENTS = {
         {
           text: '收钱办事，重构那坨意大利面代码',
           effects: { Money: +20, Academic_Ability: +8, Mental_Health: -15 },
-          flavor_text: '你赚了钱，顺便把知识点吃透了，但你看他代码时气的差点脑溢血。'
+          flavor_text: '你赚了钱，顺便把知识点吃透了，不过你看他代码时气的差点脑溢血。'
         },
         {
           text: '嫌麻烦拒绝，有这时间不如玩原神',
