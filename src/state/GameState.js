@@ -140,6 +140,9 @@ export function createInitialState() {
     // ── 标签系统 ─────────────────────────────────────────────
     tags: [],
 
+    // 【新增】：初始只解锁 理工楼(sb)、图书馆(cb)、宿舍(dorm)
+    unlockedBuildings: ['sb', 'cb', 'dorm'],
+
     // ── Buff 系统 ────────────────────────────────────────────
     activeBuff: [],
 

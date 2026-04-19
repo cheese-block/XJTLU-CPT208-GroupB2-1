@@ -756,3 +756,25 @@ export function debugPrintState() {
 export function _getInternalState() {
   return _state;
 }
+
+// ─────────────────────────────────────────────────────────────
+// 建筑解锁操作
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * 解锁地图上的新建筑
+ * @param {string} buildingId 
+ */
+export function unlockBuilding(buildingId) {
+  if (!_state) throw new Error('[StateManager] 状态未初始化');
+
+  if (!_state.unlockedBuildings) {
+    _state.unlockedBuildings = [];
+  }
+
+  if (!_state.unlockedBuildings.includes(buildingId)) {
+    _state.unlockedBuildings.push(buildingId);
+    log('info', 'StateManager', `🔓 建筑已解锁：${buildingId}`);
+    _notifyChange();
+  }
+}
