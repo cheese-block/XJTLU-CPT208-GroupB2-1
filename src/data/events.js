@@ -88,11 +88,11 @@ export const EVENTS = {
 
   'agency_part1': {
     event_id:     'agency_part1',
-    type:         'scheduled',
+    type:         'location',
     title:        '中介风云：起心动念',
     scenes: [
       {
-        text: '三月，春招的氛围开始在校园里蔓延。对床的室友一边刷着手机一边问你："朋友圈好多人都在晒中介签约图了，你打算什么时候开始弄申研的事？"',
+        text: '你走进了 IA（国际学术交流中心）。走廊里贴满了各大留学机构的讲座海报，几个中介老师正在给学生发传单。你意识到，是时候考虑申研的事了。', // 【修改】：稍微调整了文案以契合主动前往建筑的语境
         choices: [
           {
             text:       '"急什么，等 7 月放暑假了再慢慢看，先搞期末。"',
@@ -102,7 +102,7 @@ export const EVENTS = {
             tip:        '时间规划雷区：找中介的最晚时间是暑假前！拖到 7-8 月才定中介，会导致背景提升和文书头脑风暴的时间极其被动。',
           },
           {
-            text:       '"确实该开始了，我这周末就去了解一下。"',
+            text:       '"确实该开始了，趁此机会现在就去了解一下吧。"',
             effects:    { Agency_Score: +10 },
             next_event_id: 'agency_investigation',
             tags_added: ['Agency_Start'],

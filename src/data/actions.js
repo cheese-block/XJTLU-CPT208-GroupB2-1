@@ -72,7 +72,7 @@ export const ACTIONS = {
   'visit_ia': {
     id: 'visit_ia', buildingId: 'ia', label: '前往咨询', apCost: 1, icon: 'globe',
     eventPool: [
-      // 暂时留空，Step 2 会把 agency_part1 等事件移入这里
+      'agency_part1', // 【新增】：将中介事件放入 IA 卡池
     ],
   },
 
