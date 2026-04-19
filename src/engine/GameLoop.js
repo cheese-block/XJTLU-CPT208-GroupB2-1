@@ -194,8 +194,6 @@ function _resolveEndOfMonth(onMonthEnd) {
   // 【新增】：第 3 个月（春招季）动态解锁 IA 建筑
   if (newMonth === 3) {
     StateManager.unlockBuilding('ia');
-    // 触发一个中立的飘字提示玩家
-    StateManager.applyStatDelta({}, { AP: '各大留学机构开始活跃，IA 建筑已解锁' });
   }
 
   StateManager.saveGame();
