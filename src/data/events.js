@@ -67,6 +67,23 @@ export const EVENTS = {
   // 特殊大事件（Scheduled Events）
   // ════════════════════════════════════════════════════════
 
+  // 【新增】：IA 建筑解锁提示
+  'unlock_ia_notice': {
+    event_id:      'unlock_ia_notice',
+    type:          'scheduled',
+    trigger_month: 3,
+    title:         '春招季的暗流',
+    scenes: [
+      {
+        text: '三月，春招的氛围开始在校园里蔓延。你注意到，最近校园周边多了很多发传单的西装男女。\n\n朋友圈里，已经有同学开始晒出和留学中介的签约合同了。',
+      },
+      {
+        text: '申研是一场信息战。也许你该去趟 <span class="text-xjtlu-blue font-bold">IA（国际学术交流中心）</span> 看看了，那里是各大机构和校方合作宣讲的集散地。',
+        tip:  '新建筑【IA】已解锁！在地图上点击蓝色高亮的 IA 建筑，可以开始接触并筛选留学中介。',
+      }
+    ],
+  },
+
   'sem1_final_exam': {
     event_id:      'sem1_final_exam',
     type:          'scheduled',
