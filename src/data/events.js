@@ -562,11 +562,11 @@ export const EVENTS = {
       choices: [
         {
           text: '就这样吧，提前一小时下课去打游戏',
-          effects: { Mental_Health: +20, Academic_Ability: +4 }
+          effects: { Mental_Health: +20, Academic_Ability: +3 }
         },
         {
           text: '觉得这数据好得不真实，坚持换个仪器重测',
-          effects: { Academic_Ability: +8, Mental_Health: -10 },
+          effects: { Academic_Ability: +7, Mental_Health: -10 },
           flavor_text: '第二组数据烂得像一坨泥。你完全不能理解发生了什么。'
         }
       ]
@@ -597,11 +597,11 @@ export const EVENTS = {
       choices: [
         {
           text: '溜到后排偷吃零食，血糖过山车后放弃理解讲座内容，开始低头刷手机',
-          effects: { Money: +10, Mental_Health: +10, Physical_Health: -10, Academic_Ability: -2 }
+          effects: { Money: +10, Mental_Health: +10, Physical_Health: -10, Academic_Ability: -3 }
         },
         {
           text: '强打精神，尝试理解讲座内容',
-          effects: { Academic_Ability: +8, English_Ability: +2, Mental_Health: -10 },
+          effects: { Academic_Ability: +7, English_Ability: +2, Mental_Health: -10 },
           flavor_text: '讲座老师开始重新组织自己的语言，也许是因为注意到了你呆滞的表情'
         }
       ]
@@ -619,7 +619,7 @@ export const EVENTS = {
         },
         {
           text: '去星巴克点杯美式接着学',
-          effects: { Money: -30, Mental_Health: +15, Academic_Ability: +8 }
+          effects: { Money: -30, Mental_Health: +15, Academic_Ability: +7 }
         }
       ]
     }]
@@ -669,7 +669,7 @@ export const EVENTS = {
       choices: [
         {
           text: '弯着腰像特工一样潜行到前排去签字',
-          effects: { Mental_Health: -15, Academic_Ability: +4 },
+          effects: { Mental_Health: -15, Academic_Ability: +3 },
           flavor_text: '很多学生看到了你奇异搞笑的行为。'
         },
         {
@@ -707,7 +707,7 @@ export const EVENTS = {
       choices: [
         {
           text: '咬牙转账',
-          effects: { Money: -15, Academic_Ability: +12 }
+          effects: { Money: -15, Academic_Ability: +9 }
         },
         {
           text: '决定靠自己啃 PPT',
@@ -725,12 +725,12 @@ export const EVENTS = {
       choices: [
         {
           text: '用同义词替换大法把每一句话都改得面目全非',
-          effects: { Mental_Health: -15, Academic_Ability: -4, English_Ability: -1 },
+          effects: { Mental_Health: -15, Academic_Ability: +4, English_Ability: +2 },
           flavor_text: '查重率降到了 15%。但你交上去的已经不是一篇论文，而是一堆毫无逻辑的单词拼盘。'
         },
         {
           text: '花钱开一个 AI 降重软件的高级会员',
-          effects: { Money: -15, Mental_Health: -10, Academic_Ability: +5 }
+          effects: { Money: -15, Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 }
         }
       ]
     }]
@@ -1256,7 +1256,7 @@ export const EVENTS = {
         },
         {
           text: '被焦虑感逼迫，选择去刷专业课习题',
-          effects: { Mental_Health: -15, Academic_Ability: +8 }
+          effects: { Mental_Health: -15, Academic_Ability: +10 }
         }
       ]
     }]
@@ -1288,7 +1288,7 @@ export const EVENTS = {
       choices: [
         {
           text: '收钱办事，重构那坨意大利面代码',
-          effects: { Money: +20, Academic_Ability: +8, Mental_Health: -15 },
+          effects: { Money: +20, Academic_Ability: +10, Mental_Health: -15 },
           flavor_text: '你赚了钱，顺便把知识点吃透了，不过你看他代码时气的差点脑溢血。'
         },
         {
