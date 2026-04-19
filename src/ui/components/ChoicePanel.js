@@ -147,8 +147,9 @@ _renderSingle(choices, playerTags, hasExactBuff) {
       // 设定阈值：绝对值 >= 15 视为大改变
       const isLarge = Math.abs(delta) >= 15;
       const dotSize = isLarge ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5';
-      const dotColor = isPositive ? 'bg-xjtlu-green' : 'bg-xjtlu-red';
-      const tooltip = `${labelMap[stat]}将发生${isLarge ? '大幅' : '小幅'}${isPositive ? '提升' : '下降'}`;
+      // 【修改】：统一为中性灰色，隐藏增减方向
+      const dotColor = 'bg-gray-400';
+      const tooltip = `${labelMap[stat]}将发生${isLarge ? '显著' : '些许'}变化`;
 
       return `
         <div class="flex flex-col items-center gap-1" title="${tooltip}">

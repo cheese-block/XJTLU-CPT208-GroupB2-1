@@ -77,28 +77,24 @@ export class StatusBar {
     `;
   }
 
-  _buildBarHTML(id, icon, label) {
+_buildBarHTML(id, icon, label) {
     return `
       <div class="flex-1 flex flex-col justify-center min-w-[80px]">
         <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
+          <!-- 【修改】：将中性小球放在数值名称右侧 -->
+          <div id="sb-${id}-preview-dot" 
+               class="w-1.5 h-1.5 rounded-full bg-gray-400 opacity-0 transition-transform duration-200 ml-0.5"></div>
         </span>
-        <!-- 【修改】：增加 px-3 为左右圆点腾出空间，防止被裁剪 -->
+        <!-- 【修改】：保留原有结构，仅移除 left/right 两个红绿小球 -->
         <div class="relative w-full flex items-center px-3">
-          <!-- 左侧预览点 (代表减少) -->
-          <div id="sb-${id}-preview-left" 
-               class="absolute left-0 w-2 h-2 rounded-full bg-xjtlu-navy opacity-0 transition-all duration-200 z-10"></div>
           
           <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
             <div id="sb-${id}-fill" 
                  class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" 
                  style="width: 50%"></div>
           </div>
-
-          <!-- 右侧预览点 (代表增加) -->
-          <div id="sb-${id}-preview-right" 
-               class="absolute right-0 w-2 h-2 rounded-full bg-xjtlu-navy opacity-0 transition-all duration-200 z-10"></div>
           
           <!-- 悬浮时的具体数值飘字 -->
           <div id="sb-${id}-preview-text"
@@ -128,18 +124,12 @@ export class StatusBar {
       const isLarge = Math.abs(delta) >= 15;
       const dotSize = isLarge ? 'scale-150' : 'scale-100';
 
-      if (isPos) {
-        const rightDot = this._container.querySelector(`#sb-${id}-preview-right`);
-        if (rightDot) {
-          rightDot.style.opacity = '1';
-          rightDot.className = `absolute right-0 w-2 h-2 rounded-full bg-xjtlu-navy transition-all duration-200 z-10 opacity-100 ${dotSize}`;
-        }
-      } else {
-        const leftDot = this._container.querySelector(`#sb-${id}-preview-left`);
-        if (leftDot) {
-          leftDot.style.opacity = '1';
-          leftDot.className = `absolute left-0 w-2 h-2 rounded-full bg-xjtlu-navy transition-all duration-200 z-10 opacity-100 ${dotSize}`;
-        }
+      // 【修改】：统一控制名称右侧的中性小球
+      const dot = this._container.querySelector(`#sb-${id}-preview-dot`);
+      if (dot) {
+        dot.style.opacity = '1';
+        dot.classList.remove('scale-150', 'scale-100');
+        dot.classList.add(dotSize);
       }
 
       if (hasExactBuff) {
@@ -152,14 +142,20 @@ export class StatusBar {
     });
   }
 
-  // 【新增方法】：清除所有预览
+  // 【修改】：清除所有预览（适应新的单一小球）
   clearPreview() {
     if (!this._container) return;
-    const dots = this._container.querySelectorAll('[id*="-preview-"]');
+    const dots = this._container.querySelectorAll('[id$="-preview-dot"]');
     dots.forEach(dot => {
       dot.style.opacity = '0';
       // 恢复默认大小
       dot.classList.remove('scale-150', 'scale-100');
+    });
+
+    // 隐藏透视文字
+    const texts = this._container.querySelectorAll('[id$="-preview-text"]');
+    texts.forEach(text => {
+      text.style.opacity = '0';
     });
   }
 
