@@ -40,6 +40,13 @@ export class EventCardScreen {
     this._sceneIndex = index;
     const scene = scenes[index];
 
+    // 【修复】：场景自带的基础 effects 应该在进入场景时立即结算
+    if (scene.effects && Object.keys(scene.effects).length > 0) {
+       StateManager.applyStatDelta(scene.effects, this._buildEffectLabels(scene.effects));
+       // 结算后清空，防止在某些极端情况下重复触发（此时操作的是 GameLoop 传来的深拷贝副本，很安全）
+       scene.effects = null;
+    }
+
     // 更新界面文本
     const titleEl = this._container.querySelector('#ec-title');
     const textEl = this._container.querySelector('#ec-text');
@@ -67,10 +74,7 @@ export class EventCardScreen {
         </button>
       `;
       choicesContainer.querySelector('button').addEventListener('click', () => {
-        // 纯文本如果有影响，直接结算
-        if (scene.effects && Object.keys(scene.effects).length > 0) {
-           StateManager.applyStatDelta(scene.effects, this._buildEffectLabels(scene.effects));
-        }
+        // 【修复】：移除此处的 effects 结算，已移至顶部
         this._playScene(index + 1);
       });
     }
