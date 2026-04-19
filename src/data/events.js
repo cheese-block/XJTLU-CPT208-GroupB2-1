@@ -1185,108 +1185,133 @@ export const EVENTS = {
   // 地点事件：宿舍
   // ════════════════════════════════════════════════════════
 
-  'loc_dorm_sleep': {
-    event_id: 'loc_dorm_sleep', type: 'location', title: '躺平一天',
+  'loc_dorm_001': {
+    event_id: 'loc_dorm_001', type: 'location', title: '闲不住？上咸鱼',
     scenes: [{
-      text: '外面狂风暴雨，你躺在温暖的被窝里，听着雨声。你现在什么都不想干，也不需要做任何选择。',
+      text: '你看着桌上那摞几乎全新的雅思剑桥真题。自从买回来后，它们唯一的价值就是用来垫显示器。',
       choices: [
         {
-          text: '就这样躺平',
-          effects: { Mental_Health: +20, Physical_Health: +15, Academic_Ability: -8 },
-          flavor_text: '你睡了整整十二个小时。身体和心灵都得到了修复，代价是今天的学习进度彻底停摆了。',
+          text: '挂到闲鱼上，半价打包出给大一新生',
+          effects: { Money: +15, English_Ability: -2, Mental_Health: +10 },
+          flavor_text: '看着微信到账提示，你感到一阵轻松。你不仅卖掉了书，还卖掉了对英语的最后一丝负罪感。'
         },
-      ],
-    }],
+        {
+          text: '撤下显示器，强迫自己做一套听力',
+          effects: { Mental_Health: -15, English_Ability: +3 }
+        }
+      ]
+    }]
   },
 
-  'loc_dorm_gaming': {
-    event_id: 'loc_dorm_gaming', type: 'location', title: '罪恶的连败',
+  'loc_dorm_002': {
+    event_id: 'loc_dorm_002', type: 'location', title: '违规电器的诱惑',
     scenes: [{
-      text: '晚上十点，你打开游戏准备"只玩一把就睡"。结果遭遇了史诗级的三连败，队友的嘲讽让你血压飙升。',
+      text: '月底了，你的微信零钱只剩两位数。室友从床底摸出一个违规电煮锅：“今晚别点外卖了，我煮泡面加淀粉肠，来点不？”',
       choices: [
         {
-          text: '怒开下一把，赢了才睡！',
-          effects: { Mental_Health: -22, Physical_Health: -18, Academic_Ability: -8 },
-          flavor_text: '你一直打到天亮，最终以七连败结束了战斗。你不仅没复习，还感觉身体被掏空。',
+          text: '加入室友的赛博盛宴，连汤都喝干净',
+          effects: { Money: +15, Physical_Health: -10, Mental_Health: +15 },
+          flavor_text: '高钠碳水带来的快乐是无与伦比的，哪怕第二天早上你肿得像个发面馒头。'
         },
         {
-          text: '强行关机，深呼吸睡觉',
-          effects: { Mental_Health: +8, Physical_Health: +12 },
-          flavor_text: '你凭借极强的自制力按下了电源键。虽然带着不甘入睡，但第二天醒来时，你庆幸自己做出了正确的决定。',
-        },
-      ],
-    }],
+          text: '坚守健康底线，花钱点一份轻食沙拉',
+          effects: { Money: -10, Mental_Health: -5 },
+          flavor_text: '仔细想想花钱吃草何意味，你觉得自己既破财又憋屈。'
+        }
+      ]
+    }]
   },
 
-  'loc_dorm_takeaway': {
-    event_id: 'loc_dorm_takeaway', type: 'location', title: '外卖失窃',
+  'loc_dorm_003': {
+    event_id: 'loc_dorm_003', type: 'location', title: '深夜的 CS2',
     scenes: [{
-      text: '你在宿舍楼下等了半个小时，发现自己点的外卖被别人拿走了。',
+      text: '凌晨一点，室友戴着耳机在打机，正在激情指挥：“A小！A小！他残了！特么的你会不会玩！”',
       choices: [
         {
-          text: '气炸了，联系客服追责',
-          effects: { Mental_Health: -18, Money: +8 },
-          flavor_text: '你花了一个小时和客服扯皮，最终拿到了退款。钱是回来了，但心情彻底坏掉了。',
+          text: '戴上降噪耳机，在床上背单词',
+          effects: { English_Ability: +3, Physical_Health: -10, Mental_Health: -15 }
         },
         {
-          text: '自认倒霉，泡碗面吃',
-          effects: { Physical_Health: -8, Mental_Health: -8 },
-          flavor_text: '你默默回宿舍泡了碗面。食物不好，心情也不好，但至少省了力气。',
-        },
-      ],
-    }],
+          text: '这能学得进？一起开黑算了',
+          effects: { Mental_Health: +20, Physical_Health: -10, Academic_Ability: -2 },
+          flavor_text: '你用一波五杀拯救了室友的排位分，也摧毁了你明天早八的起床意志。'
+        }
+      ]
+    }]
   },
 
-  'loc_dorm_noise': {
-    event_id: 'loc_dorm_noise', type: 'location', title: '楼上的蹦迪',
+  'loc_dorm_004': {
+    event_id: 'loc_dorm_004', type: 'location', title: '沉浸式学习 VLOG',
     scenes: [{
-      text: '凌晨一点，楼上的宿舍突然开始大声放音乐，甚至还有人在跳绳。你明天还要早起去上课。',
+      text: '你本来打算复习，但推送让你点开了一个“清华学霸 4 小时沉浸式学习 VLOG”。视频里的桌搭很精致，笔记很漂亮。',
       choices: [
         {
-          text: '上去敲门对线',
-          effects: { Mental_Health: -12, English_Ability: +3 },
-          flavor_text: '你上去交涉，对方是一群外国留学生，完全没有意识到这么吵。你用英语沟通了五分钟，他们道歉并关小了音乐。意外练了口语。',
+          text: '看了两小时，感觉也被精英氛围净化了',
+          effects: { Mental_Health: +10, Academic_Ability: -3 },
+          flavor_text: '看着别人学习，你的大脑分泌了虚假的成就感。你今天什么都没学，但至少睡得很香。'
         },
         {
-          text: '戴上耳塞强行睡觉',
-          effects: { Physical_Health: -8, Mental_Health: -5 },
-          flavor_text: '你选择了最省事的方式。耳塞隔音效果一般，你睡得很浅，第二天精神萎靡。',
-        },
-      ],
-    }],
+          text: '被焦虑感逼迫，选择去刷专业课习题',
+          effects: { Mental_Health: -15, Academic_Ability: +8 }
+        }
+      ]
+    }]
   },
 
-  'loc_dorm_study_buddy': {
-    event_id: 'loc_dorm_study_buddy', type: 'location', title: '意外的学习搭子',
+  'loc_dorm_005': {
+    event_id: 'loc_dorm_005', type: 'location', title: 'G 胖的微笑',
     scenes: [{
-      text: '你本来打算躺着刷手机，结果室友把专业书摊在桌上说："一起卷吧，我要看到凌晨两点。"\n\n你们就这样无声地并排学了起来。',
+      text: 'Steam 秋季特卖。你愿望单里那个眼馋了半年的 3A 大作《荒野○镖客》直接打骨折，只要 89 块钱。',
       choices: [
         {
-          text: '跟上节奏，一起卷',
-          effects: { Academic_Ability: +8, English_Ability: +3, Mental_Health: +8 },
-          flavor_text: '有人陪着的自习效率出奇地高。你们谁也没说话，但书页翻动的声音让人觉得踏实。',
+          text: '没玩过这游戏不配说自己是笔电小子！',
+          effects: { Money: -10, Mental_Health: +15, Academic_Ability: -3 },
+          flavor_text: '《宇宙机○人》不如《黑○话》一根！'
         },
-      ],
-    }],
+        {
+          text: '不买，去 B 站看 UP 主的实况视频，聊以解馋',
+          effects: { Money: +5, Mental_Health: +10 },
+          flavor_text: '白嫖虽然快乐，但云玩家的体验终究差了点意思。'
+        }
+      ]
+    }]
   },
 
-  'loc_dorm_insomnia': {
-    event_id: 'loc_dorm_insomnia', type: 'location', title: '失眠',
+  'loc_dorm_006': {
+    event_id: 'loc_dorm_006', type: 'location', title: '富哥的求助',
     scenes: [{
-      text: '你躺在床上盯着天花板。脑子里转的都是：雅思还没考、GPA 够不够、中介靠不靠谱……越想越睡不着。',
+      text: 'EAP 课上认识的富哥同学在微信上敲你：“兄弟明天 Java 大作业救一下，我真写不明白，给你 600 辛苦费咋样？”',
       choices: [
         {
-          text: '起来背单词，反正睡不着',
-          effects: { English_Ability: +3, Physical_Health: -12, Mental_Health: -8 },
-          flavor_text: '你背了两个小时单词，天快亮了才迷迷糊糊睡过去。单词记住了一些，但身体状态很差。',
+          text: '收钱办事，重构那坨意大利面代码',
+          effects: { Money: +20, Academic_Ability: +8, Mental_Health: -15 },
+          flavor_text: '你赚了钱，顺便把知识点吃透了，但你看他代码时气的差点脑溢血。'
         },
         {
-          text: '强迫自己闭眼，什么都不想',
-          effects: { Physical_Health: -12, Mental_Health: -15 },
-          flavor_text: '你什么都没做，就这样焦虑地躺到了天亮。这是最坏的结果——既没有休息，也没有做任何事情。',
+          text: '嫌麻烦拒绝，有这时间不如玩原神',
+          effects: { Mental_Health: +5, Money: -5 }
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_007': {
+    event_id: 'loc_dorm_007', type: 'location', title: '凌晨三点的虚无',
+    scenes: [{
+      text: '凌晨三点，你在床上辗转反侧。虚无主义袭击了你，你觉得考研、留学、GPA 都毫无意义，人类不过是宇宙中的尘埃。',
+      choices: [
+        {
+          text: '戴上耳机，任由自己沉溺在悲伤里',
+          effects: { Mental_Health: -15, Physical_Health: -10 },
+          flavor_text: '全网最伤感的bgm，听完不哭你来打我。尤其是最后一首建议点赞收藏起来以免找不到。夜深人静的时候个人听，前奏一响立马emo。没猜错的话，艾特列表中的第三位一定是你生命中最重要的存在。你表情包里的第二排第三个就是你现在的心情带上耳机，用心感受这浓浓的伤感氛围。评论区留下你的手机电量相当于一百的，那就做一天朋友。听完艾特一位你喜欢的博主，看他会不会来接你。有人找了十年，只听前奏就已沦陷。记得分享给你的姐妹，看看你姐妹会给你回什么。如果不回，建议两人断了，就问你敢不敢在评论区留下你想对喜欢的人说的话，万一他看到了留下一句祝福。听说打出l d，据说百分之九十的打出来都是老大。如果不是，请打在评论区，让我看看你就是那百分之十。废话不多说，就让我们听听有哪些伤感bgm，键盘打出七四八三二幺，如果相似的，那么就做一周兄弟听完不哭，下个月的奶茶我包了。不要单独一个人听，建议分享给闺蜜一起听。据说这几个星座听完之后，两周内回进到那个有缘的地方去进行修炼。下面让我们听听网友总结的最伤感的十首bgm吧。一首是经典，看看你听过几首关上灯，戴上耳机，让我们用心感受一下这几首音乐歌曲天花板。@你闺蜜过来看看你闺蜜会不会来接你。心情不好的时候，千万不要怕你听完后瞬间落泪，如果没有落泪，那算我输，让我们一起欣赏网友总结的emo歌曲天花板先准备好纸巾，以免落泪了。来不及，bgm上'
         },
-      ],
-    }],
+        {
+          text: '睡不着也无事做，背背单词打发时间',
+          effects: { Mental_Health: +15, English_Ability: +3, Physical_Health: -15 },
+          flavor_text: '因为彻底放弃了功利心，单词竟然过目不忘。这种看破红尘带来了内心的极度平静。'
+        }
+      ]
+    }]
   },
 
 };
