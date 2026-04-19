@@ -68,4 +68,12 @@ export const ACTIONS = {
       'loc_dorm_insomnia',
     ],
   },
+
+  'visit_ia': {
+    id: 'visit_ia', buildingId: 'ia', label: '前往咨询', apCost: 1, icon: 'globe',
+    eventPool: [
+      // 暂时留空，Step 2 会把 agency_part1 等事件移入这里
+    ],
+  },
+
 };
