@@ -129,10 +129,9 @@ export const CONSTANTS = Object.freeze({
   // 【特殊（强制）事件时间表】
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
-    { month: 3,  eventId: 'agency_part1'               },
     { month: 4,  eventId: 'sem1_final_exam'             },
     { month: 7,  eventId: 'agency_investigation_late'   },
-    { month: 8,  eventId: 'ielts_guarantee'             },  // 新增
+    { month: 8,  eventId: 'ielts_guarantee'             },
     { month: 9,  eventId: 'sem2_final_exam'             },
     { month: 10, eventId: 'summer_internship_decision'  },
     { month: 12, eventId: 'final_application'           },
