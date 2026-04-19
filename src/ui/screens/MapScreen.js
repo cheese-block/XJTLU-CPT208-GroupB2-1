@@ -713,7 +713,8 @@ export class MapScreen {
   }
 
   _buildBuildingPanel(building) {
-    const isAction = building.type === 'B';
+    // 【修改】：同样改为动态判定
+    const isAction = this._state?.unlockedBuildings?.includes(building.id);
 
     return `
       <div class="flex-1 flex flex-col overflow-hidden">
@@ -766,19 +767,7 @@ export class MapScreen {
           </div>
         </div>
 
-        ${building.tendency ? `
-          <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
-            <div class="flex items-center gap-1.5 mb-1.5">
-              <i data-lucide="trending-up"
-                class="lucide w-3 h-3 text-xjtlu-blue"></i>
-              <span class="text-[0.6rem] font-bold text-xjtlu-blue
-                          tracking-wider uppercase">行动倾向</span>
-            </div>
-            <p class="text-xs text-blue-700 leading-relaxed">
-              ${building.tendency}
-            </p>
-          </div>
-        ` : ''}
+        <!-- 【移除】：彻底删除了 tendency 渲染区块 -->
 
       </div>
     `;
@@ -806,7 +795,8 @@ export class MapScreen {
     const popover = this._container?.querySelector('#action-popover');
     if (!popover) return;
 
-    const isAction = building.type === 'B';
+    // 【修改】：动态判定是否为可行动建筑
+    const isAction = this._state?.unlockedBuildings?.includes(building.id);
     const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
     const apRemain = this._state?.AP ?? 0;
 
