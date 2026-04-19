@@ -6,11 +6,10 @@ export const ACTIONS = {
   'study_class': {
     id: 'study_class', buildingId: 'sb', label: '上专业课', apCost: 1, icon: 'flask-conical',
     eventPool: [
-      'loc_sb_lecture',
-      'loc_sb_group_work',
-      'loc_sb_quiz',
-      'loc_sb_front_row',
-      'loc_sb_aircon',
+      'loc_sb_001', 'loc_sb_002', 'loc_sb_003', 'loc_sb_004',
+      'loc_sb_005', 'loc_sb_006', 'loc_sb_007', 'loc_sb_008',
+      'loc_sb_009', 'loc_sb_010', 'loc_sb_011', 'loc_sb_012',
+      'loc_sb_013'
     ],
   },
 
