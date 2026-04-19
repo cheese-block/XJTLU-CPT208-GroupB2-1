@@ -224,8 +224,9 @@ export function checkBadEndings() {
   for (const check of deathChecks) {
     if (check.condition) {
       log('warn', 'GameLoop', `💀 走钢丝失败，触发结局：${check.tag}`);
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      // 【修复】：先添加 Tag，再触发结局阶段切换
       StateManager.addTag(check.tag);
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
       return true; // 拦截后续流程
     }
   }
