@@ -109,7 +109,8 @@ export class MapScreen {
 
   _buildHTML() {
     const pinsHTML = BUILDINGS.map(b => {
-      const isAction   = b.type === 'B';
+      // 【修改】：由静态的 type 判定改为动态读取 state
+      const isAction   = this._state?.unlockedBuildings?.includes(b.id);
       const shortLabel = this._getShortLabel(b.id);
       return `
         <button
