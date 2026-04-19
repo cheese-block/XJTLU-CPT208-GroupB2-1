@@ -535,7 +535,7 @@ export const EVENTS = {
   },
 
   // ════════════════════════════════════════════════════════
-  // 地点事件：SA~SD 专业课楼 (重构版 - 张力增强)
+  // 地点事件：SA~SD 专业课楼 (重构版 - 高张力数值平衡)
   // ════════════════════════════════════════════════════════
 
   'loc_sb_001': {
@@ -545,11 +545,11 @@ export const EVENTS = {
       choices: [
         {
           text: '靠体温硬抗，死盯投影屏幕上的公式',
-          effects: { Physical_Health: -8, Academic_Ability: +12 }
+          effects: { Physical_Health: -25, Academic_Ability: +8 }
         },
         {
           text: '套上连帽衫，靠在椅背上闭目养神',
-          effects: { Physical_Health: +5, Mental_Health: +5, Academic_Ability: -5 },
+          effects: { Physical_Health: +15, Mental_Health: +15, Academic_Ability: -5 },
           flavor_text: '你睡得很暖和。醒来时黑板已经擦干净了。'
         }
       ]
@@ -563,11 +563,11 @@ export const EVENTS = {
       choices: [
         {
           text: '疯狂截图，今晚熬夜背下这道题的每一个步骤',
-          effects: { Academic_Ability: +15, Physical_Health: -8, Mental_Health: -8 }
+          effects: { Academic_Ability: +8, Physical_Health: -20, Mental_Health: -20 }
         },
         {
           text: '把群里的截图存进手机，决定先去补个觉',
-          effects: { Mental_Health: +5, Academic_Ability: -5 },
+          effects: { Mental_Health: +15, Academic_Ability: -4 },
           flavor_text: '这张截图在你的相册里躺到了毕业。'
         }
       ]
@@ -581,11 +581,11 @@ export const EVENTS = {
       choices: [
         {
           text: '叹口气，主动揽下最难的数据分析部分',
-          effects: { Academic_Ability: +15, Mental_Health: -15, Physical_Health: -5 }
+          effects: { Academic_Ability: +8, Mental_Health: -30, Physical_Health: -15 }
         },
         {
           text: '抢先开口，拿走最简单的 Introduction',
-          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          effects: { Mental_Health: +20, Academic_Ability: -6 },
           flavor_text: '你交差了。至于最后的分数，听天由命吧。'
         }
       ]
@@ -599,12 +599,12 @@ export const EVENTS = {
       choices: [
         {
           text: '结结巴巴地用散装英语硬编一个答案',
-          effects: { English_Ability: +5, Mental_Health: -12, Academic_Ability: +5 },
+          effects: { English_Ability: +3, Mental_Health: -20, Academic_Ability: +4 },
           flavor_text: '教授帮你纠正了语法，你尴尬得出了一身汗，但记住了这个知识点。'
         },
         {
           text: '坦然低头："Sorry, I have no idea."',
-          effects: { Mental_Health: +8, Academic_Ability: -8 }
+          effects: { Mental_Health: +15, Academic_Ability: -5 }
         }
       ]
     }]
@@ -617,11 +617,11 @@ export const EVENTS = {
       choices: [
         {
           text: '老实挨训，并记下他给出的修改建议',
-          effects: { Mental_Health: -15, Academic_Ability: +15 }
+          effects: { Mental_Health: -25, Academic_Ability: +8 }
         },
         {
           text: '强行画大饼，承诺下周一定能出初步结果',
-          effects: { Mental_Health: +5, Academic_Ability: -8 },
+          effects: { Mental_Health: +10, Academic_Ability: -8 },
           flavor_text: '导师满意地点头。你走出办公室，意识到自己挖了个填不上的坑。'
         }
       ]
@@ -635,11 +635,11 @@ export const EVENTS = {
       choices: [
         {
           text: '戴上降噪耳机，强行把注意力死磕在 PPT 上',
-          effects: { Mental_Health: -12, Academic_Ability: +15 }
+          effects: { Mental_Health: -20, Academic_Ability: +8 }
         },
         {
           text: '默默收拾书包，搬到后排的角落顺便摸鱼',
-          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          effects: { Mental_Health: +20, Academic_Ability: -8 },
           flavor_text: '新座位视野很差，但你刷手机刷得很舒服。'
         }
       ]
@@ -653,11 +653,11 @@ export const EVENTS = {
       choices: [
         {
           text: '花钱去文印室打出来，今晚买杯咖啡死磕这 62 页',
-          effects: { Money: -8, Physical_Health: -15, Academic_Ability: +18 }
+          effects: { Money: -20, Physical_Health: -25, Academic_Ability: +8 }
         },
         {
           text: '点击下载，收藏，告诉自己“待会再看”',
-          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          effects: { Mental_Health: +10, Academic_Ability: -5 },
           flavor_text: '你再也没有打开过这个文件。'
         }
       ]
@@ -671,11 +671,11 @@ export const EVENTS = {
       choices: [
         {
           text: '跟着全班一起松口气，划掉笔记开始回微信',
-          effects: { Mental_Health: +8, Academic_Ability: -8 }
+          effects: { Mental_Health: +15, Academic_Ability: -8 }
         },
         {
           text: '继续听，把这部分复杂的推导过程硬啃下来',
-          effects: { Academic_Ability: +15, Mental_Health: -8, English_Ability: +5 },
+          effects: { Academic_Ability: +8, Mental_Health: -15, English_Ability: +2 },
           flavor_text: '这部分知识后来出现在了研究生的面试题里。'
         }
       ]
@@ -685,16 +685,16 @@ export const EVENTS = {
   'loc_sb_009': {
     event_id: 'loc_sb_009', type: 'location', title: '失踪的组员',
     scenes: [{
-      text: 'DDL 只剩三天。你们的共享文档里，那个负责核心代码的组员依然毫无动静，群消息已读不回。',
+      text: 'DDL 只剩三天。你们的共享文档里，那个负责核心代码的组员依然毫无动静，群消息已读不回分析。',
       choices: [
         {
           text: '点个外卖通宵，把他的部分也写了',
-          effects: { Money: -8, Physical_Health: -18, Academic_Ability: +18 },
+          effects: { Money: -15, Physical_Health: -30, Academic_Ability: +8 },
           flavor_text: '成绩不错。他在群里发了句“大家辛苦啦！”，你没有回复。'
         },
         {
           text: '只管好自己的部分，剩下的听天由命',
-          effects: { Mental_Health: +5, Academic_Ability: -12 }
+          effects: { Mental_Health: +15, Academic_Ability: -8 }
         }
       ]
     }]
@@ -707,11 +707,11 @@ export const EVENTS = {
       choices: [
         {
           text: '赶紧截图，照着抄完交差',
-          effects: { Mental_Health: +8, Academic_Ability: -8 }
+          effects: { Mental_Health: +20, Academic_Ability: -8 }
         },
         {
           text: '写邮件匿名举报，维护学术公平',
-          effects: { Mental_Health: -15, Academic_Ability: +8 },
+          effects: { Mental_Health: -25, Academic_Ability: +6 },
           flavor_text: '录播被删了。你在群里被骂了三天，但你自己把题做出来了。'
         }
       ]
@@ -725,12 +725,12 @@ export const EVENTS = {
       choices: [
         {
           text: '咬牙冲进楼梯间，一口气爬上五楼',
-          effects: { Physical_Health: -15, Mental_Health: -5, Academic_Ability: +8 },
+          effects: { Physical_Health: -25, Mental_Health: -15, Academic_Ability: +5 },
           flavor_text: '你踩着铃声瘫坐在座位上，肺里全是血腥味，但你拿到了出勤分。'
         },
         {
           text: '佛系排队，顺便去一楼全家买个肉包子边吃边等',
-          effects: { Money: -8, Mental_Health: +8, Academic_Ability: -8 }
+          effects: { Money: -15, Mental_Health: +20, Academic_Ability: -5 }
         }
       ]
     }]
@@ -743,12 +743,12 @@ export const EVENTS = {
       choices: [
         {
           text: '拍两下机器，强行凑几组看起来“合理”的数据填进报告',
-          effects: { Mental_Health: +8, Academic_Ability: -12 },
+          effects: { Mental_Health: +20, Academic_Ability: -8 },
           flavor_text: '报告顺利提交。期末考到这道实验题时，你对着卷子发了十分钟的呆。'
         },
         {
           text: '举手死等 TA，用英语磕磕绊绊地解释故障，重做一遍',
-          effects: { Physical_Health: -8, English_Ability: +5, Academic_Ability: +5 }
+          effects: { Physical_Health: -15, English_Ability: +3, Academic_Ability: +6 }
         }
       ]
     }]
@@ -761,12 +761,12 @@ export const EVENTS = {
       choices: [
         {
           text: '举手打断，用英语指出他的错误',
-          effects: { Mental_Health: -15, English_Ability: +15, Academic_Ability: +5 },
+          effects: { Mental_Health: -20, English_Ability: +3, Academic_Ability: +4 },
           flavor_text: '全班的目光刺得你发毛。教授愣了一下，说“Good catch”，并在你的平时分表上画了个勾。'
         },
         {
           text: '保持沉默，只在自己的笔记上默默把负号补上',
-          effects: { Mental_Health: +5, Academic_Ability: -5 }
+          effects: { Mental_Health: +10, Academic_Ability: -4 }
         }
       ]
     }]
@@ -779,12 +779,12 @@ export const EVENTS = {
       choices: [
         {
           text: '敲门进去，用毕生所学的英语词汇强行 argue 这 1 分',
-          effects: { Mental_Health: -18, English_Ability: +15, Academic_Ability: +8 },
+          effects: { Mental_Health: -30, English_Ability: +3, Academic_Ability: +6 },
           flavor_text: '你扯了十五分钟。教授被你烦得不行，在卷子上找了个步骤分给你加上了。'
         },
         {
           text: '在门口站了三分钟，叹了口气，转身回宿舍',
-          effects: { Mental_Health: +5, Academic_Ability: -8 }
+          effects: { Mental_Health: +10, Academic_Ability: -5 }
         }
       ]
     }]
@@ -797,11 +797,11 @@ export const EVENTS = {
       choices: [
         {
           text: '掏出银行卡，当场买下一个月的正版授权',
-          effects: { Money: -18, Academic_Ability: +8 }
+          effects: { Money: -30, Academic_Ability: +6 }
         },
         {
           text: '打开论坛和网盘，通宵寻找并安装破解版',
-          effects: { Physical_Health: -15, Mental_Health: -8, Academic_Ability: +5 },
+          effects: { Physical_Health: -25, Mental_Health: -15, Academic_Ability: +4 },
           flavor_text: '凌晨三点，你终于装好了。顺便还附赠了一个关不掉的流氓弹窗。'
         }
       ]
@@ -815,12 +815,12 @@ export const EVENTS = {
       choices: [
         {
           text: '回复“谢谢义父！”，然后打开游戏',
-          effects: { Mental_Health: +15, Academic_Ability: -15 },
+          effects: { Mental_Health: +30, Academic_Ability: -8 },
           flavor_text: '这门课你拿了 A。但你完全不知道这个项目是用什么语言写的。'
         },
         {
           text: '硬着头皮点开大神的源码，一行行看，不懂就去群里问他',
-          effects: { Mental_Health: -12, Academic_Ability: +18 }
+          effects: { Mental_Health: -20, Academic_Ability: +8 }
         }
       ]
     }]
@@ -833,12 +833,12 @@ export const EVENTS = {
       choices: [
         {
           text: '走过去拍拍他的肩膀，接管他的麦克风替他讲完',
-          effects: { Mental_Health: -15, English_Ability: +15, Academic_Ability: +8 },
+          effects: { Mental_Health: -25, English_Ability: +3, Academic_Ability: +4 },
           flavor_text: '你们组的分数保住了。但他下台后整整一天没跟你说话。'
         },
         {
           text: '站在旁边用眼神鼓励他，陪他一起罚站',
-          effects: { Mental_Health: +5, Academic_Ability: -8 }
+          effects: { Mental_Health: +10, Academic_Ability: -8 }
         }
       ]
     }]
@@ -851,12 +851,12 @@ export const EVENTS = {
       choices: [
         {
           text: '从后门溜出去，去自动贩卖机买个面包',
-          effects: { Money: -5, Physical_Health: +5, Academic_Ability: -8 },
-          flavor_text: '你啃着面包回来时，黑板上已经多出了三个你看不懂的推导公式。'
+          effects: { Money: -15, Physical_Health: +15, Academic_Ability: -8 },
+          flavor_text: '你啃着面包回来时，黑板上已经多出了三个你看不懂的推懂公式。'
         },
         {
           text: '灌下半瓶凉水强行压制胃酸，继续死盯 PPT',
-          effects: { Physical_Health: -15, Mental_Health: -5, Academic_Ability: +8 }
+          effects: { Physical_Health: -30, Mental_Health: -15, Academic_Ability: +8 }
         }
       ]
     }]
