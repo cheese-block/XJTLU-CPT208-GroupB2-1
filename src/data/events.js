@@ -1314,4 +1314,42 @@ export const EVENTS = {
     }]
   },
 
+  'loc_dorm_008': {
+    event_id: 'loc_dorm_008', type: 'location', title: '疯狂星期四',
+    scenes: [{
+      text: '今天是星期四。你 QQ、微信的各个群聊都在刷不知道哪里偷的“疯狂星期四”文案。',
+      choices: [
+        {
+          text: '复制其中最难绷的一条，转发到各个群里，并配上你的收款码',
+          effects: { Money: +10, Mental_Health: +10 },
+          flavor_text: '可能是佩服你自己开盒自己的胆识，居然真的有个富哥给你转了 50。你没去买肯德基，而是去食堂吃了一周的挂面。这就是互联网的魅力。'
+        },
+        {
+          text: '实在受不了这种互联网讨口子的行为，让 AI 引经据典现编一段三千字雄文痛斥他们',
+          effects: { Mental_Health: +15, Academic_Ability: +2 },
+          flavor_text: '虽然你扮了扫兴鬼，但赢得了道德高地。在看到 AI 生成出“君子忧道不忧贫”的时候，你觉得自己灵魂升华了。'
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_009': {
+    event_id: 'loc_dorm_009', type: 'location', title: 'Steam 饰品理财',
+    scenes: [{
+      text: '日常的一天，你偶然地发现，你两年前 5 块钱买的 CS 皮肤竟然涨到了 400 块，而且现在涨势似乎也还行。',
+      choices: [
+        {
+          text: '赶紧抛售。落袋为安，今晚加餐！',
+          effects: { Money: +15, Mental_Health: +15 },
+          flavor_text: '看着余额增加，你觉得自己就是西浦巴菲特。虽然第二天它又涨了 100。'
+        },
+        {
+          text: '我就是西浦赌神，给我擦皮鞋',
+          effects: { Money: -10, Mental_Health: -15 },
+          flavor_text: '倒狗你赢了。'
+        }
+      ]
+    }]
+  },
+
 };

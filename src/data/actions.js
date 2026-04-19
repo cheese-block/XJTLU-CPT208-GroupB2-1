@@ -60,7 +60,8 @@ export const ACTIONS = {
     id: 'rest', buildingId: 'dorm', label: '回宿舍休息', apCost: 1, icon: 'moon',
     eventPool: [
       'loc_dorm_001', 'loc_dorm_002', 'loc_dorm_003', 'loc_dorm_004',
-      'loc_dorm_005', 'loc_dorm_006', 'loc_dorm_007'
+      'loc_dorm_005', 'loc_dorm_006', 'loc_dorm_007', 'loc_dorm_008',
+      'loc_dorm_009'
     ],
   },
 
