@@ -535,28 +535,22 @@ export const EVENTS = {
   },
 
   // ════════════════════════════════════════════════════════
-  // 地点事件：SA~SD 专业课楼 (学业与高压卡组)
+  // 地点事件：SA~SD 专业课楼 (重构版 - 张力增强)
   // ════════════════════════════════════════════════════════
 
   'loc_sb_001': {
     event_id: 'loc_sb_001', type: 'location', title: '空调战争',
     scenes: [{
-      text: 'SA楼的空调今天调到了二十度。\n\n你穿着短袖来上课，现在后悔了。坐在你前排的女生已经把外套裹成了一个茧，坐在你右边的男生却在用笔记本风扇对着自己吹，嘴里嘟囔着"怎么这么热"。\n\n教授还在台上念PPT。距离下课还有五十分钟。',
+      text: 'SA 楼的空调今天调到了二十度。你穿着短袖冻得发抖，而教授还在台上念着 PPT。',
       choices: [
         {
-          text: '去找管理员投诉，要求调高温度',
-          effects: { Physical_Health: +5, Mental_Health: -5, Academic_Ability: -5 },
-          flavor_text: '你在走廊里站了七分钟，管理员说"好的好的"，然后什么都没变。但你至少在走廊暖和了七分钟，还顺便拍了一下窗外的天空。上课嘛，内容都在录播里。',
+          text: '靠体温硬抗，死盯投影屏幕上的公式',
+          effects: { Physical_Health: -8, Academic_Ability: +12 }
         },
         {
-          text: '原地忍着，把注意力集中到PPT上',
-          effects: { Physical_Health: -5, Academic_Ability: +10 },
-          flavor_text: '你的手指开始发凉，但你盯着投影屏幕，第一次认真看清了那个你之前以为是乱码的公式。冷，让你清醒。',
-        },
-        {
-          text: '把帽衫从包里扯出来套上，靠在椅背上眯一会',
-          effects: { Physical_Health: +5, Mental_Health: +5, Academic_Ability: -8 },
-          flavor_text: '暖和了。也困了。老师的声音变成了白噪音。你在第四十分钟的时候睁眼，发现旁边同学的笔记已经记了两页，你的页面还是空的。',
+          text: '套上连帽衫，靠在椅背上闭目养神',
+          effects: { Physical_Health: +5, Mental_Health: +5, Academic_Ability: -5 },
+          flavor_text: '你睡得很暖和。醒来时黑板已经擦干净了。'
         }
       ]
     }]
@@ -565,295 +559,308 @@ export const EVENTS = {
   'loc_sb_002': {
     event_id: 'loc_sb_002', type: 'location', title: '教授原题',
     scenes: [{
-      text: '期末考试前的最后一节复习课。\n\n教授站在讲台上，清了清嗓子，说："我现在给大家划一下重点。"\n\n全场从半昏迷状态瞬间复活，笔和手机同时举起。教授开始翻PPT，指着某道例题说："这种题型……大家要理解它的思路。"\n\n他顿了一下。"理解它的思路。"\n\n你看了一眼隔壁同学的屏幕，他已经把这道题截图发进了八个群。',
+      text: '最后一节复习课，教授指着某道例题顿了一下：“大家要理解它的思路。”隔壁同学已经把题目截图发到了群里。',
       choices: [
         {
-          text: '疯狂截图，回去背这道题的每一个步骤',
-          effects: { Academic_Ability: +12, Mental_Health: -8 },
-          flavor_text: '五道例题，你全部截图，全部背完，配合往年卷，整理出了一份两页纸的精华笔记。你不确定自己是不是真的懂了，但你的笔记看起来非常好看。',
+          text: '疯狂截图，今晚熬夜背下这道题的每一个步骤',
+          effects: { Academic_Ability: +15, Physical_Health: -8, Mental_Health: -8 }
         },
         {
-          text: '截图发群，然后把复习课剩下的时间拿来刷另一门课',
-          effects: { Academic_Ability: +10, Mental_Health: +5 },
-          flavor_text: '你今天很高效。两门课都推进了一点，两门课都没推进太多。这就是大学生版的"鱼和熊掌"。',
-        },
-        {
-          text: '没来复习课，但在群里收到了截图',
-          effects: { Academic_Ability: -8, Mental_Health: +8, Physical_Health: +5 },
-          flavor_text: '你在宿舍补觉，手机震了一下，群里是二十七张截图和一条消息："老师原题！！！"你把截图保存到相册，告诉自己晚点再看。晚点是什么时候你心里没数。',
+          text: '把群里的截图存进手机，决定先去补个觉',
+          effects: { Mental_Health: +5, Academic_Ability: -5 },
+          flavor_text: '这张截图在你的相册里躺到了毕业。'
         }
       ]
     }]
   },
 
   'loc_sb_003': {
-    event_id: 'loc_sb_003', type: 'location', title: '分工会议',
+    event_id: 'loc_sb_003', type: 'location', title: '小组作业分工',
     scenes: [{
-      text: '你们组在SA二楼找了个角落，围坐在一起，打开了共享文档。\n\n沉默了大概三十秒。然后有人说："那……我们先分一下工？"\n\n又沉默了二十秒。组里有五个人。你们的作业有四个部分。你注意到有一个人从会议开始就在低头看手机。',
+      text: '五人小组会议。沉默了半分钟后，终于有人问：“那……我们怎么分工？”',
       choices: [
         {
-          text: '主动站出来，把任务分配好，自己揽最难的那块',
-          effects: { Academic_Ability: +15, Mental_Health: -15, Money: -5 },
-          flavor_text: '你把框架搭好，把任务发到群里，附上了ddl提醒。三个人回复"好的"，一个人已读不回，一个人回复"我最近有点事"。你预感到你会在截止日期前两天重写至少一半。你是对的。',
+          text: '叹口气，主动揽下最难的数据分析部分',
+          effects: { Academic_Ability: +15, Mental_Health: -15, Physical_Health: -5 }
         },
         {
-          text: '等别人先开口，选一个相对轻松的部分',
-          effects: { Academic_Ability: -5, Mental_Health: +8 },
-          flavor_text: '你拿到了"Introduction"部分。写起来很快，AI润色一遍，格式对齐，交差。你不知道组里其他人的部分质量如何，你也不太想知道。分数出来再说。',
-        },
-        {
-          text: '提议按兴趣分工，把自己感兴趣的技术部分争过来',
-          effects: { Academic_Ability: +10, Mental_Health: +5, English_Ability: +5 },
-          flavor_text: '你拿到了数据分析那块，工作量比你预想的大，但你做得很投入，甚至查了几篇课外的论文。你不确定这对分数有没有帮助，但你写完之后有一种罕见的满足感。',
-        },
-        {
-          text: '在会议上说"我们先把需求理清楚吧"，把讨论引向虚空',
-          effects: { Mental_Health: -5, Academic_Ability: -8 },
-          flavor_text: '你们讨论了四十分钟，什么都没分下去，但每个人都觉得"思路更清晰了"。回宿舍的路上你意识到你们没有定下任何一个截止日期。你们的ddl是下周四。',
+          text: '抢先开口，拿走最简单的 Introduction',
+          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          flavor_text: '你交差了。至于最后的分数，听天由命吧。'
         }
       ]
     }]
   },
 
   'loc_sb_004': {
-    event_id: 'loc_sb_004', type: 'location', title: '教授提问',
+    event_id: 'loc_sb_004', type: 'location', title: '课上点名',
     scenes: [{
-      text: '教授讲到一半，忽然停下来，目光在教室里扫了一圈。\n\n"好，这里有个问题，谁来回答一下？"\n\n教室里二十七个人同时低下头。有人开始假装看笔记，有人开始假装在手机上记重点，坐在第一排的同学开始在纸上画线。\n\n教授的目光停在了你身上。\n"你来说说？"',
+      text: '教授的目光扫过全场，停在了你身上：“你来回答一下这个问题？”',
       choices: [
         {
-          text: '硬着头皮回答，说了个大概方向',
-          effects: { English_Ability: +5, Mental_Health: -10, Academic_Ability: +8 },
-          flavor_text: '你的声音有点抖，但你说完了。教授点点头说"差不多，但还需要……"然后开始补充。你没完全听进去，因为你还在从刚才的肾上腺素里缓过来。但你把答题框架记住了。',
+          text: '结结巴巴地用散装英语硬编一个答案',
+          effects: { English_Ability: +5, Mental_Health: -12, Academic_Ability: +5 },
+          flavor_text: '教授帮你纠正了语法，你尴尬得出了一身汗，但记住了这个知识点。'
         },
         {
-          text: '说"Sorry, could you repeat the question?"争取时间',
-          effects: { English_Ability: +5, Mental_Health: -5 },
-          flavor_text: '教授重复了一遍，你用这十秒钟拼命回想。你的回答依然模糊，教授说"有点思路，但不够准确"。你点点头，假装在记笔记。你其实在祈祷他不要再点你。',
-        },
-        {
-          text: '直接说"I\'m not sure about this one."',
-          effects: { Mental_Health: +5, Academic_Ability: +5 },
-          flavor_text: '教授看了你一秒钟，说"没关系，我们一起来看看"，然后自己解释了。你发现这个问题其实你本来有一点头绪的。你在笔记本上写下这个知识点，比之前认真了一点点。',
+          text: '坦然低头："Sorry, I have no idea."',
+          effects: { Mental_Health: +8, Academic_Ability: -8 }
         }
       ]
     }]
   },
 
   'loc_sb_005': {
-    event_id: 'loc_sb_005', type: 'location', title: '进度汇报',
+    event_id: 'loc_sb_005', type: 'location', title: 'FYP 导师组会',
     scenes: [{
-      text: '你们组今天要向导师汇报进度。\n\n上周你写了三页报告，删掉了两页，留下了一页，然后在最后一天又把那两页加回去了。\n\n导师坐在对面，翻开你发给他的文件，安静地看了一分钟。抬起头。\n\n"这个方向……你自己觉得推进得怎么样？"',
+      text: 'FYP 导师看着你那只有一页纸的进度报告，问：“你自己觉得推进得怎么样？”',
       choices: [
         {
-          text: '如实说"进度有点慢，但我这周会加速。"',
-          effects: { Mental_Health: -10, Academic_Ability: +8 },
-          flavor_text: '导师点头，说了一些"要注意时间节点"之类的话，然后给你指出了一个你没想到的切入角度。你出门的时候觉得被说了，但也觉得有点收获。',
+          text: '老实挨训，并记下他给出的修改建议',
+          effects: { Mental_Health: -15, Academic_Ability: +15 }
         },
         {
-          text: '把你做的部分包装一下，讲得比实际进度乐观一些',
-          effects: { Mental_Health: -15, Academic_Ability: -5 },
-          flavor_text: '导师看起来满意了，会议结束得很顺利。你走出会议室，意识到你刚刚给自己挖了一个坑——你说下周能给他看初步结果，但你现在连框架都还没搭好。倒计时开始了。',
-        },
-        {
-          text: '把研究过的资料和思考过程完整展示，哪怕没结论',
-          effects: { Academic_Ability: +15, English_Ability: +5, Mental_Health: -8 },
-          flavor_text: '导师听完沉默了一会儿，然后说了很多。有些话你当场没有完全听懂，但你录了音。这次会议比你预想的有价值，你的思路清晰了不少，虽然工作量也变大了不少。',
+          text: '强行画大饼，承诺下周一定能出初步结果',
+          effects: { Mental_Health: +5, Academic_Ability: -8 },
+          flavor_text: '导师满意地点头。你走出办公室，意识到自己挖了个填不上的坑。'
         }
       ]
     }]
   },
 
   'loc_sb_006': {
-    event_id: 'loc_sb_006', type: 'location', title: '临时分组',
+    event_id: 'loc_sb_006', type: 'location', title: '抖腿的同学',
     scenes: [{
-      text: '老师今天临时宣布："好，大家现在就地分组，四个人一组，做一个课上活动，待会分享。"\n\n你旁边坐着三个人：一个是你认识但不熟的同学，一个是你完全不认识的人，还有一个正在戴着耳机假装没听见老师说话。\n\n你们面面相觑了大约五秒。',
+      text: '你左边的同学疯狂抖腿，桌上的水瓶跟着共振。你已经完全听不进课了。',
       choices: [
         {
-          text: '主动说"我们组成一组吧"，然后立刻开始讨论任务',
-          effects: { Academic_Ability: +8, English_Ability: +5, Mental_Health: -5 },
-          flavor_text: '你捅了一下戴耳机的同学，他把一边耳机摘下来，懵懵地加入了讨论。你们的产出在全班属于中上，分享的时候你开口说了两句，老师点头表示认可。还行。',
+          text: '戴上降噪耳机，强行把注意力死磕在 PPT 上',
+          effects: { Mental_Health: -12, Academic_Ability: +15 }
         },
         {
-          text: '等别人来找你，结果被分进了一个全不认识的组',
-          effects: { Mental_Health: -10, English_Ability: +5, Academic_Ability: -5 },
-          flavor_text: '你们组有一个很强势的同学，把整个讨论的方向全程掌控，你插不进去几句话，但最后的结论还不错。你在这个小活动里主要贡献了点头和偶尔的"yeah, that makes sense"。',
-        },
-        {
-          text: '和认识的那个同学对视了一眼，用眼神达成默契',
-          effects: { Mental_Health: +5, Academic_Ability: -5 },
-          flavor_text: '你们两个人讨论效率极高，拉上另外两个人之后反而慢下来了，但最后勉强捏出了一个答案。你在这次活动里说的话大多数是中文，只有在全班分享的时候切回了英文。',
+          text: '默默收拾书包，搬到后排的角落顺便摸鱼',
+          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          flavor_text: '新座位视野很差，但你刷手机刷得很舒服。'
         }
       ]
     }]
   },
 
   'loc_sb_007': {
-    event_id: 'loc_sb_007', type: 'location', title: '地震源',
+    event_id: 'loc_sb_007', type: 'location', title: '期中重点包',
     scenes: [{
-      text: '你今天坐在了一个坏位置。\n\n你左边的同学，从上课开始就在抖腿。不是那种微小的、可以忽略的抖，是那种能通过椅子把振动传给你、让你桌上的水瓶轻微颤动的抖。\n\n老师还在讲台上说着什么。你已经完全不知道他在讲什么了。',
+      text: '期中考前夜，课程群里突然有人发了一份 62 页的“期中重点整理 PDF”。',
       choices: [
         {
-          text: '轻轻碰了一下他，说"不好意思，能不抖腿吗？"',
-          effects: { Mental_Health: -8, Academic_Ability: -5 },
-          flavor_text: '他愣了一秒，说"哦哦，抱歉"，停了大约三分钟，然后又开始了。这次幅度小了一点点。你决定接受这个结果。',
+          text: '花钱去文印室打出来，今晚买杯咖啡死磕这 62 页',
+          effects: { Money: -8, Physical_Health: -15, Academic_Ability: +18 }
         },
         {
-          text: '默默换了个座位，假装去找个更好的角度看投影',
-          effects: { Mental_Health: +8, Academic_Ability: +5 },
-          flavor_text: '新座位的视野没有原来好，但你耳根清净了。你把刚才没听进去的内容从录播里找回来，顺便多看了一段。也许是因为安静，这段你听得格外清楚。',
-        },
-        {
-          text: '戴上耳机，用白噪音盖掉所有干扰，包括老师的声音',
-          effects: { Mental_Health: -5, Academic_Ability: +10 },
-          flavor_text: '震动还在，但你感知不到了。你进入了某种自我隔离的状态——抖腿隔绝了，老师也隔绝了，你看着PPT上的字，试图靠自学把这节课的内容补回来。有些看懂了，有些没有。',
+          text: '点击下载，收藏，告诉自己“待会再看”',
+          effects: { Mental_Health: +8, Academic_Ability: -8 },
+          flavor_text: '你再也没有打开过这个文件。'
         }
       ]
     }]
   },
 
   'loc_sb_008': {
-    event_id: 'loc_sb_008', type: 'location', title: '无准备之战',
+    event_id: 'loc_sb_008', type: 'location', title: '“这个不考”',
     scenes: [{
-      text: 'Tutorial开始了。\n\nTA说："好，我们来对一下这周的练习题，谁来讲第三题？"\n\n你打开题目文件，才意识到你这周完全忘了做这套题。第三题你看了第一行，没看懂，然后往下翻，发现后面四道你也没看懂。\n\nTA的目光开始在人群里巡逻。',
+      text: '教授指着 PPT 上一堆复杂的公式说：“This part... you don\'t need to worry about it in the exam.”',
       choices: [
         {
-          text: '趁TA还没点到你，飞速扫一遍题目，试图现场推',
-          effects: { Academic_Ability: +8, Mental_Health: -10 },
-          flavor_text: '你把题目大概看了一遍，发现思路其实不复杂，你推出了一个答案，不确定对不对，但TA点到你的时候你磕磕绊绊说出来了。TA说"对，就是这个思路"。你有点意外。',
+          text: '跟着全班一起松口气，划掉笔记开始回微信',
+          effects: { Mental_Health: +8, Academic_Ability: -8 }
         },
         {
-          text: '主动举手说"我来讲"，把推导过程一步步说出来',
-          effects: { Academic_Ability: +15, English_Ability: +5, Mental_Health: -15 },
-          flavor_text: '你说错了一步，TA指出来，帮你纠正。这道题的错误方式你永远记住了，这比看十遍正确答案的印象都深。你出了一身薄汗。',
-        },
-        {
-          text: '坐在后排不吭声，偷偷把同学的答案拍下来',
-          effects: { Academic_Ability: -5, Mental_Health: +5 },
-          flavor_text: '你全程没被点到，顺利隐形。你拍到了五道题的答案，存在手机里。你给自己定了个计划，今晚把这五道题重做一遍。今晚最终没有重做。',
+          text: '继续听，把这部分复杂的推导过程硬啃下来',
+          effects: { Academic_Ability: +15, Mental_Health: -8, English_Ability: +5 },
+          flavor_text: '这部分知识后来出现在了研究生的面试题里。'
         }
       ]
     }]
   },
 
   'loc_sb_009': {
-    event_id: 'loc_sb_009', type: 'location', title: '62页的救赎',
+    event_id: 'loc_sb_009', type: 'location', title: '失踪的组员',
     scenes: [{
-      text: '期中周。\n\n你路过SA走廊，看到有人把笔记本电脑摆在地板上，席地而坐，旁边放着一杯冷掉的奶茶。再往前走，有人站在窗边打电话，声音很低，听不清说什么，但表情很难看。\n\n你的手机震了一下，是你们的课程群：有人刚发了一份"期中重点整理汇总"，62页，PDF格式。',
+      text: 'DDL 只剩三天。你们的共享文档里，那个负责核心代码的组员依然毫无动静，群消息已读不回。',
       choices: [
         {
-          text: '下载，打印出来，找个空教室从第一页开始看',
-          effects: { Academic_Ability: +15, Money: -5, Physical_Health: -10 },
-          flavor_text: '62页。你打印了，用了将近半小时。你坐在空教室里翻开第一页，发现很多内容你其实都见过，只是从来没有这样系统地串起来。你看到第30页的时候，眼睛开始发酸。',
+          text: '点个外卖通宵，把他的部分也写了',
+          effects: { Money: -8, Physical_Health: -18, Academic_Ability: +18 },
+          flavor_text: '成绩不错。他在群里发了句“大家辛苦啦！”，你没有回复。'
         },
         {
-          text: '下载，收藏，告诉自己"待会再看"',
-          effects: { Mental_Health: +8, Academic_Ability: -8 },
-          flavor_text: '你继续走路。这份文件在你的下载文件夹里躺到了期中考试结束之后，你再也没打开过它。也许里面有你需要的东西，也许没有。你永远不会知道了。',
-        },
-        {
-          text: '扫一眼目录，只把你没把握的章节找出来精准复习',
-          effects: { Academic_Ability: +12, Mental_Health: +10 },
-          flavor_text: '你花了二十分钟定位到自己的盲区，发现一共三个知识点，你之前以为自己懂，其实没懂。你把这三个点搞清楚之后，感觉比看完62页踏实多了。',
+          text: '只管好自己的部分，剩下的听天由命',
+          effects: { Mental_Health: +5, Academic_Ability: -12 }
         }
       ]
     }]
   },
 
   'loc_sb_010': {
-    event_id: 'loc_sb_010', type: 'location', title: '免死金牌',
+    event_id: 'loc_sb_010', type: 'location', title: '录播泄露答案',
     scenes: [{
-      text: '教授讲到一半，停下来，看了一眼他的幻灯片，然后说：\n\n"This part… you don\'t need to worry about it in the exam."\n\n教室里发出了一种低沉的、集体性的呼出气声。有人立刻在笔记上划掉了整整一段，有人在群里发了"！！！"。\n\n但你注意到，教授接下来说的下一句话，几乎没有人在听了。',
+      text: '这周的课程录播里，教授忘记切屏，不小心展示了下次作业的参考答案。视频正在群里疯传。',
       choices: [
         {
-          text: '跟着大家一起松了口气，标注"不考"，开始走神',
-          effects: { Mental_Health: +5, Academic_Ability: -10 },
-          flavor_text: '你在这段"不考内容"期间刷了一会儿手机，等你回过神来，教授已经翻了三张PPT。你看了看旁边的笔记，发现中间有一段空白，不知道漏了什么。',
+          text: '赶紧截图，照着抄完交差',
+          effects: { Mental_Health: +8, Academic_Ability: -8 }
         },
         {
-          text: '继续听，把这部分内容记下来——万一有用呢',
-          effects: { Academic_Ability: +10, English_Ability: +5 },
-          flavor_text: '你是教室里极少数还在记笔记的人。教授瞥了你一眼，没说什么。这部分内容后来出现在了一道课后作业里。你是组里唯一一个不需要现查的人。',
-        },
-        {
-          text: '趁这个间隙，把前面没听懂的部分赶紧补一补',
-          effects: { Academic_Ability: +15, Mental_Health: +8 },
-          flavor_text: '你打开之前拍的PPT截图，把某个卡住你很久的公式重新推了一遍。你推通了。你感到一种细小但真实的满足感，像是拼图最后一块咔哒一声卡进去了。',
+          text: '写邮件匿名举报，维护学术公平',
+          effects: { Mental_Health: -15, Academic_Ability: +8 },
+          flavor_text: '录播被删了。你在群里被骂了三天，但你自己把题做出来了。'
         }
       ]
     }]
   },
 
   'loc_sb_011': {
-    event_id: 'loc_sb_011', type: 'location', title: '消失的组员',
+    event_id: 'loc_sb_011', type: 'location', title: '早八的 SA 电梯',
     scenes: [{
-      text: '小组作业截止日期还有四天。\n\n你们的共享文档只有你一个人在编辑。你上次发的消息是三天前，问大家"这周能不能碰个面"，下面只有两个已读，没有回复。\n\n你刚刚又发了一条消息："不知道大家进度怎么样？"\n\n发送之后，群里安静如初。',
+      text: '早上 8:55。SA 一楼的电梯前排了二十多米长的队，而你的专业课在五楼，教授以“准点点名”著称。',
       choices: [
         {
-          text: '挨个私信，逼问进度',
-          effects: { Mental_Health: -10, Academic_Ability: -5 },
-          flavor_text: '两个人回复了，说"快好了"。一个人说"最近有点事，明天给你"。明天他没有给你。你把"明天"这个词加入了你的不可信词汇表。',
+          text: '咬牙冲进楼梯间，一口气爬上五楼',
+          effects: { Physical_Health: -15, Mental_Health: -5, Academic_Ability: +8 },
+          flavor_text: '你踩着铃声瘫坐在座位上，肺里全是血腥味，但你拿到了出勤分。'
         },
         {
-          text: '决定不等了，把自己负责的部分做到最好，其他留空',
-          effects: { Academic_Ability: +10, Mental_Health: -10, Physical_Health: -5 },
-          flavor_text: '你花了一个下午和一个晚上，把自己的部分打磨得很完整。其他人的部分最后以良莠不齐的状态交上去了，整体分数还行。你不知道是不是该为别人的部分感到庆幸还是生气。',
-        },
-        {
-          text: '打开文档，把其他人的部分默默填上',
-          effects: { Academic_Ability: +18, Mental_Health: -18, Physical_Health: -15, Money: -8 },
-          flavor_text: '你买了两杯咖啡，通宵，完成了整份作业。你没有告诉任何人。分数出来，你们组成绩不错，组员在群里发了"耶！"你没有回复这条消息。',
+          text: '佛系排队，顺便去一楼全家买个肉包子边吃边等',
+          effects: { Money: -8, Mental_Health: +8, Academic_Ability: -8 }
         }
       ]
     }]
   },
 
   'loc_sb_012': {
-    event_id: 'loc_sb_012', type: 'location', title: '意外的馈赠',
+    event_id: 'loc_sb_012', type: 'location', title: '玄学示波器',
     scenes: [{
-      text: '有人在群里发现，这周lecture的录播里，教授在PPT讲完之后忘记切屏，多录了三分钟——刚好是他在电脑上打开下一次作业的参考答案的三分钟。\n\n视频在群里传开了，大家都在截图。\n\n你打开视频看了一眼，分辨率一般，但能看清楚大部分内容。',
+      text: '物理实验课。你这台示波器跳出的波形像是在跳街舞，完全不符合理论预期。TA（助教）正在指导另一组，看起来半小时内没空理你。',
       choices: [
         {
-          text: '截图保存，但不全靠它——拿来对照一下自己的思路',
-          effects: { Academic_Ability: +10, Mental_Health: +5 },
-          flavor_text: '你先独立做了一遍，然后对照截图。有两道你做对了，有一道思路方向对但细节错了。你把错误的地方重新推了一遍，感觉这次真的弄懂了。',
+          text: '拍两下机器，强行凑几组看起来“合理”的数据填进报告',
+          effects: { Mental_Health: +8, Academic_Ability: -12 },
+          flavor_text: '报告顺利提交。期末考到这道实验题时，你对着卷子发了十分钟的呆。'
         },
         {
-          text: '直接照着截图写答案，改改格式，交上去',
-          effects: { Academic_Ability: -10, Mental_Health: +8 },
-          flavor_text: '效率极高。你提前两天完成了作业，省下的时间用来备考另一门课。至于这门课的知识点，你不确定自己是否真的掌握了——但这个问题可以留到期末前再想。',
-        },
-        {
-          text: '把视频举报给教务，说这可能造成学术不公平',
-          effects: { Mental_Health: -15, Academic_Ability: +8 },
-          flavor_text: '你发了一封邮件，措辞谨慎，礼貌，匿名。你不知道有没有人处理这件事，录播后来消失了，群里有人骂"谁举报的"，你没有吱声。那道作业你自己做，做出来了，分数不低。',
+          text: '举手死等 TA，用英语磕磕绊绊地解释故障，重做一遍',
+          effects: { Physical_Health: -8, English_Ability: +5, Academic_Ability: +5 }
         }
       ]
     }]
   },
 
   'loc_sb_013': {
-    event_id: 'loc_sb_013', type: 'location', title: '考前的长夜',
+    event_id: 'loc_sb_013', type: 'location', title: '黑板上的负号',
     scenes: [{
-      text: '明天上午九点，考试。\n\n现在是晚上十一点，你坐在SA的一间空教室里，桌上摊着三份往年卷、两沓笔记和一杯正在变凉的蜜雪冰城。\n\n你翻开第一份往年卷，看到第一题，感觉似曾相识但想不起来怎么做。你翻到最后一页看答案，看完还是有点不确定。\n\n教室里还有其他四个人，各自盯着自己的屏幕，谁都不说话。',
+      text: '教授在黑板上推导了一个占据半面墙的复杂公式。但你非常确定，他在第三步漏写了一个负号，导致后面的结果全错了。',
       choices: [
         {
-          text: '专注刷题，把三份卷子从头到尾过一遍',
-          effects: { Academic_Ability: +15, Physical_Health: -15 },
-          flavor_text: '你刷完了。凌晨一点半。你的状态是那种"感觉学会了但不确定"的薛定谔状态，你决定相信这种感觉，然后回去睡觉。第二天的考场上，你感谢了昨晚那个没有通宵的自己。',
+          text: '举手打断，用英语指出他的错误',
+          effects: { Mental_Health: -15, English_Ability: +15, Academic_Ability: +5 },
+          flavor_text: '全班的目光刺得你发毛。教授愣了一下，说“Good catch”，并在你的平时分表上画了个勾。'
         },
         {
-          text: '发现某个知识点完全没复习到，临时开始学新内容',
-          effects: { Academic_Ability: +8, Mental_Health: -10, Physical_Health: -8 },
-          flavor_text: '你把这个知识点从头学了一遍，花了两个小时，大概学会了七成。然后你意识到时间不够了，你还有两个章节没复习，但你已经太困了。你做了一个代价高昂的决定：两章不管，睡觉。',
-        },
-        {
-          text: '拉群问一道题，等回复的时候玩了二十分钟手机',
-          effects: { Mental_Health: -5, Academic_Ability: -8, Physical_Health: -18 },
-          flavor_text: '有人回复了你，给了个思路，你看完大概明白了。然后你意识在你玩手机的时候，本来快撑不住的困意又被硬生生续了命。你在凌晨十二点半精神奕奕，在凌晨两点彻底崩溃，考试当天顶着黑眼圈进场。',
+          text: '保持沉默，只在自己的笔记上默默把负号补上',
+          effects: { Mental_Health: +5, Academic_Ability: -5 }
         }
       ]
     }]
-  }, 
+  },
+
+  'loc_sb_014': {
+    event_id: 'loc_sb_014', type: 'location', title: '59 分的 Office Hours',
+    scenes: [{
+      text: '期中成绩出了，你考了 59 分（在英制评分中，差 1 分及格/升档）。你现在正站在教授办公室的门外。',
+      choices: [
+        {
+          text: '敲门进去，用毕生所学的英语词汇强行 argue 这 1 分',
+          effects: { Mental_Health: -18, English_Ability: +15, Academic_Ability: +8 },
+          flavor_text: '你扯了十五分钟。教授被你烦得不行，在卷子上找了个步骤分给你加上了。'
+        },
+        {
+          text: '在门口站了三分钟，叹了口气，转身回宿舍',
+          effects: { Mental_Health: +5, Academic_Ability: -8 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_015': {
+    event_id: 'loc_sb_015', type: 'location', title: '软件授权到期',
+    scenes: [{
+      text: '晚上十一点的 SA 机房。你刚准备导出期末项目，弹窗提示：“MATLAB 学生试用版已过期”。',
+      choices: [
+        {
+          text: '掏出银行卡，当场买下一个月的正版授权',
+          effects: { Money: -18, Academic_Ability: +8 }
+        },
+        {
+          text: '打开论坛和网盘，通宵寻找并安装破解版',
+          effects: { Physical_Health: -15, Mental_Health: -8, Academic_Ability: +5 },
+          flavor_text: '凌晨三点，你终于装好了。顺便还附赠了一个关不掉的流氓弹窗。'
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_016': {
+    event_id: 'loc_sb_016', type: 'location', title: '大神的施舍',
+    scenes: [{
+      text: '你运气爆棚，和系里均分 4.0 的“大神”分到了一组。刚建完群，大神就发来文件压缩包：“我都做完了，你们挂个名就行。”',
+      choices: [
+        {
+          text: '回复“谢谢义父！”，然后打开游戏',
+          effects: { Mental_Health: +15, Academic_Ability: -15 },
+          flavor_text: '这门课你拿了 A。但你完全不知道这个项目是用什么语言写的。'
+        },
+        {
+          text: '硬着头皮点开大神的源码，一行行看，不懂就去群里问他',
+          effects: { Mental_Health: -12, Academic_Ability: +18 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_017': {
+    event_id: 'loc_sb_017', type: 'location', title: 'Pre 上的死寂',
+    scenes: [{
+      text: '小组 Presentation 现场。轮到你的室友发言时，他看着台下的外教，大脑突然宕机，拿着提示卡的手在抖。死寂已经持续了十秒。',
+      choices: [
+        {
+          text: '走过去拍拍他的肩膀，接管他的麦克风替他讲完',
+          effects: { Mental_Health: -15, English_Ability: +15, Academic_Ability: +8 },
+          flavor_text: '你们组的分数保住了。但他下台后整整一天没跟你说话。'
+        },
+        {
+          text: '站在旁边用眼神鼓励他，陪他一起罚站',
+          effects: { Mental_Health: +5, Academic_Ability: -8 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_018': {
+    event_id: 'loc_sb_018', type: 'location', title: '生理极限',
+    scenes: [{
+      text: '两小时连排课的第二节。你的肚子发出了一声巨大的轰鸣，连前排的同学都回头看了你一眼。你饿得有些低血糖了。',
+      choices: [
+        {
+          text: '从后门溜出去，去自动贩卖机买个面包',
+          effects: { Money: -5, Physical_Health: +5, Academic_Ability: -8 },
+          flavor_text: '你啃着面包回来时，黑板上已经多出了三个你看不懂的推导公式。'
+        },
+        {
+          text: '灌下半瓶凉水强行压制胃酸，继续死盯 PPT',
+          effects: { Physical_Health: -15, Mental_Health: -5, Academic_Ability: +8 }
+        }
+      ]
+    }]
+  },
 
   // ════════════════════════════════════════════════════════
   // 地点事件：CB 图书馆
