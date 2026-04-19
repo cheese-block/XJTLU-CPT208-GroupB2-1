@@ -61,7 +61,7 @@ export const ACTIONS = {
     eventPool: [
       'loc_dorm_001', 'loc_dorm_002', 'loc_dorm_003', 'loc_dorm_004',
       'loc_dorm_005', 'loc_dorm_006', 'loc_dorm_007', 'loc_dorm_008',
-      'loc_dorm_009'
+      'loc_dorm_009', 'loc_dorm_010', 'loc_dorm_011', 'loc_dorm_012'
     ],
   },
 

@@ -1356,4 +1356,60 @@ export const EVENTS = {
     }]
   },
 
+  'loc_dorm_010': {
+    event_id: 'loc_dorm_010', type: 'location', title: '床头夜聊的虚妄',
+    scenes: [{
+      text: '凌晨一点，宿舍熄灯。室友突然叹了口气：“兄弟，你说咱们这专业毕业以后能干嘛？”以此为契机，宿舍瞬间进入了经典睡得着但夜聊环节。',
+      choices: [
+        {
+          text: '翻个身，跟他大谈特谈国际局势、AI 发展和未来经济形势',
+          effects: { Mental_Health: +15, Physical_Health: -10, Academic_Ability: -3 },
+          flavor_text: '聊到凌晨四点，你们觉得已经掌握了世界运行的底层逻辑，万物皆是草芥——除了明天的早九。'
+        },
+        {
+          text: '“能干嘛？进厂打螺丝呗。”戴上耳塞强行睡觉',
+          effects: { Physical_Health: +10, Mental_Health: -10, English_Ability: +2 },
+          flavor_text: '你在梦里竟然梦到自己在国外的流水线工厂打黑工。'
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_011': {
+    event_id: 'loc_dorm_011', type: 'location', title: '洗衣间的生化危机',
+    scenes: [{
+      text: '你端着装脏衣服的桶去洗衣间，发现有人用公共洗衣机洗内裤袜子……🤮',
+      choices: [
+        {
+          text: '捏着鼻子拿出来，然后花钱开“高温桶自洁”后再洗',
+          effects: { Money: -5, Mental_Health: -10, Physical_Health: +5 }
+        },
+        {
+          text: '都放洗衣液了有啥关系，直接洗',
+          effects: { Physical_Health: -15, Mental_Health: -10, Money: +5 },
+          flavor_text: '“为啥老发痒？”'
+        }
+      ]
+    }]
+  },
+
+  'loc_dorm_012': {
+    event_id: 'loc_dorm_012', type: 'location', title: '过期的蛋白粉',
+    scenes: [{
+      text: '隔壁爱好健身的学长要毕业了，送了你半桶快过期的进口分离乳清蛋白粉。',
+      choices: [
+        {
+          text: '挂在二手群里，以低廉的价格卖给不知情的学弟',
+          effects: { Money: +15, Mental_Health: -10 },
+          flavor_text: '钱到账了。但你总怕半夜学弟捂着肚子来敲门暗杀你，良心受到了隐隐的谴责。'
+        },
+        {
+          text: '秉承着不能浪费的原则，尝试在早晨猛喝两大勺代替早饭',
+          effects: { Physical_Health: -15, Money: +5 },
+          flavor_text: '你和马桶酱一起度过了难忘的一天。'
+        }
+      ]
+    }]
+  },
+
 };
