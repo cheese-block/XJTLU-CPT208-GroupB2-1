@@ -31,43 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGameLoop(_vnScreen, _eventCardScreen);
 
+  // 【修复】：合并注册逻辑，确保所有 Screen（包括 EVENT_CARD）都被正确注册，删除多余的重复注册块
   registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
   registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
   registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
   registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
-  registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
-  registerScreen(CONSTANTS.GAME_PHASE.EVENT_CARD,  _eventCardScreen);
-
-  const placeholder = (label) => ({
-    mount(container) {
-      container.innerHTML = `
-        <div class="w-full h-full flex flex-col items-center
-                    justify-center gap-6 bg-white">
-          <div class="text-6xl">🚧</div>
-          <p class="text-xl font-black text-xjtlu-navy">${label}</p>
-          <p class="text-sm text-xjtlu-gray">该界面正在开发中</p>
-          <button id="placeholder-back"
-                  class="xjtlu-btn xjtlu-btn--secondary mt-4">
-            <i data-lucide="arrow-left" class="lucide w-4 h-4"></i>
-            返回主菜单
-          </button>
-        </div>
-      `;
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-      container.querySelector('#placeholder-back')
-        ?.addEventListener('click', () => {
-          StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
-        });
-    },
-    unmount() {},
-    onStateChange() {},
-  });
-
-  // 【修改注册部分】：删除原来的 placeholder 逻辑，注册真实的 Screen
-  registerScreen(CONSTANTS.GAME_PHASE.TITLE,         new TitleScreen());
-  registerScreen(CONSTANTS.GAME_PHASE.SCHOOL_SELECT, new SchoolSelectScreen());
-  registerScreen(CONSTANTS.GAME_PHASE.MAP,           new MapScreen());
-  registerScreen(CONSTANTS.GAME_PHASE.VN,            _vnScreen);
+  registerScreen(CONSTANTS.GAME_PHASE.EVENT_CARD,    _eventCardScreen);
   registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
   registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  new TagShowcaseScreen());
   registerScreen(CONSTANTS.GAME_PHASE.ENDING,        new EndingScreen());
