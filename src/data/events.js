@@ -562,11 +562,11 @@ export const EVENTS = {
       choices: [
         {
           text: '赶紧截图保存，提前一小时下课去打游戏！',
-          effects: { Mental_Health: +20, Academic_Ability: +4 }
+          effects: { Mental_Health: +20, Academic_Ability: +6 }
         },
         {
           text: '觉得这数据好得不真实，坚持换个仪器重测',
-          effects: { Academic_Ability: +8, Mental_Health: -10 },
+          effects: { Academic_Ability: +12, Mental_Health: -10 },
           flavor_text: '第二组数据烂得像一坨泥。你陷入了深深的自我怀疑。'
         }
       ]
@@ -601,7 +601,7 @@ export const EVENTS = {
         },
         {
           text: '强忍饥饿，把大佬 PPT 上的专有名词全抄下来',
-          effects: { Academic_Ability: +5, English_Ability: +2, Physical_Health: -10 }
+          effects: { Academic_Ability: +8, English_Ability: +2, Physical_Health: -10 }
         }
       ]
     }]
@@ -614,11 +614,11 @@ export const EVENTS = {
       choices: [
         {
           text: '靠意志力硬抗青轴的物理超度',
-          effects: { Mental_Health: -25, Academic_Ability: +3 }
+          effects: { Mental_Health: -25, Academic_Ability: +4 }
         },
         {
           text: '去星巴克点杯美式接着学',
-          effects: { Money: -30, Mental_Health: +15, Academic_Ability: +4 }
+          effects: { Money: -30, Mental_Health: +15, Academic_Ability: +8 }
         }
       ]
     }]
@@ -636,7 +636,7 @@ export const EVENTS = {
         },
         {
           text: '强行现编一段听起来很高级的技术原理解释',
-          effects: { English_Ability: +2, Mental_Health: -15, Academic_Ability: +2 }
+          effects: { English_Ability: +2, Mental_Health: -15, Academic_Ability: +4 }
         }
       ]
     }]
@@ -667,11 +667,157 @@ export const EVENTS = {
       choices: [
         {
           text: '弯着腰像特工一样潜行到前排去签字',
-          effects: { Mental_Health: -15, Academic_Ability: +3 }
+          effects: { Mental_Health: -15, Academic_Ability: +4 }
         },
         {
           text: '放弃签到，心安理得地坐在最后一排开始补觉',
           effects: { Mental_Health: +10, Physical_Health: +10, Academic_Ability: -4 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_009': {
+    event_id: 'loc_sb_009', type: 'location', title: '自动贩卖机的嘲讽',
+    scenes: [{
+      text: '你在 SD 楼一楼的自动贩卖机买无糖可乐。扫码，付款，机械臂动了一下，然后卡住了。你的可乐悬停在半空中。',
+      choices: [
+        {
+          text: '左右观察无人，对着机器狠狠踹了一脚',
+          effects: { Physical_Health: -5, Mental_Health: +15 },
+          flavor_text: '可乐没掉下来，而你的脚趾隐隐作痛。但至少你觉得没那么郁闷了。'
+        },
+        {
+          text: '不信邪，再买一瓶，试图用第二瓶把第一瓶砸下来',
+          effects: { Money: -15, Mental_Health: -20 },
+          flavor_text: '恭喜你，现在你有两瓶可乐卡在半空中了。'
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_010': {
+    event_id: 'loc_sb_010', type: 'location', title: '祖传复习资料',
+    scenes: [{
+      text: '一个大四的学长在群里兜售某门地狱级专业课的“祖传复习大礼包”，包含历年卷、重点批注和往届高分作业，标价 150 元。',
+      choices: [
+        {
+          text: '咬牙转账',
+          effects: { Money: -25, Academic_Ability: +12 }
+        },
+        {
+          text: '决定靠自己啃 PPT',
+          effects: { Mental_Health: -15, Academic_Ability: +4 },
+          flavor_text: '你花了一整晚自己整理重点，虽然学到了一点，但总觉得别人在走捷径，越想越气。'
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_011': {
+    event_id: 'loc_sb_011', type: 'location', title: '致命的查重率',
+    scenes: [{
+      text: '距离作业提交（DDL）还有两小时。你把写好的 Essay 传到 Turnitin 上查重，屏幕上赫然跳出一个红色的数字：45% Similarity。',
+      choices: [
+        {
+          text: '用同义词替换大法把每一句话都改得面目全非',
+          effects: { Mental_Health: -15, Academic_Ability: -4, English_Ability: -1 },
+          flavor_text: '查重率降到了 15%。但你交上去的已经不是一篇论文，而是一堆毫无逻辑的单词拼盘。'
+        },
+        {
+          text: '花钱秒开一个 AI 降重软件的高级会员',
+          effects: { Money: -15, Mental_Health: -10, Academic_Ability: +5 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_012': {
+    event_id: 'loc_sb_012', type: 'location', title: '教授的慈悲',
+    scenes: [{
+      text: '由于这学期大家都抱怨某门课太难，教授在课上宣布：“这周末的 Assignment 4 取消了，所有人这项平时分直接给满分。”',
+      choices: [
+        {
+          text: '赞美教授！立刻回宿舍《原神》启动',
+          effects: { Mental_Health: +25 }
+        },
+        {
+          text: '既然没压力了，反而静下心来把它当练习做一遍',
+          effects: { Academic_Ability: +12, Mental_Health: +10 },
+          flavor_text: '没有分数压迫的纯粹求知，让你体验到了久违的学术快感。'
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_013': {
+    event_id: 'loc_sb_013', type: 'location', title: 'Grammarly 的诱惑',
+    scenes: [{
+      text: '你在写报告，免费版的 Grammarly 提示你的文章里有 48 个“高级语法错误”，并不断诱惑你升级 Premium。',
+      choices: [
+        {
+          text: '冲一个礼拜高级会员，一键全部自动修改',
+          effects: { Money: -15, Academic_Ability: +10, English_Ability: -2 },
+          flavor_text: '文章看起来非常地道。你完全不知道它帮你改了什么，你的语感甚至退化了。'
+        },
+        {
+          text: '坚决不充钱，自己对着词典一个个扒出来改掉',
+          effects: { Mental_Health: -20, English_Ability: +3, Academic_Ability: +6 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_014': {
+    event_id: 'loc_sb_014', type: 'location', title: '走错教室的旁听',
+    scenes: [{
+      text: '你提前十分钟走进 SA 的教室，坐下听了一会儿才发现，台上讲的是隔壁专业的课。但教授讲的一个模型刚好能解决你最近的疑惑。',
+      choices: [
+        {
+          text: '假装自己就是这个专业的，津津有味地听完',
+          effects: { Academic_Ability: +8, English_Ability: +1 }
+        },
+        {
+          text: '觉得太尴尬了，趁教授转身写板书时溜走',
+          effects: { Mental_Health: -5 }
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_015': {
+    event_id: 'loc_sb_015', type: 'location', title: '遗落的“武功秘籍”',
+    scenes: [{
+      text: '你在空教室自习，发现桌洞里有一本被人遗忘的课本。随便翻开一页，是密密麻麻的用三种颜色笔做的超级学霸笔记。',
+      choices: [
+        {
+          text: '据为己有，有便宜不占王八蛋',
+          effects: { Academic_Ability: +10, Mental_Health: +15 },
+          flavor_text: '你白嫖了学霸的智慧结晶，感觉自己今天赚翻了。'
+        },
+        {
+          text: '追出教室，把书交给了正在找东西的学霸本人',
+          effects: { Mental_Health: +5, English_Ability: +2 },
+          flavor_text: '学霸是个留学生，他对你千恩万谢，你们用英语聊了十分钟。'
+        }
+      ]
+    }]
+  },
+
+  'loc_sb_016': {
+    event_id: 'loc_sb_016', type: 'location', title: '跑步机上的文献',
+    scenes: [{
+      text: '你这周都没运动，身体已经感觉生锈了。但明天的 Seminar 还有两篇全英文文献没读。',
+      choices: [
+        {
+          text: '去健身房，一边在跑步机上快走一边看文献',
+          effects: { Physical_Health: +15, Academic_Ability: +5, Mental_Health: -20 },
+          flavor_text: '你既锻炼了身体又看了书，但这种一心二用让你觉得活着好累。'
+        },
+        {
+          text: '抛开一切罪恶感，去操场结结实实地跑了五公里',
+          effects: { Physical_Health: +25, Mental_Health: +20, Academic_Ability: -2 },
+          flavor_text: '大汗淋漓之后，你觉得那两篇文献根本不重要，人生健康最重要。'
         }
       ]
     }]
