@@ -149,10 +149,9 @@ export class MapScreen {
                  style="left:0;top:0;width:0;height:0;z-index:40;">
               ${pinsHTML}
               
-              <!-- 动态悬浮动作气泡 (修复居中与位置) -->
+              <!-- 【修改】：移除 style 中的 transform，完全交由 JS 动态计算 -->
               <div id="action-popover" 
-                   class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none"
-                   style="transform: translate(-50%, calc(-100% - 12px));">
+                   class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none">
               </div>
             </div>
 
@@ -817,7 +816,6 @@ export class MapScreen {
     const popover = this._container?.querySelector('#action-popover');
     if (!popover) return;
 
-    // 【修改】：动态判定是否为可行动建筑
     const isAction = this._state?.unlockedBuildings?.includes(building.id);
     const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
     const apRemain = this._state?.AP ?? 0;
@@ -829,7 +827,6 @@ export class MapScreen {
 
     const buttonsHTML = actions.map(action => {
       const canAfford = apRemain >= action.apCost;
-      // 移除了 hover:translate-x-1 防止溢出
       return `
         <button class="action-btn w-44 text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors duration-150 ${canAfford ? 'bg-white hover:bg-xjtlu-blue hover:text-white text-xjtlu-navy border border-gray-200 hover:border-xjtlu-blue shadow-sm cursor-pointer' : 'bg-gray-100 text-gray-400 border border-transparent cursor-not-allowed'}"
           data-action-id="${action.id}" ${!canAfford ? 'disabled' : ''}>
@@ -842,11 +839,26 @@ export class MapScreen {
       `;
     }).join('');
 
+    // 【新增】：动态位置计算
+    const pos = this._hotspotPositions[building.id];
+    // 如果建筑太靠顶部（Y坐标小于 25%），气泡向下弹出；否则向上弹出
+    const isNearTop = pos.y < 25; 
+    
+    // 偏移量设为 22px，彻底避开 Pin
+    const transformStyle = isNearTop 
+      ? 'translate(-50%, 22px)' 
+      : 'translate(-50%, calc(-100% - 22px))';
+      
+    // 小尾巴的位置也要跟着反转
+    const arrowClass = isNearTop 
+      ? '-top-1.5 border-t border-l' 
+      : '-bottom-1.5 border-b border-r';
+
     popover.innerHTML = `
       <div class="bg-white/95 backdrop-blur-sm p-1.5 rounded-xl shadow-xl border border-gray-200 flex flex-col gap-1.5 relative">
         ${buttonsHTML}
-        <!-- 小尾巴绝对居中 -->
-        <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 border-b border-r border-gray-200 transform rotate-45"></div>
+        <!-- 动态小尾巴 -->
+        <div class="absolute ${arrowClass} left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 border-gray-200 transform rotate-45"></div>
       </div>
     `;
 
@@ -859,9 +871,9 @@ export class MapScreen {
 
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: popover });
 
-    const pos = this._hotspotPositions[building.id];
     popover.style.left = `${pos.x}%`;
     popover.style.top  = `${pos.y}%`;
+    popover.style.transform = transformStyle; // 【应用动态 Transform】
     
     popover.classList.remove('hidden');
     popover.style.pointerEvents = 'auto';
