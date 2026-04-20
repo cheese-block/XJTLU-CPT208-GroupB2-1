@@ -77,18 +77,20 @@ export class StatusBar {
     `;
   }
 
-_buildBarHTML(id, icon, label) {
+  _buildBarHTML(id, icon, label) {
     return `
-      <div class="flex-1 flex flex-col justify-center min-w-[80px]">
+      <!-- 【修改】：外层统一加 px-1，确保内部文字和进度条左侧对齐 -->
+      <div class="flex-1 flex flex-col justify-center min-w-[80px] px-1">
         <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
-          <!-- 【修改】：将中性小球放在数值名称右侧 -->
-          <div id="sb-${id}-preview-dot" 
-               class="w-1.5 h-1.5 rounded-full bg-gray-400 opacity-0 transition-transform duration-200 ml-0.5"></div>
+          <!-- 【修改】：改为包裹文字的徽章样式 -->
+          <span id="sb-${id}-preview-dot" 
+               class="w-3.5 h-3.5 rounded-full text-white text-[0.65rem] font-black flex items-center justify-center opacity-0 transition-opacity duration-200 ml-1 leading-none">
+          </span>
         </span>
-        <!-- 【修改】：保留原有结构，仅移除 left/right 两个红绿小球 -->
-        <div class="relative w-full flex items-center px-3">
+        <!-- 【修改】：移除此处的 px-3 -->
+        <div class="relative w-full flex items-center">
           
           <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
             <div id="sb-${id}-fill" 
@@ -122,14 +124,13 @@ _buildBarHTML(id, icon, label) {
 
       const isPos = delta > 0;
       const isLarge = Math.abs(delta) >= 15;
-      const dotSize = isLarge ? 'scale-150' : 'scale-100';
 
-      // 【修改】：统一控制名称右侧的中性小球
+      // 【修改】：更新带有文字的指示器
       const dot = this._container.querySelector(`#sb-${id}-preview-dot`);
       if (dot) {
-        dot.style.opacity = '1';
-        dot.classList.remove('scale-150', 'scale-100');
-        dot.classList.add(dotSize);
+        dot.textContent = isLarge ? '大' : '小';
+        // 动态赋予红绿背景色
+        dot.className = `w-3.5 h-3.5 rounded-full text-white text-[0.65rem] font-black flex items-center justify-center opacity-100 transition-opacity duration-200 ml-1 leading-none ${isPos ? 'bg-xjtlu-green' : 'bg-xjtlu-red'}`;
       }
 
       if (hasExactBuff) {
@@ -142,14 +143,11 @@ _buildBarHTML(id, icon, label) {
     });
   }
 
-  // 【修改】：清除所有预览（适应新的单一小球）
   clearPreview() {
     if (!this._container) return;
     const dots = this._container.querySelectorAll('[id$="-preview-dot"]');
     dots.forEach(dot => {
       dot.style.opacity = '0';
-      // 恢复默认大小
-      dot.classList.remove('scale-150', 'scale-100');
     });
 
     // 隐藏透视文字
