@@ -78,17 +78,14 @@ export function executeAction(actionId, action, onEvent) {
     log('info', 'GameLoop', `🎯 抽卡命中：${hitEventId}`);
   }
 
-  // 5. 判定是否触发全局随机突发事件（推入队列尾部，地点事件处理完后再处理）
-  const fresh = StateManager.getState();
-  EventEngine.rollRandomEvent(fresh); 
+  // 【移除】：删除了原本在此处的“判定是否触发全局随机突发事件”逻辑
 
-  // 6. 存档并启动事件队列
+  // 5. 存档并启动事件队列
   StateManager.saveGame();
 
   const newState = StateManager.getState();
   if (newState.pendingEventQueue.length > 0) {
     StateManager.setProcessing(true); // 加锁
-    // 【修复】：移除原本的 500ms 延迟，直接处理队列，消除卡顿感
     processEventQueue(() => {
       StateManager.setProcessing(false); // 解锁
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP); // 返回地图
