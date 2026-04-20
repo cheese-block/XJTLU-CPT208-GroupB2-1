@@ -8,7 +8,7 @@ export const EVENTS = {
   // 轮回引导剧情
   // ════════════════════════════════════════════════════════
 
-'tutorial_intro_1': {
+  'tutorial_intro_1': {
     event_id: 'tutorial_intro_1',
     type:     'chain',
     title:    '延毕之灵',
@@ -62,7 +62,7 @@ export const EVENTS = {
     ],
   },
 
-'tutorial_intro_2': {
+  'tutorial_intro_2': {
     event_id: 'tutorial_intro_2',
     type:     'chain',
     title:    '幽魂再临',
