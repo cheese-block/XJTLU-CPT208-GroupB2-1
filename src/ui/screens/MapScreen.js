@@ -588,13 +588,13 @@ export class MapScreen {
 
     panel.innerHTML = `
       <div class="px-5 py-3 border-b border-gray-200 bg-white flex items-center justify-between">
-        <h3 class="text-sm font-black text-xjtlu-navy flex items-center gap-1.5">
+        <!-- 【修改】：text-sm -> text-base -->
+        <h3 class="text-base font-black text-xjtlu-navy flex items-center gap-1.5">
           <i data-lucide="contact" class="lucide w-4 h-4"></i>
           我的申请履历
         </h3>
         
         <!-- 教学 Tooltip -->
-        <!-- 【修改点 1】：使用全局 Tooltip 属性 -->
         <i data-lucide="help-circle" 
            class="lucide w-4 h-4 text-xjtlu-gray cursor-help"
            data-tooltip-title="状态与增益说明"
@@ -608,14 +608,18 @@ export class MapScreen {
         <!-- 硬件条件 -->
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1">
-            <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">累计 GPA</span>
-            <span class="text-lg font-black ${state.cumulativeGPA >= 3.3 ? 'text-xjtlu-green' : 'text-xjtlu-navy'}">
+            <!-- 【修改】：text-[0.65rem] -> text-xs -->
+            <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">累计 GPA</span>
+            <!-- 【修改】：text-lg -> text-xl -->
+            <span class="text-xl font-black ${state.cumulativeGPA >= 3.3 ? 'text-xjtlu-green' : 'text-xjtlu-navy'}">
               ${state.cumulativeGPA ? state.cumulativeGPA.toFixed(2) : '暂无'}
             </span>
           </div>
           <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1">
-            <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">雅思成绩</span>
-            <span class="text-lg font-black ${ieltsScore !== '未出分' ? 'text-xjtlu-blue' : 'text-gray-400'}">
+            <!-- 【修改】：text-[0.65rem] -> text-xs -->
+            <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">雅思成绩</span>
+            <!-- 【修改】：text-lg -> text-xl -->
+            <span class="text-xl font-black ${ieltsScore !== '未出分' ? 'text-xjtlu-blue' : 'text-gray-400'}">
               ${ieltsScore}
             </span>
           </div>
@@ -623,11 +627,12 @@ export class MapScreen {
 
         <!-- 软背景 -->
         <div class="flex flex-col gap-2">
-          <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">软背景积累</span>
+          <!-- 【修改】：text-[0.65rem] -> text-xs -->
+          <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">软背景积累</span>
           <div class="flex flex-wrap gap-2">
             ${softBgs.length > 0 
               ? softBgs.map(bg => `<span class="tag-badge tag-badge--blue">${bg}</span>`).join('')
-              : `<span class="text-xs text-gray-400 italic">简历空空如也...去参加点活动吧</span>`
+              : `<span class="text-sm text-gray-400 italic">简历空空如也...去参加点活动吧</span>`
             }
           </div>
         </div>
@@ -636,11 +641,12 @@ export class MapScreen {
 
         <!-- 活跃 Buff -->
         <div class="flex flex-col gap-2">
-          <span class="text-[0.65rem] font-bold text-xjtlu-gray uppercase tracking-wider">活跃状态 (Buffs)</span>
+          <!-- 【修改】：text-[0.65rem] -> text-xs -->
+          <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">活跃状态 (Buffs)</span>
           <div class="flex flex-wrap gap-2">
             ${state.activeBuff && state.activeBuff.length > 0 
               ? state.activeBuff.map(buff => this._buildBuffBadge(buff)).join('')
-              : `<span class="text-xs text-gray-400 italic">当前无特殊状态</span>`
+              : `<span class="text-sm text-gray-400 italic">当前无特殊状态</span>`
             }
           </div>
         </div>
@@ -705,31 +711,36 @@ export class MapScreen {
                     flex items-center justify-center">
           <i data-lucide="map-pin" class="lucide w-6 h-6 text-xjtlu-gray"></i>
         </div>
-        <p class="text-sm font-bold text-xjtlu-navy">点击地图上的建筑</p>
-        <p class="text-xs text-xjtlu-gray leading-relaxed">
+        <!-- 【修改】：text-sm -> text-base -->
+        <p class="text-base font-bold text-xjtlu-navy">点击地图上的建筑</p>
+        <!-- 【修改】：text-xs -> text-sm -->
+        <p class="text-sm text-xjtlu-gray leading-relaxed">
           蓝色标记可消耗 AP 执行活动<br>灰色标记仅供了解
         </p>
         <div class="mt-4 flex flex-col gap-2 w-full max-w-[180px]">
-          <div class="flex items-center gap-2 text-xs text-xjtlu-gray">
+          <!-- 【修改】：text-xs -> text-sm -->
+          <div class="flex items-center gap-2 text-sm text-xjtlu-gray">
             <div class="w-3 h-3 rounded-full bg-xjtlu-blue shrink-0"></div>
             可执行行动的建筑
           </div>
-          <div class="flex items-center gap-2 text-xs text-xjtlu-gray">
+          <!-- 【修改】：text-xs -> text-sm -->
+          <div class="flex items-center gap-2 text-sm text-xjtlu-gray">
             <div class="w-3 h-3 rounded-full bg-gray-400 shrink-0"></div>
             纯科普建筑
           </div>
         </div>
       </div>
       <div class="shrink-0 border-t border-gray-100 px-5 py-3
-                  flex items-center gap-2 text-xs text-xjtlu-gray">
-        <i data-lucide="zap" class="lucide w-3.5 h-3.5 text-xjtlu-blue"></i>
+                  flex items-center gap-2 text-sm text-xjtlu-gray">
+        <!-- 【修改】：text-xs -> text-sm -->
+        <i data-lucide="zap" class="lucide w-4 h-4 text-xjtlu-blue"></i>
         本月剩余行动点显示在顶部状态栏
       </div>
     `;
   }
 
   _buildBuildingPanel(building) {
-    // 【修改】：同样改为动态判定
+    // 同样改为动态判定
     const isAction = this._state?.unlockedBuildings?.includes(building.id);
 
     return `
@@ -748,7 +759,8 @@ export class MapScreen {
             </div>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-sm font-black text-xjtlu-navy leading-tight">
+                <!-- 【修改】：text-sm -> text-base -->
+                <h2 class="text-base font-black text-xjtlu-navy leading-tight">
                   ${building.name}
                 </h2>
                 <span class="tag-badge
@@ -757,7 +769,8 @@ export class MapScreen {
                   ${isAction ? '可行动' : '纯科普'}
                 </span>
               </div>
-              <p class="text-[0.65rem] text-xjtlu-gray mt-0.5">
+              <!-- 【修改】：text-[0.65rem] -> text-xs -->
+              <p class="text-xs text-xjtlu-gray mt-0.5">
                 ${building.fullName}
               </p>
             </div>
@@ -767,23 +780,24 @@ export class MapScreen {
         <!-- 内容（可滚动）-->
         <div class="flex-1 overflow-y-auto custom-scroll px-5 py-4
                     flex flex-col gap-4">
-          <p class="text-xs text-gray-600 leading-relaxed">
+          <!-- 【修改】：text-xs -> text-sm -->
+          <p class="text-sm text-gray-600 leading-relaxed">
             ${building.description}
           </p>
           <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
             <div class="flex items-center gap-1.5 mb-1.5">
               <i data-lucide="message-square-quote"
                  class="lucide w-3 h-3 text-xjtlu-gray"></i>
-              <span class="text-[0.6rem] font-bold text-xjtlu-gray
+              <!-- 【修改】：text-[0.6rem] -> text-[0.65rem] -->
+              <span class="text-[0.65rem] font-bold text-xjtlu-gray
                            tracking-wider uppercase">同学说</span>
             </div>
-            <p class="text-xs text-gray-500 leading-relaxed italic">
+            <!-- 【修改】：text-xs -> text-sm -->
+            <p class="text-sm text-gray-500 leading-relaxed italic">
               ${building.lore}
             </p>
           </div>
         </div>
-
-        <!-- 【移除】：彻底删除了 tendency 渲染区块 -->
 
       </div>
     `;
