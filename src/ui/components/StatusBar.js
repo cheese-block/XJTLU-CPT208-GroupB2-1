@@ -79,26 +79,25 @@ export class StatusBar {
 
   _buildBarHTML(id, icon, label) {
     return `
-      <!-- 【修改】：外层统一加 px-1，确保内部文字和进度条左侧对齐 -->
       <div class="flex-1 flex flex-col justify-center min-w-[80px] px-1">
         <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
-          <!-- 【修改】：改为包裹文字的徽章样式 -->
+          <!-- 【修改】：指示器容器，设为固定圆圈样式，初始透明 -->
           <span id="sb-${id}-preview-dot" 
-               class="w-3.5 h-3.5 rounded-full text-white text-[0.65rem] font-black flex items-center justify-center opacity-0 transition-opacity duration-200 ml-1 leading-none">
+               class="w-4 h-4 rounded-full bg-gray-400 text-white font-black flex items-center justify-center opacity-0 transition-all duration-200 ml-1 shadow-sm"
+               style="font-size: 0.6rem; line-height: 1;">
           </span>
         </span>
-        <!-- 【修改】：移除此处的 px-3 -->
+        
         <div class="relative w-full flex items-center">
-          
           <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
             <div id="sb-${id}-fill" 
                  class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" 
                  style="width: 50%"></div>
           </div>
           
-          <!-- 悬浮时的具体数值飘字 -->
+          <!-- 悬浮时的具体数值飘字（仅在拥有透视 Buff 时显示） -->
           <div id="sb-${id}-preview-text"
                class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black opacity-0 transition-all duration-200"></div>
         </div>
@@ -125,14 +124,16 @@ export class StatusBar {
       const isPos = delta > 0;
       const isLarge = Math.abs(delta) >= 15;
 
-      // 【修改】：更新带有文字的指示器
+      // 【修改】：更新指示器文字，颜色固定为灰色
       const dot = this._container.querySelector(`#sb-${id}-preview-dot`);
       if (dot) {
         dot.textContent = isLarge ? '大' : '小';
-        // 动态赋予红绿背景色
-        dot.className = `w-3.5 h-3.5 rounded-full text-white text-[0.65rem] font-black flex items-center justify-center opacity-100 transition-opacity duration-200 ml-1 leading-none ${isPos ? 'bg-xjtlu-green' : 'bg-xjtlu-red'}`;
+        dot.style.opacity = '1';
+        // 保持中性灰色，不随正负变化
+        dot.className = "w-4 h-4 rounded-full bg-gray-400 text-white font-black flex items-center justify-center transition-all duration-200 ml-1 shadow-sm";
       }
 
+      // 只有在拥有“透视” Buff 时才显示具体数值和颜色
       if (hasExactBuff) {
         const textEl = this._container.querySelector(`#sb-${id}-preview-text`);
         if (textEl) {
@@ -145,12 +146,14 @@ export class StatusBar {
 
   clearPreview() {
     if (!this._container) return;
+    
+    // 隐藏“大/小”指示器
     const dots = this._container.querySelectorAll('[id$="-preview-dot"]');
     dots.forEach(dot => {
       dot.style.opacity = '0';
     });
 
-    // 隐藏透视文字
+    // 隐藏透视具体数值
     const texts = this._container.querySelectorAll('[id$="-preview-text"]');
     texts.forEach(text => {
       text.style.opacity = '0';
