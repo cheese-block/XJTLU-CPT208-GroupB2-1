@@ -52,6 +52,10 @@ export class MonthSummaryScreen {
     const newLabel  = CONSTANTS.MONTH_TO_REALWORLD[newMonth]  ?? `Month ${newMonth}`;
     const newPhase  = CONSTANTS.PHASE_LABELS[CONSTANTS.MONTH_TO_PHASE[newMonth]] ?? '';
 
+    // 【修改】：判定逻辑加入 GPA_Top
+    const isGoodGpa = examResult?.tag === 'GPA_Top' || examResult?.tag === 'GPA_High';
+    const isMidGpa  = examResult?.tag === 'GPA_Mid';
+
     this._container.innerHTML = `
       <div class="w-full h-full flex items-center justify-center
                   bg-white px-6">
@@ -61,7 +65,7 @@ export class MonthSummaryScreen {
           <!-- 标题 -->
           <div class="flex flex-col gap-1">
             <p class="text-xs font-bold text-xjtlu-blue tracking-widest uppercase">
-              月末总结
+              学期总结
             </p>
             <h1 class="text-2xl font-black text-xjtlu-navy">
               ${prevLabel} 结束
@@ -70,7 +74,7 @@ export class MonthSummaryScreen {
 
           <div class="h-px bg-gray-100"></div>
 
-          <!-- 期末考试结果（如有）-->
+          <!-- 期末考试结果 -->
           ${examResult ? `
             <div class="flex flex-col gap-3">
               <p class="text-xs font-bold text-xjtlu-gray tracking-wider uppercase">
@@ -81,11 +85,7 @@ export class MonthSummaryScreen {
                           border border-xjtlu-blue/20">
                 <span class="text-sm text-gray-600">${examResult.phase} GPA</span>
                 <span class="text-2xl font-black
-                             ${examResult.tag === 'GPA_High'
-                               ? 'text-xjtlu-green'
-                               : examResult.tag === 'GPA_Mid'
-                               ? 'text-xjtlu-blue'
-                               : 'text-xjtlu-red'}">
+                             ${isGoodGpa ? 'text-xjtlu-green' : isMidGpa ? 'text-xjtlu-blue' : 'text-xjtlu-red'}">
                   ${examResult.gpa}
                 </span>
               </div>
@@ -96,26 +96,7 @@ export class MonthSummaryScreen {
             <div class="h-px bg-gray-100"></div>
           ` : ''}
 
-          <!-- 当前状态快照 -->
-          <div class="flex flex-col gap-2">
-            <p class="text-xs font-bold text-xjtlu-gray tracking-wider uppercase">
-              当前状态
-            </p>
-            <div class="grid grid-cols-2 gap-2">
-              ${this._buildStatRow('心理健康', state.Mental_Health,  CONSTANTS.MENTAL_HEALTH_WARN)}
-              ${this._buildStatRow('身体健康', state.Physical_Health, CONSTANTS.PHYSICAL_HEALTH_WARN)}
-              ${this._buildStatRow('英语能力', state.English_Ability, 0)}
-              <div class="flex items-center justify-between
-                          bg-gray-50 rounded-lg px-3 py-2">
-                <span class="text-xs text-gray-500">资金</span>
-                <span class="text-sm font-black text-xjtlu-navy">
-                  ¥${state.Money.toLocaleString('zh-CN')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="h-px bg-gray-100"></div>
+          <!-- 【移除】：彻底删除了暴露具体数值的“当前状态”区块 -->
 
           <!-- 下月预告 -->
           <div class="flex items-center gap-3 text-sm text-xjtlu-gray">

@@ -71,7 +71,8 @@ export function calculateGPA(ability) {
 }
 
 function _buildExamSummary(gpa, tag, ability) {
-  if (tag === 'GPA_High') {
+  // 【修复】：加入 GPA_Top 的判定
+  if (tag === 'GPA_Top' || tag === 'GPA_High') {
     return `本学期学力积累 ${ability} 分，期末 GPA ${gpa}，表现优秀。成绩单上又多了一行亮眼的数字。`;
   } else if (tag === 'GPA_Mid') {
     return `本学期学力积累 ${ability} 分，期末 GPA ${gpa}，表现中规中矩。申研时这个成绩可能需要用其他材料来补强。`;

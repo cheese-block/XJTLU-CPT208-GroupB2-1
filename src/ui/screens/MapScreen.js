@@ -382,26 +382,36 @@ export class MapScreen {
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-      const state = StateManager.getState();
-      const apRemain = state.AP;
+      this._promptEndMonth();
+    });
+  }
 
-      // 如果还有 AP 没用完，提示文案要更严厉一点
-      const message = apRemain > 0 
-        ? `本月还有 <span class="text-xjtlu-red font-black">${apRemain} 点 AP</span> 未使用，结束本月将会清零。<br><br>确定要进入下个月吗？`
-        : `确定要结束本月行程，进入下个月吗？`;
+  // 【新增】：抽离出的结束本月确认逻辑
+  _promptEndMonth() {
+    const state = StateManager.getState();
+    const apRemain = state.AP;
 
-      showConfirm({
-        title: '结束本月',
-        message: message,
-        confirmText: '进入下月',
-        cancelText: '再看看',
-        confirmVariant: 'primary',
-        onConfirm: () => {
-          log('info', 'MapScreen', '📅 玩家确认月末结算');
+    const message = apRemain > 0 
+      ? `本月还有 <span class="text-xjtlu-red font-black">${apRemain} 点 AP</span> 未使用，结束本月将会清零。<br><br>确定要进入下个月吗？`
+      : `本月行动点已耗尽。<br><br>确定要结束本月行程，进入下个月吗？`;
+
+    showConfirm({
+      title: '结束本月',
+      message: message,
+      confirmText: '进入下月',
+      cancelText: '再看看',
+      confirmVariant: 'primary',
+      onConfirm: () => {
+        log('info', 'MapScreen', '📅 玩家确认月末结算');
+        const btn = this._container?.querySelector('#btn-end-month');
+        if (btn) {
           btn.disabled = true;
           btn.classList.add('opacity-50');
+        }
 
-          resolveMonthEnd(({ newMonth, examResult }) => {
+        resolveMonthEnd(({ newMonth, examResult }) => {
+          if (examResult) {
+            // 【修改】：有期末成绩，进入学期总结界面
             window._pendingMonthSummary = {
               prevMonth:  newMonth - 1,
               newMonth,
@@ -412,9 +422,16 @@ export class MapScreen {
               },
             };
             StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MONTH_SUMMARY);
-          });
-        }
-      });
+          } else {
+            // 【修改】：无期末成绩，直接留在地图并刷新状态
+            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+            if (btn) {
+              btn.disabled = false;
+              btn.classList.remove('opacity-50');
+            }
+          }
+        });
+      }
     });
   }
 
@@ -782,8 +799,13 @@ export class MapScreen {
     if (!action) return;
 
     executeAction(actionId, action, () => {
-      // 随机事件触发时 GameLoop 内部已切换到 VN 模式
-      // 此回调暂时留空
+      // 【新增】：行动和相关事件全部结束后，检查 AP
+      if (StateManager.getState().AP <= 0) {
+        // 稍微延迟弹出，避免和事件卡片的关闭动画冲突
+        setTimeout(() => {
+          this._promptEndMonth();
+        }, 300);
+      }
     });
   }
 
