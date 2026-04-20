@@ -150,8 +150,8 @@ export class EventCardScreen {
       <!-- 半透明毛玻璃背景遮罩 -->
       <div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
       
-      <!-- 居中偏上容器 -->
-      <div class="relative z-10 w-full h-full flex items-start justify-center pt-24 px-6">
+      <!-- 【修改】：移除 pt-24 和 items-start，改为 items-center 实现完全居中 -->
+      <div class="relative z-10 w-full h-full flex items-center justify-center px-6">
         
         <!-- 卡片主体: 左右分栏 -->
         <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border-2 border-xjtlu-navy animate-fade-in">
