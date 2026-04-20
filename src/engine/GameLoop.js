@@ -135,7 +135,7 @@ function _playNextEvent() {
   // 【修复】：接收 StateManager 深度克隆后的安全副本，防止 UI 层变异污染全局 EVENTS
   const clonedEventData = StateManager.startEvent(eventData);
   
-  const useVN = ['tutorial_intro_1', 'tutorial_intro_2', 'sem1_final_exam', 'sem2_final_exam']
+  const useVN = ['sem1_final_exam', 'sem2_final_exam']
     .includes(clonedEventData.event_id);
   const targetPhase = useVN ? CONSTANTS.GAME_PHASE.VN : CONSTANTS.GAME_PHASE.EVENT_CARD;
   const targetScreen = useVN ? _vnScreen : _eventCardScreen;
