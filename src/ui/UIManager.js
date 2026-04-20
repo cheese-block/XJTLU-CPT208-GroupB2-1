@@ -87,6 +87,7 @@ function _updateStatusBarVisibility(state) {
   const hideOnPhases = [
     CONSTANTS.GAME_PHASE.TITLE,
     CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
+    CONSTANTS.GAME_PHASE.COLLECTION,
   ];
 
   const shouldHide = hideOnPhases.includes(state.gamePhase);
@@ -192,7 +193,8 @@ function _switchToPhase(phase) {
     const needsPadding = ![
       CONSTANTS.GAME_PHASE.TITLE,
       CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
-      CONSTANTS.GAME_PHASE.EVENT_CARD, 
+      CONSTANTS.GAME_PHASE.EVENT_CARD,
+      CONSTANTS.GAME_PHASE.COLLECTION,   // 新增
     ].includes(phase);
     
     container.style.paddingTop = needsPadding ? '4.5rem' : '';

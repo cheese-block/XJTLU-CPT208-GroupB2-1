@@ -208,9 +208,9 @@ export class TitleScreen {
               <!-- 结局图鉴按钮 -->
               <button
                 id="btn-collection"
-                class="xjtlu-btn xjtlu-btn--ghost w-full justify-center"
+                class="xjtlu-btn xjtlu-btn--secondary w-full justify-center"
               >
-                <i data-lucide="trophy" class="lucide w-4 h-4"></i>
+                <i data-lucide="book-marked" class="lucide w-4 h-4"></i>
                 结局图鉴
               </button>
 

@@ -138,30 +138,25 @@ export class CollectionScreen {
 
     if (!isUnlocked) {
       return `
-        <div class="relative flex flex-col gap-3 p-5 rounded-2xl
+        <div class="flex flex-col gap-3 p-5 rounded-2xl
                     border-2 border-dashed border-gray-200 bg-white
-                    opacity-60 select-none">
-          <!-- 未解锁遮罩 -->
-          <div class="absolute inset-0 flex flex-col items-center justify-center
-                      rounded-2xl bg-white/80 backdrop-blur-[1px] z-10">
-            <i data-lucide="lock" class="lucide w-8 h-8 text-gray-300 mb-2"></i>
-            <span class="text-xs font-bold text-gray-400">尚未解锁</span>
-          </div>
+                    select-none">
 
-          <!-- 背景占位（保持卡片高度一致） -->
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 shrink-0"></div>
-            <div class="flex flex-col gap-1.5 flex-1">
-              <div class="h-3 bg-gray-100 rounded w-3/4"></div>
-              <div class="h-2 bg-gray-100 rounded w-1/2"></div>
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gray-100 shrink-0
+                        flex items-center justify-center">
+              <i data-lucide="lock" class="lucide w-5 h-5 text-gray-300"></i>
+            </div>
+            <div class="flex-1 min-w-0 flex flex-col justify-center gap-1">
+              <h3 class="text-sm font-black text-gray-400 leading-tight">
+                ${ending.title}
+              </h3>
+              <span class="text-[0.6rem] text-gray-300">
+                尚未解锁
+              </span>
             </div>
           </div>
-          <div class="h-px bg-gray-100"></div>
-          <div class="flex flex-col gap-1.5">
-            <div class="h-2 bg-gray-100 rounded w-full"></div>
-            <div class="h-2 bg-gray-100 rounded w-5/6"></div>
-            <div class="h-2 bg-gray-100 rounded w-4/6"></div>
-          </div>
+
         </div>
       `;
     }
