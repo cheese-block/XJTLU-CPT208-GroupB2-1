@@ -432,107 +432,6 @@ export const EVENTS = {
     ],
   },
 
-  // ════════════════════════════════════════════════════════
-  // 随机事件（保留有选择的三个）
-  // ════════════════════════════════════════════════════════
-
-  'random_ielts_opportunity': {
-    event_id:         'random_ielts_opportunity',
-    type:             'random',
-    title:            '雅思考位放出',
-    available_months: [2, 3, 5, 7, 8, 10, 11],
-    forbidden_tags:   ['IELTS_7.5'],  // 改为只有7.5才禁止触发，允许6.0/6.5重考
-    weight:           1.2,
-    scenes: [
-      {
-        text: '你在刷手机时偶然看到，下个月初的雅思考试突然放出了几个考位。报名费 2170 元。你心里盘算了一下自己最近的复习状态……',
-        tip:  '时间规划：雅思成绩有效期为 2 年。最晚应在申请季当年的暑假结束前考出达标成绩，如果成绩不理想，还来得及在 9-10 月进行二战。',
-        choices: [
-          {
-            text:    '冲了！立刻缴费报名！',
-            effects: { Money: -20 },
-            flavor_text: '你咬咬牙交了报名费。看着日历上标红的考试日期，你的心跳开始加速，接下来的几周注定是地狱模式。',
-            next_event_id: 'ielts_exam_result',
-          },
-          {
-            text:    '先去目标院校官网查查具体要求',
-            effects: { Mental_Health: +5 },
-            flavor_text: '你没有冲动，而是打开了 UCL 的官网。你发现他们不仅要求总分 7.0，还要求单项不低于 6.5。你决定再沉淀一下。',
-            tip:     '绝对不要只听信中介或旁人的说法！必须亲自上目标院校官网查询。文科专业的要求通常比理工科更高。',
-          },
-        ],
-      },
-    ],
-  },
-
-  'ielts_exam_result': {
-    event_id: 'ielts_exam_result',
-    type:     'chain',
-    title:    '雅思出分日',
-    scenes: [
-      {
-        text: '两周后，一个普通的下午。你收到了一条来自教育部考试中心的短信。你深吸一口气，颤抖着手登录了查分网站……',
-      },
-      {
-        text: '（雅思成绩将在此显示）',
-      },
-    ],
-  },
-
-  'random_study_buddy': {
-    event_id:         'random_study_buddy',
-    type:             'random',
-    title:            '雅思搭子',
-    available_months: [1, 2, 3, 4, 6, 7, 8],
-    forbidden_tags:   ['IELTS_7.0', 'IELTS_7.5'],
-    weight:           1.0,
-    scenes: [
-      {
-        text: '室友推开你的房间门："我最近也在备考雅思，要不要一起？两个人互相监督，听力对答案也方便点。"',
-        choices: [
-          {
-            text:       '好啊，一起去 CB 卷！',
-            effects:    { Mental_Health: +8, English_Ability: +3 },
-            tags_added: ['Study_Buddy'],
-            flavor_text: '从这周开始，你们约定每天一起去图书馆刷题。有了同伴的监督，连枯燥的阅读题都没那么面目可憎了。',
-          },
-          {
-            text:       '谢了，但我习惯一个人按自己的节奏学',
-            effects:    { Mental_Health: +3 },
-            flavor_text: '室友点点头，没有勉强。你关上房门，戴上降噪耳机。安静和专注，是你目前最需要的东西。',
-          },
-        ],
-      },
-    ],
-  },
-
-  'random_professor_chat': {
-    event_id:         'random_professor_chat',
-    type:             'random',
-    title:            '教授的橄榄枝',
-    available_months: [1, 2, 3, 4, 6, 7, 8, 9],
-    forbidden_tags:   [],
-    weight:           0.8,
-    scenes: [
-      {
-        text: '下课后，专业课教授叫住了你："你上次那份 Assignment 写得很有深度。我最近有个课题组缺人手，有没有兴趣来帮帮忙？"',
-        tip:  '软背景提升：教授推荐信 (LoR) 是申研材料中的重要一环。与教授建立良好关系，不仅能获得强推，还能积累宝贵的科研经历。',
-        choices: [
-          {
-            text:       '当然！非常荣幸加入课题组',
-            effects:    { Mental_Health: -10, Physical_Health: -5 },
-            tags_added: ['Research_Exp'],
-            flavor_text: '你加入了课题组，开始了每周跑实验室、看外文文献的日子。虽然占用了大量课余时间，但教授对你的态度明显亲络了许多。',
-          },
-          {
-            text:       '感谢教授，但目前想全力保 GPA',
-            effects:    { Mental_Health: +5 },
-            flavor_text: '教授表示理解，并鼓励你继续保持成绩。你错过了一个潜在的科研机会，但也保住了摇摇欲坠的发际线和睡眠时间。',
-          },
-        ],
-      },
-    ],
-  },
 
   // ════════════════════════════════════════════════════════
   // 地点事件：SA~SD 专业课楼 (解耦“波动类”数值和“积累类”数值)
@@ -815,16 +714,41 @@ export const EVENTS = {
       choices: [
         {
           text: '去健身房，一边在跑步机上快走一边看文献',
-          effects: { Physical_Health: +15, Academic_Ability: +5, Mental_Health: -20 },
+          effects: { Physical_Health: +8, Academic_Ability: +3, Mental_Health: -15 },
           flavor_text: '你既锻炼了身体又看了书，但这种一心二用让你觉得活着好累。'
         },
         {
           text: '抛开一切罪恶感，去操场结结实实地跑了五公里',
-          effects: { Physical_Health: +25, Mental_Health: +20, Academic_Ability: -2 },
-          flavor_text: '大汗淋漓之后，你觉得那两篇文献根本不重要，人生健康最重要。'
+          effects: { Physical_Health: +15, Mental_Health: +15, Academic_Ability: -2 },
+          flavor_text: '大汗淋漓之后，你觉得那两篇文献根本不重要，健康才是第一位的。'
         }
       ]
     }]
+  },
+
+  'loc_sb_017': {
+    event_id:         'loc_sb_017',
+    type:             'location',
+    title:            '昂贵的橄榄枝',
+    scenes: [
+      {
+        text: '专业课下课后，以严厉著称的教授叫住了你：“你上次的大作业的思路不错。我课题组最近在做个项目，缺个打杂的，要不要来？没有钱，但最后发 Paper 可以带你的名字。”',
+        tip:  '软背景提升：教授推荐信 (LoR) 是申研材料中的重要一环。与教授建立良好关系，不仅能获得强推，还能积累宝贵的科研经历，但会极大消耗精力。',
+        choices: [
+          {
+            text:       '这是千载难逢的机会，我卖身了！',
+            effects:    { Mental_Health: -20, Physical_Health: -15, Academic_Ability: +5 },
+            tags_added: ['Research_Exp'],
+            flavor_text: '你加入了课题组，开始了每周跑实验室、通宵看外文文献的日子。你获得了宝贵的科研经历，代价是你的发际线退后了一厘米。',
+          },
+          {
+            text:       '感谢教授，但我目前想全力保 GPA。',
+            effects:    { Mental_Health: +8 },
+            flavor_text: '教授冷淡地点了点头，转身离开了。你保住了睡眠和周末，但也可能错失了一封强有力的推荐信。',
+          },
+        ],
+      },
+    ],
   },
 
   // ════════════════════════════════════════════════════════
@@ -924,6 +848,46 @@ export const EVENTS = {
         },
       ],
     }],
+  },
+
+  'loc_cb_ielts_opportunity': {
+    event_id:         'loc_cb_ielts_opportunity',
+    type:             'location',
+    title:            '极限捡漏',
+    // 依然限制只有在没考到最高分时才会触发
+    forbidden_tags:   ['IELTS_7.5'],  
+    scenes: [
+      {
+        text: '你在图书馆刷题刷得头昏脑涨，随手刷新了一下雅思报名官网。居然刷出了下个月初的一个退考考位！距离报名截止只剩十分钟了。报名费 2170 元。',
+        tip:  '时间规划：雅思成绩有效期为 2 年。最晚应在申请季当年的暑假结束前考出达标成绩。',
+        choices: [
+          {
+            text:    '管不了那么多了，先锁考位！',
+            effects: { Mental_Health: -5, Money: -20 },
+            flavor_text: '你颤抖着扫码付了款。看着日历上标红的考试日期，你的心跳开始加速，接下来的几周注定是地狱模式。',
+            next_event_id: 'ielts_exam_result',
+          },
+          {
+            text:    '理智点，我连剑桥 14 都没刷完……',
+            effects: { Mental_Health: +5 },
+          },
+        ],
+      },
+    ],
+  },
+
+  'ielts_exam_result': {
+    event_id: 'ielts_exam_result',
+    type:     'chain',
+    title:    '雅思出分日',
+    scenes: [
+      {
+        text: '两周后，一个普通的下午。你收到了一条来自教育部考试中心的短信。你深吸一口气，颤抖着手登录了查分网站……',
+      },
+      {
+        text: '（雅思成绩将在此显示）',
+      },
+    ],
   },
 
   // ════════════════════════════════════════════════════════
@@ -1404,12 +1368,37 @@ export const EVENTS = {
           flavor_text: '钱到账了。但你总怕半夜学弟捂着肚子来敲门暗杀你，良心受到了隐隐的谴责。'
         },
         {
-          text: '秉承着不能浪费的原则，尝试在早晨猛喝两大勺代替早饭',
+          text: '秉承着珍惜食物的原则，尝试在早晨猛喝两大勺代替早饭',
           effects: { Physical_Health: -15, Money: +5 },
-          flavor_text: '你和马桶酱一起度过了难忘的一天。'
+          flavor_text: '和马桶一起度过了难忘的一天。'
         }
       ]
     }]
+  },
+
+  'loc_dorm_013': {
+    event_id:         'loc_dorm_013',
+    type:             'location',
+    title:            '室友的觉醒',
+    forbidden_tags:   ['IELTS_7.0', 'IELTS_7.5'],
+    scenes: [
+      {
+        text: '你正躺在床上刷视频，平时最爱打游戏的室友突然搬回一整套《剑桥雅思》，神色凝重地对你说：“兄弟我不想再徒耗人生了。以后每天早上七点，我们互相监督背单词咋样？谁不起谁是狗。”',
+        choices: [
+          {
+            text:       '👍',
+            effects:    { English_Ability: +3, Mental_Health: -10, Physical_Health: -5 },
+            tags_added: ['Study_Buddy'],
+            flavor_text: '你们达成了神圣的契约。虽然每天早起极其痛苦，但在互相鄙视的驱动下，你确实比一个人单打独斗有效率多了。',
+          },
+          {
+            text:       '👎',
+            effects:    { Mental_Health: +5 },
+            flavor_text: '室友的热血只维持了三天，随后那套真题就成了他的泡面盖。你庆幸自己没有跟着瞎折腾，保住了安稳的睡眠。',
+          },
+        ],
+      },
+    ],
   },
 
 };

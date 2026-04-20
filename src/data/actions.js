@@ -9,7 +9,8 @@ export const ACTIONS = {
       'loc_sb_001', 'loc_sb_002', 'loc_sb_003', 'loc_sb_004',
       'loc_sb_005', 'loc_sb_006', 'loc_sb_007', 'loc_sb_008',
       'loc_sb_009', 'loc_sb_010', 'loc_sb_011', 'loc_sb_012',
-      'loc_sb_013', 'loc_sb_014', 'loc_sb_015', 'loc_sb_016'
+      'loc_sb_013', 'loc_sb_014', 'loc_sb_015', 'loc_sb_016',
+      'loc_sb_017'
     ],
   },
 
@@ -21,6 +22,7 @@ export const ACTIONS = {
       'loc_cb_couple',
       'loc_cb_close_time',
       'loc_cb_lost_found',
+      'loc_cb_ielts_opportunity' // 【新增】：雅思考位放出
     ],
   },
 
@@ -61,14 +63,15 @@ export const ACTIONS = {
     eventPool: [
       'loc_dorm_001', 'loc_dorm_002', 'loc_dorm_003', 'loc_dorm_004',
       'loc_dorm_005', 'loc_dorm_006', 'loc_dorm_007', 'loc_dorm_008',
-      'loc_dorm_009', 'loc_dorm_010', 'loc_dorm_011', 'loc_dorm_012'
+      'loc_dorm_009', 'loc_dorm_010', 'loc_dorm_011', 'loc_dorm_012',
+      'loc_dorm_013'
     ],
   },
 
   'visit_ia': {
     id: 'visit_ia', buildingId: 'ia', label: '前往咨询', apCost: 1, icon: 'globe',
     eventPool: [
-      'agency_part1', // 【新增】：将中介事件放入 IA 卡池
+      'agency_part1'
     ],
   },
 
