@@ -778,3 +778,11 @@ export function unlockBuilding(buildingId) {
     _notifyChange();
   }
 }
+
+/**
+ * 获取已解锁的结局 ID 列表（深拷贝）。
+ * @returns {string[]}
+ */
+export function getUnlockedEndings() {
+  return [..._globalState.unlockedEndings];
+}

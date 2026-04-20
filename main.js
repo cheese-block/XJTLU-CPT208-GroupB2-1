@@ -13,6 +13,7 @@ import { initTooltipManager } from './src/ui/components/TooltipManager.js';
 import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
 import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
 import { EventCardScreen }    from './src/ui/screens/EventCardScreen.js';
+import { CollectionScreen }   from './src/ui/screens/CollectionScreen.js';
 
 let _vnScreen = null;
 let _eventCardScreen = null;
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   registerScreen(CONSTANTS.GAME_PHASE.MONTH_SUMMARY, new MonthSummaryScreen());
   registerScreen(CONSTANTS.GAME_PHASE.TAG_SHOWCASE,  new TagShowcaseScreen());
   registerScreen(CONSTANTS.GAME_PHASE.ENDING,        new EndingScreen());
+  registerScreen(CONSTANTS.GAME_PHASE.COLLECTION,    new CollectionScreen());
 
   initUIManager();
 

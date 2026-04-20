@@ -27,6 +27,7 @@ export class TitleScreen {
     this._onContinue  = null;
     this._onNewGame   = null;
     this._onHowToPlay = null;
+    this._onCollection = null;
   }
 
   // ───────────────────────────────────────────────────────────
@@ -58,10 +59,12 @@ export class TitleScreen {
     const continueBtn = this._container?.querySelector('#btn-continue');
     const newGameBtn  = this._container?.querySelector('#btn-new-game');
     const howToBtn    = this._container?.querySelector('#btn-how-to-play');
+    const collectionBtn = this._container?.querySelector('#btn-collection');
 
     if (continueBtn && this._onContinue)  continueBtn.removeEventListener('click', this._onContinue);
     if (newGameBtn  && this._onNewGame)   newGameBtn.removeEventListener('click',  this._onNewGame);
     if (howToBtn    && this._onHowToPlay) howToBtn.removeEventListener('click',    this._onHowToPlay);
+    if (collectionBtn && this._onCollection) collectionBtn.removeEventListener('click', this._onCollection);
 
     this._container = null;
     log('info', 'TitleScreen', '已卸载');
@@ -202,6 +205,15 @@ export class TitleScreen {
                 怎么玩？
               </button>
 
+              <!-- 结局图鉴按钮 -->
+              <button
+                id="btn-collection"
+                class="xjtlu-btn xjtlu-btn--ghost w-full justify-center"
+              >
+                <i data-lucide="trophy" class="lucide w-4 h-4"></i>
+                结局图鉴
+              </button>
+
             </div>
 
             <!-- 版本号 -->
@@ -299,6 +311,12 @@ export class TitleScreen {
     this._container
       ?.querySelector('#btn-how-to-play')
       ?.addEventListener('click', this._onHowToPlay);
+
+    // ── 结局图鉴 ────────────────────────────────────────────
+    this._onCollection = () => StateManager.setGamePhase(CONSTANTS.GAME_PHASE.COLLECTION);
+    this._container
+      ?.querySelector('#btn-collection')
+      ?.addEventListener('click', this._onCollection);
   }
 
   // ───────────────────────────────────────────────────────────
