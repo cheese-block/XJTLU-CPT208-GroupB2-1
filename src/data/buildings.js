@@ -105,7 +105,7 @@ export const BUILDINGS = [
     lore:        '每年十月申请季，IA 门口都会排起长队。有人来咨询，有人来碰运气，还有人只是来蹭空调的。',
     photo:       null,
     hotspot:     { x: 60.3, y: 66.0 },
-    actions:     [],
+    actions:     ['visit_ia'], // 【修复】：添加 visit_ia 行动
   },
 
   {
