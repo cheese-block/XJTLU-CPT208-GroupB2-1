@@ -209,8 +209,11 @@ export function applyStatDelta(deltas, labels = {}) {
     _state[stat]      = newValue;
     actualDeltas[stat] = actualDelta;
 
-    // 仅当数值真正发生变化时，推入飘字队列
-    if (actualDelta !== 0) {
+    // 【修复】：判断是否为内部隐藏属性（如 Agency_Score 或以 __ 开头的属性）
+    const isHiddenStat = stat === 'Agency_Score' || stat.startsWith('__');
+
+    // 仅当数值真正发生变化时，且不是隐藏属性时，推入飘字队列
+    if (actualDelta !== 0 && !isHiddenStat) {
       _state.pendingStatChanges.push({
         stat,
         delta: actualDelta,
