@@ -1449,4 +1449,37 @@ export const EVENTS = {
     ],
   },
 
+  // ════════════════════════════════════════════════════════
+  // 各建筑保底事件（Default / Filler Events）
+  // ════════════════════════════════════════════════════════
+
+  'default_sb': {
+    event_id: 'default_sb', type: 'location', title: '理工楼日常',
+    scenes: [{ text: '教授今天按部就班地讲完了 PPT。你记了满屏的笔记，下课时教室里充满了收拾书包的声音。' }]
+  },
+  'default_cb': {
+    event_id: 'default_cb', type: 'location', title: '图书馆日常',
+    scenes: [{ text: '图书馆里一如既往地安静，只有偶尔翻书的声音和远处打印机的轰鸣。你专注地完成了一段学习任务。' }]
+  },
+  'default_pb': {
+    event_id: 'default_pb', type: 'location', title: '公共楼日常',
+    scenes: [{ text: '你在 PB 穿行，应急通道的楼梯上挤满了来不及等电梯的学生，便利店的关东煮香气飘得很远。今天没什么特别的人和你打招呼。' }]
+  },
+  'default_ir': {
+    event_id: 'default_ir', type: 'location', title: '科研中心日常',
+    scenes: [{ text: '机房电脑的风扇嗡嗡作响，你盯着跑了一半的脚本，确认没有报错后记录下了今天的数据。' }]
+  },
+  'default_gym': {
+    event_id: 'default_gym', type: 'location', title: '健身房日常',
+    scenes: [{ text: '完成最后一组器械后，你擦了擦汗。镜子里的你看起来和昨天没什么不同，但肌肉的酸胀感提醒你今天没有虚度。' }]
+  },
+  'default_dorm': {
+    event_id: 'default_dorm', type: 'location', title: '宿舍日常',
+    scenes: [{ text: '你回到了宿舍，今日无事发生。室友们都在忙自己的事，你换上睡衣，享受这难得的片刻宁静。' }]
+  },
+  'default_ia': {
+    event_id: 'default_ia', type: 'location', title: 'IA 日常',
+    scenes: [{ text: 'IA 的咨询台前排着小队。你翻看了一下最近的宣讲会排期表，并没有发现特别感兴趣的项目。' }]
+  },
+
 };

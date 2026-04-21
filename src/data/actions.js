@@ -5,6 +5,7 @@
 export const ACTIONS = {
   'study_class': {
     id: 'study_class', buildingId: 'sb', label: '上专业课', apCost: 1, icon: 'flask-conical',
+    guaranteedEventId: 'default_sb', // 新增
     eventPool: [
       'loc_sb_001', 'loc_sb_002', 'loc_sb_003', 'loc_sb_004',
       'loc_sb_005', 'loc_sb_006', 'loc_sb_007', 'loc_sb_008',
@@ -16,6 +17,7 @@ export const ACTIONS = {
 
   'study_ielts': {
     id: 'study_ielts', buildingId: 'cb', label: '备考雅思', apCost: 1, icon: 'languages',
+    guaranteedEventId: 'default_cb', // 新增
     eventPool: [
       'loc_cb_ielts_mock',
       'loc_cb_seat_war',
@@ -28,6 +30,7 @@ export const ACTIONS = {
 
   'social_pb': {
     id: 'social_pb', buildingId: 'pb', label: '在 PB 闲逛', apCost: 1, icon: 'users',
+    guaranteedEventId: 'default_pb', // 新增
     eventPool: [
       'loc_pb_foreigner',
       'loc_pb_gossip',
@@ -40,6 +43,7 @@ export const ACTIONS = {
   'research_ir': {
     id: 'research_ir', buildingId: 'ir', label: '参与科研项目', apCost: 1, icon: 'microscope',
     tagsProgress: 'Research_Exp',
+    guaranteedEventId: 'default_ir', // 新增
     eventPool: [
       'loc_ir_data_clean',
       'loc_ir_professor_meeting',
@@ -50,6 +54,7 @@ export const ACTIONS = {
 
   'exercise': {
     id: 'exercise', buildingId: 'gym', label: '去健身房锻炼', apCost: 1, icon: 'dumbbell',
+    guaranteedEventId: 'default_gym', // 新增
     eventPool: [
       'loc_gym_heavy_lift',
       'loc_gym_yoga',
@@ -60,6 +65,7 @@ export const ACTIONS = {
 
   'rest': {
     id: 'rest', buildingId: 'dorm', label: '回宿舍休息', apCost: 1, icon: 'moon',
+    guaranteedEventId: 'default_dorm', // 新增
     eventPool: [
       'loc_dorm_001', 'loc_dorm_002', 'loc_dorm_003', 'loc_dorm_004',
       'loc_dorm_005', 'loc_dorm_006', 'loc_dorm_007', 'loc_dorm_008',
@@ -70,6 +76,7 @@ export const ACTIONS = {
 
   'visit_ia': {
     id: 'visit_ia', buildingId: 'ia', label: '前往咨询', apCost: 1, icon: 'globe',
+    guaranteedEventId: 'default_ia', // 新增
     eventPool: [
       'agency_part1'
     ],

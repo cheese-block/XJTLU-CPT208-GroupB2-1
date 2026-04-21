@@ -44,51 +44,52 @@ export function initGameLoop(vnScreen, eventCardScreen) {
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
 
-  // 互斥锁，防止重复点击
-  if (state.isProcessing) {
-    log('warn', 'GameLoop', '行动被拦截：当前有事件正在处理中');
-    return false;
-  }
+  // 1. 拦截处理
+  if (state.isProcessing) return false;
 
-  // 1. 计算真实的 AP 消耗并扣除
+  // 2. 消耗计算
   const apMod       = BuffEngine.getAPCostModifier(state, actionId);
   const finalApCost = Math.max(0, action.apCost + apMod);
+  if (!StateManager.consumeAP(finalApCost)) return false;
 
-  if (!StateManager.consumeAP(finalApCost)) {
-    log('info', 'GameLoop', 'AP 不足，行动取消');
-    return false;
+  // 3. 进度标签
+  if (action.tagsProgress) _trackProgressTag(action.tagsProgress);
+
+  // --- 核心修改：唯一性过滤 + 保底抽卡逻辑 ---
+  
+  // 过滤出未触发过的事件
+  const pool = action.eventPool || [];
+  const availableEvents = pool.filter(id => !state.triggeredEventIds.includes(id));
+  const guaranteedId = action.guaranteedEventId;
+
+  let hitEventId = guaranteedId; // 默认设为保底
+
+  if (availableEvents.length > 0) {
+    // 设定 80% 的概率出现新事件，20% 的概率出现保底日常
+    const shouldShowNew = Math.random() < 0.8;
+    
+    if (shouldShowNew) {
+      const randomIndex = Math.floor(Math.random() * availableEvents.length);
+      hitEventId = availableEvents[randomIndex];
+    }
   }
+  // 如果 availableEvents 长度为 0，hitEventId 保持为 guaranteedId
+  
+  // --- 修改结束 ---
 
-  // 2. 进度标签追踪 (如：科研积累)
-  if (action.tagsProgress) {
-    _trackProgressTag(action.tagsProgress);
-  }
-
-  // 3. 核心机制改变：从建筑卡池中抽卡
-  let hitEventId = null;
-  if (action.eventPool && action.eventPool.length > 0) {
-    // 简单随机抽取（MVP 阶段暂不加权重干预）
-    const randomIndex = Math.floor(Math.random() * action.eventPool.length);
-    hitEventId = action.eventPool[randomIndex];
-  }
-
-  // 4. 将抽到的地点事件推入队列头部
   if (hitEventId) {
     StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
-    log('info', 'GameLoop', `🎯 抽卡命中：${hitEventId}`);
+    log('info', 'GameLoop', `🎯 抽卡结果：${hitEventId} (可用新事件数: ${availableEvents.length})`);
   }
 
-  // 【移除】：删除了原本在此处的“判定是否触发全局随机突发事件”逻辑
-
-  // 5. 存档并启动事件队列
   StateManager.saveGame();
 
   const newState = StateManager.getState();
   if (newState.pendingEventQueue.length > 0) {
-    StateManager.setProcessing(true); // 加锁
+    StateManager.setProcessing(true);
     processEventQueue(() => {
-      StateManager.setProcessing(false); // 解锁
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP); // 返回地图
+      StateManager.setProcessing(false);
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
       if (onEvent) onEvent();
     });
   }
@@ -132,7 +133,6 @@ function _playNextEvent() {
     }
   }
 
-  // 【修复】：接收 StateManager 深度克隆后的安全副本，防止 UI 层变异污染全局 EVENTS
   const clonedEventData = StateManager.startEvent(eventData);
   
   const useVN = ['sem1_final_exam', 'sem2_final_exam']
@@ -143,9 +143,14 @@ function _playNextEvent() {
   StateManager.setGamePhase(targetPhase);
 
   setTimeout(() => {
-    // 【修复】：传递 clonedEventData 而不是原始的 eventData
     targetScreen.startEvent(clonedEventData, () => {
-      StateManager.markEventTriggered(clonedEventData.event_id);
+      
+      // --- 修改：保底事件不记录触发 ID，允许重复出现 ---
+      if (!clonedEventData.event_id.startsWith('default_')) {
+        StateManager.markEventTriggered(clonedEventData.event_id);
+      }
+      // --- 修改结束 ---
+
       StateManager.saveGame();
       _playNextEvent();
     });
