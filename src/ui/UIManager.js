@@ -234,13 +234,13 @@ function _mountLangButton() {
 
   const btn = document.createElement('button');
   btn.id = 'global-lang-btn';
-  // 【修改】：移到左下角 (bottom-6 left-6)，样式更精致
+  // 【修改】：移回右上角，做成斜线分割的小圆球
   btn.className = `
-    absolute bottom-6 left-6 z-[9999] 
+    absolute top-5 right-6 z-[9999] 
+    w-10 h-10 rounded-full 
     bg-white/90 backdrop-blur-md border border-gray-200 
-    text-xjtlu-navy font-black text-sm px-4 py-2 
-    rounded-full shadow-lg hover:bg-white hover:shadow-xl hover:-translate-y-0.5
-    transition-all flex items-center gap-2 hidden
+    shadow-md hover:bg-white hover:shadow-lg hover:scale-105 
+    transition-all hidden
   `;
   
   btn.addEventListener('click', () => toggleLanguage());
@@ -254,22 +254,27 @@ function _updateLangButtonVisibility(state) {
   const btn = document.getElementById('global-lang-btn');
   if (!btn) return;
 
-  // 【修改】：增加 SCHOOL_SELECT 和 MONTH_SUMMARY
+  // 增加 COLLECTION，让图鉴页面也能切换语言
   const show = [
     CONSTANTS.GAME_PHASE.TITLE,
     CONSTANTS.GAME_PHASE.MAP,
     CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
-    CONSTANTS.GAME_PHASE.MONTH_SUMMARY
+    CONSTANTS.GAME_PHASE.MONTH_SUMMARY,
+    CONSTANTS.GAME_PHASE.COLLECTION
   ].includes(state.gamePhase);
   
   if (show) {
     btn.classList.remove('hidden');
     const isZh = getLang() === 'zh';
+    
+    // 【新增】：精致的斜线分割布局
     btn.innerHTML = `
-      <i data-lucide="languages" class="lucide w-4 h-4"></i>
-      ${isZh ? '中 / EN' : 'EN / 中'}
+      <div class="relative w-full h-full pointer-events-none">
+        <span class="absolute top-1.5 left-1.5 text-[0.55rem] font-black ${isZh ? 'text-xjtlu-blue' : 'text-gray-400'} leading-none">中</span>
+        <div class="absolute top-1/2 left-1/2 w-7 h-px bg-gray-300 -translate-x-1/2 -translate-y-1/2 -rotate-45"></div>
+        <span class="absolute bottom-1.5 right-1.5 text-[0.5rem] font-black ${!isZh ? 'text-xjtlu-blue' : 'text-gray-400'} leading-none">EN</span>
+      </div>
     `;
-    if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn });
   } else {
     btn.classList.add('hidden');
   }
