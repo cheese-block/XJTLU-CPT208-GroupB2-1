@@ -196,33 +196,53 @@ _playScene(index) {
     }, isMultiple, state); 
   }
 
+  // ───────────────────────────────────────────────────────────
+  // 选项处理（带调试日志版）
+  // ───────────────────────────────────────────────────────────
+
   _resolveChoice(choice) {
-    // 【修复】：单选结算时强制重置多选状态，防止状态污染
     this._isMultiChoiceText = false;
     this._multiChoiceQueue = [];
 
     const currentState = StateManager.getState();
     const playerTags   = currentState.tags || [];
-    // 【新增】：获取透视 Buff 状态
     const hasExactBuff = currentState.activeBuff?.some(b => b.buffId === 'insight_buff');
 
-    // 遍历 variants，找到第一个满足条件的
+    // === 调试日志开始 ===
+    console.group(`%c🔍 选项判定调试: ${choice.text}`, "color: #004B9B; font-weight: bold;");
+    console.log("当前完整状态:", currentState);
+    console.log("当前 Agency_Score:", currentState.Agency_Score);
+    console.log("当前持有 Tags:", playerTags);
+    // === 调试日志结束 ===
+
     let activeVariant = null;
     if (choice.flavor_text_variants && choice.flavor_text_variants.length > 0) {
-      for (const variant of choice.flavor_text_variants) {
+      for (const [idx, variant] of choice.flavor_text_variants.entries()) {
         const tagPass = !variant.required_tag || playerTags.includes(variant.required_tag);
+        
         let statPass = true;
         if (variant.required_stat) {
-          const val = currentState[variant.required_stat.stat] ?? 0;
-          if (variant.required_stat.min !== undefined && val < variant.required_stat.min) statPass = false;
-          if (variant.required_stat.max !== undefined && val > variant.required_stat.max) statPass = false;
+          const { stat, min, max } = variant.required_stat;
+          const currentVal = currentState[stat] ?? 0;
+          
+          if (min !== undefined && currentVal < min) statPass = false;
+          if (max !== undefined && currentVal > max) statPass = false;
+          
+          console.log(`检查变体 [${idx}]: 属性[${stat}] 要求(${min ?? '-∞'} 至 ${max ?? '+∞'}), 当前值: ${currentVal} -> ${statPass ? '✅' : '❌'}`);
         }
-        if (tagPass && statPass) {
+
+        const finalPass = tagPass && statPass;
+        console.log(`检查变体 [${idx}]: 最终判定 -> ${finalPass ? '🎯 匹配成功' : '🚫 跳过'}`);
+
+        if (finalPass) {
           activeVariant = variant;
           break;
         }
       }
     }
+
+    console.log("最终选择的变体:", activeVariant);
+    console.groupEnd();
 
     const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
     const finalTags    = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
@@ -240,6 +260,7 @@ _playScene(index) {
       StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
     }
     finalTags.forEach(tag => StateManager.addTag(tag));
+    
     if (choice.next_event_id) {
       StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
     }
@@ -255,7 +276,7 @@ _playScene(index) {
         tip:          choice.tip ?? '',
         effects:      finalEffects,
         effectLabels: this._buildEffectLabels(finalEffects),
-        hasExactBuff: hasExactBuff, // 【传入透视状态】
+        hasExactBuff: hasExactBuff,
       });
     } else {
       this._playScene(this._sceneIndex + 1);
