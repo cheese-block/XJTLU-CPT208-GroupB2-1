@@ -638,7 +638,7 @@ export function hasSave() {
 
 /**
  * 获取存档预览信息（供主菜单"继续游戏"显示）。
- * @returns {{ month: number, phase: string, phaseLabel: string, timestamp: string } | null}
+ * @returns {{ month: number, phase: string, phaseLabel: string, monthLabel: string, timestamp: string } | null}
  */
 export function getSavePreview() {
   const saved = loadGame();
@@ -647,11 +647,32 @@ export function getSavePreview() {
   const { valid } = validateState(saved);
   if (!valid) return null;
 
+  const lang = getLang();
+
+  // 【新增】：双语映射表
+  const mapEnMonth = { 
+    1:'Sep', 2:'Oct', 3:'Nov', 4:'Dec', 5:'Winter Break', 
+    6:'Mar', 7:'Apr', 8:'May', 9:'Jun', 10:'Summer Break', 
+    11:'Summer Break', 12:'Application Season' 
+  };
+  const mapEnPhase = { 
+    Y3_SEM1: 'Y3 Sem 1', Y3_WINTER: 'Winter', 
+    Y3_SEM2: 'Y3 Sem 2', Y3_SUMMER: 'Summer', Y4_SEM1: 'Y4 Sem 1' 
+  };
+
+  const phaseLabel = lang === 'en' 
+    ? mapEnPhase[saved.currentPhase] 
+    : (CONSTANTS.PHASE_LABELS[saved.currentPhase] ?? saved.currentPhase);
+    
+  const monthLabel = lang === 'en' 
+    ? mapEnMonth[saved.currentMonth] 
+    : (CONSTANTS.MONTH_TO_REALWORLD[saved.currentMonth] ?? `Month ${saved.currentMonth}`);
+
   return {
     month:      saved.currentMonth,
     phase:      saved.currentPhase,
-    phaseLabel: CONSTANTS.PHASE_LABELS[saved.currentPhase] ?? saved.currentPhase,
-    monthLabel: CONSTANTS.MONTH_TO_REALWORLD[saved.currentMonth] ?? `Month ${saved.currentMonth}`,
+    phaseLabel: phaseLabel,
+    monthLabel: monthLabel,
     timestamp:  formatTimestamp(saved.saveTimestamp),
   };
 }
