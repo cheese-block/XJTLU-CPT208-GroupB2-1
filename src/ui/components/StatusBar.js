@@ -75,22 +75,17 @@ export class StatusBar {
         <span class="flex items-center gap-1.5 text-gray-500 font-bold mb-1.5" style="font-size: 0.8rem;">
           <i data-lucide="${icon}" class="lucide w-4 h-4"></i>
           ${label}
-          <!-- 【修改】：尺寸从 w-4 降至 w-3.5，字体从 0.6rem 降至 0.55rem -->
+          <!-- 默认加上 opacity-0 -->
           <span id="sb-${id}-preview-dot" 
-               class="w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black flex items-center justify-center opacity-0 transition-all duration-200 ml-1 shadow-sm"
+               class="w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black flex items-center justify-center transition-opacity duration-200 ml-1 shadow-sm opacity-0"
                style="font-size: 0.55rem; line-height: 1;">
           </span>
         </span>
-        
         <div class="relative w-full flex items-center">
           <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner relative">
-            <div id="sb-${id}-fill" 
-                 class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" 
-                 style="width: 50%"></div>
+            <div id="sb-${id}-fill" class="h-full bg-xjtlu-navy transition-all duration-500 ease-out" style="width: 50%"></div>
           </div>
-          
-          <div id="sb-${id}-preview-text"
-               class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black opacity-0 transition-all duration-200"></div>
+          <div id="sb-${id}-preview-text" class="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black transition-opacity duration-200 opacity-0"></div>
         </div>
       </div>
     `;
@@ -98,11 +93,7 @@ export class StatusBar {
 
   showPreview(effects, hasExactBuff) {
     if (!this._container || !effects) return;
-
-    const statMap = {
-      Mental_Health: 'mental', Physical_Health: 'physical', Money: 'money',
-      Academic_Ability: 'academic', English_Ability: 'english'
-    };
+    const statMap = { Mental_Health: 'mental', Physical_Health: 'physical', Money: 'money', Academic_Ability: 'academic', English_Ability: 'english' };
     const lang = StateManager.getLang();
 
     Object.entries(effects).forEach(([stat, delta]) => {
@@ -112,20 +103,20 @@ export class StatusBar {
 
       const isPos = delta > 0;
       const isLarge = Math.abs(delta) >= 15;
-
       const dot = this._container.querySelector(`#sb-${id}-preview-dot`);
+      
       if (dot) {
-        // 【修改】：英文显示 B/S，中文显示 大/小
         dot.textContent = lang === 'en' ? (isLarge ? 'B' : 'S') : (isLarge ? '大' : '小');
-        dot.style.opacity = '1';
-        dot.className = "w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black flex items-center justify-center transition-all duration-200 ml-1 shadow-sm";
+        // 安全切换显隐
+        dot.classList.remove('opacity-0');
+        dot.classList.add('opacity-100');
       }
 
       if (hasExactBuff) {
         const textEl = this._container.querySelector(`#sb-${id}-preview-text`);
         if (textEl) {
           textEl.textContent = isPos ? `+${delta}` : delta;
-          textEl.className = `absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black transition-all duration-200 opacity-100 ${isPos ? 'text-xjtlu-green' : 'text-xjtlu-red'}`;
+          textEl.className = `absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-black transition-opacity duration-200 opacity-100 ${isPos ? 'text-xjtlu-green' : 'text-xjtlu-red'}`;
         }
       }
     });
@@ -133,17 +124,15 @@ export class StatusBar {
 
   clearPreview() {
     if (!this._container) return;
-    
-    // 隐藏“大/小”指示器
     const dots = this._container.querySelectorAll('[id$="-preview-dot"]');
     dots.forEach(dot => {
-      dot.style.opacity = '0';
+      dot.classList.remove('opacity-100');
+      dot.classList.add('opacity-0');
     });
-
-    // 隐藏透视具体数值
     const texts = this._container.querySelectorAll('[id$="-preview-text"]');
     texts.forEach(text => {
-      text.style.opacity = '0';
+      text.classList.remove('opacity-100');
+      text.classList.add('opacity-0');
     });
   }
 
