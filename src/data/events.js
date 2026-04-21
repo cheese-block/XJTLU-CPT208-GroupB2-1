@@ -119,7 +119,7 @@ export const EVENTS = {
   'unlock_ia_notice': {
     event_id:      'unlock_ia_notice',
     type:          'scheduled',
-    trigger_month: 3,
+    trigger_month: 1,
     title:         '春招季的暗流',
     scenes: [
       {
@@ -396,7 +396,7 @@ export const EVENTS = {
   'summer_internship_decision': {
     event_id:      'summer_internship_decision',
     type:          'scheduled',
-    trigger_month: 10,
+    trigger_month: 2,
     title:         '暑期去向：弯道超车还是原地踏步？',
     scenes: [
       {
@@ -435,7 +435,7 @@ export const EVENTS = {
   'ielts_guarantee': {
     event_id:      'ielts_guarantee',
     type:          'scheduled',
-    trigger_month: 8,
+    trigger_month: 2,
     required_tags: [],
     forbidden_tags: ['IELTS_5.5', 'IELTS_6.0', 'IELTS_6.5', 'IELTS_7.0', 'IELTS_7.5'],
     title:         '最后的考位',

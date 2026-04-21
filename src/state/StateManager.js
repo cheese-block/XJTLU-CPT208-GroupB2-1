@@ -441,21 +441,18 @@ export function advanceMonth() {
     _state.currentPhase = CONSTANTS.MONTH_TO_PHASE[newMonth];
     resetAPForNewMonth();
 
-    // 学期初清零 Academic_Ability
+    // 【修复】：只要进入第二月，强制解锁 IA 建筑，确保 UI 状态更新
+    if (newMonth === 2) {
+      StateManager.unlockBuilding('ia');
+    }
+
     if (CONSTANTS.SEMESTER_START_MONTHS.includes(newMonth)) {
       _state.Academic_Ability = 0;
-      log('info', 'StateManager', `学期初：Academic_Ability 已清零（Month ${newMonth}）`);
     }
   }
 
-  log('info', 'StateManager', isGameEnd ? '游戏结束' : `推进至 Month ${newMonth}`);
-  _notifyChange();
-
-  return {
-    newMonth:  isGameEnd ? _state.currentMonth : newMonth,
-    newPhase:  _state.currentPhase,
-    isGameEnd,
-  };
+  _notifyChange(); 
+  return { newMonth, isGameEnd };
 }
 
 // ─────────────────────────────────────────────────────────────

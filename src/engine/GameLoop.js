@@ -159,15 +159,61 @@ function _playNextEvent() {
 // 月末结算
 // ─────────────────────────────────────────────────────────────
 
+// --- 重构 resolveMonthEnd，编排大结局顺序 ---
 export function resolveMonthEnd(onMonthEnd) {
   const state = StateManager.getState();
-  log('info', 'GameLoop', `📅 月末结算开始：Month ${state.currentMonth}`);
-
   StateManager.setProcessing(true);
+
+  // 1. 注入并处理当月 Scheduled 事件（如期末考试 VN）
   EventEngine.checkScheduledEvents(state);
 
   processEventQueue(() => {
-    _resolveEndOfMonth(onMonthEnd);
+    const stateAfterEvents = StateManager.getState();
+    
+    // 2. 计算成绩
+    let examResult = null;
+    if (stateAfterEvents.currentMonth === CONSTANTS.MAX_MONTHS) {
+      examResult = resolveFinalExam(stateAfterEvents);
+    }
+
+    // 3. 检查死亡
+    if (checkBadEndings()) {
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      return;
+    }
+
+    // 4. 推进月份
+    const { isGameEnd } = StateManager.advanceMonth();
+
+    if (isGameEnd) {
+      // --- 大结局特殊流程 ---
+      // 先展示学期总结
+      window._pendingMonthSummary = {
+        prevMonth: CONSTANTS.MAX_MONTHS,
+        newMonth: CONSTANTS.MAX_MONTHS,
+        examResult,
+        state: StateManager.getState(),
+        onConfirm: () => {
+          // 总结确认后，注入“提交申请”事件卡片
+          StateManager.enqueueEventFront({ eventId: 'final_application', source: 'scheduled' });
+          processEventQueue(() => {
+            // 申请卡片点完后，弹出 Demo 结束弹窗
+            const isEn = StateManager.getLang() === 'en';
+            showConfirm({
+              title: isEn ? 'Demo Completed' : 'Demo 体验结束',
+              message: isEn ? 'Review your journey.' : '你的申请履历已经锁定，开始复盘。',
+              confirmText: isEn ? 'Review' : '开始复盘',
+              cancelText: '',
+              onConfirm: () => StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TAG_SHOWCASE)
+            });
+          });
+        }
+      };
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MONTH_SUMMARY);
+    } else {
+      // 普通月份：展示总结页
+      onMonthEnd?.({ newMonth: stateAfterEvents.currentMonth + 1, examResult });
+    }
   });
 }
 
