@@ -942,100 +942,7 @@ export const EVENTS = {
   // 地点事件：PB 公共楼
   // ════════════════════════════════════════════════════════
 
-  'loc_pb_foreigner': {
-    event_id: 'loc_pb_foreigner', type: 'location', title: '走廊偶遇',
-    scenes: [{
-      text: '在 PB 走廊等电梯时，一位你不认识的外籍教师主动和你打招呼，问你是哪个专业的。',
-      choices: [
-        {
-          text: '礼貌回应，用英语聊了几句',
-          effects: { English_Ability: +4, Mental_Health: +8 },
-          flavor_text: '你们聊了大约五分钟。他给你推荐了一篇他刚发表的论文，说对你的方向很有参考价值。这种意外的交流让你心情不错。',
-        },
-        {
-          text: '点点头，低头看手机',
-          effects: { Mental_Health: -5 },
-          flavor_text: '你尴尬地回避了对话。电梯门关上后，你有点后悔——那好像是一个不错的聊天机会。',
-        },
-      ],
-    }],
-  },
 
-  'loc_pb_gossip': {
-    event_id: 'loc_pb_gossip', type: 'location', title: '申研焦虑传播',
-    scenes: [{
-      text: '你在 PB 便利店排队时，听到前面两个人在讨论："听说今年 UCL 计算机线又涨了，均分 85 都被拒了。"',
-      choices: [
-        {
-          text: '偷听细节，疯狂对标自己',
-          effects: { Mental_Health: -18, Academic_Ability: +5 },
-          flavor_text: '你把他们的对话记在了手机备忘录里。回宿舍后越想越焦虑，但也因此多看了两个小时专业课。',
-        },
-        {
-          text: '戴上耳机，拒绝制造焦虑',
-          effects: { Mental_Health: +12 },
-          flavor_text: '你果断打开了音乐。道听途说的信息往往失真，你没必要为了一句话乱了自己的节奏。',
-        },
-      ],
-    }],
-  },
-
-  'loc_pb_convenience': {
-    event_id: 'loc_pb_convenience', type: 'location', title: '便利店',
-    scenes: [{
-      text: '你路过 PB 便利店，肚子刚好有点饿。货架上摆着热乎乎的关东煮和刚到货的进口零食。',
-      choices: [
-        {
-          text: '买一份关东煮，好好吃顿饭',
-          effects: { Physical_Health: +8, Money: -8 },
-          flavor_text: '热乎乎的关东煮让你整个人暖和了不少。有时候，一顿好饭比什么都重要。',
-        },
-        {
-          text: '忍住，回宿舍吃泡面省钱',
-          effects: { Money: +5, Physical_Health: -5 },
-          flavor_text: '你成功抵制了消费欲望，省下了这笔钱。泡面的味道依然是申研期间最熟悉的味道。',
-        },
-      ],
-    }],
-  },
-
-  'loc_pb_cross_major': {
-    event_id: 'loc_pb_cross_major', type: 'location', title: '跨专业搭话',
-    scenes: [{
-      text: '在 PB 的公共座位区，一个 IBSS 的同学看到你在写东西，凑过来问："你们 SAT 的申研是不是特别卷？我们商科感觉还好。"',
-      choices: [
-        {
-          text: '聊开了，互相分享申研经验',
-          effects: { Mental_Health: +12, English_Ability: +3 },
-          flavor_text: '你们聊了将近一个小时。你第一次了解到商科申研的逻辑，对方也对计算机方向的竞争烈度表示震惊。意外地收获了一些新视角。',
-        },
-        {
-          text: '敷衍几句，继续低头写东西',
-          effects: { Mental_Health: -8 },
-          flavor_text: '你礼貌但冷淡地结束了对话。有点不近人情，但你确实没有时间。',
-        },
-      ],
-    }],
-  },
-
-  'loc_pb_professor_hallway': {
-    event_id: 'loc_pb_professor_hallway', type: 'location', title: '走廊遇见教授',
-    scenes: [{
-      text: '你在 PB 走廊遇见了你的专业课教授。他看起来很闲，正在看手机。你知道期末考试就在下个月。',
-      choices: [
-        {
-          text: '主动打招呼，顺便套话考试重点',
-          effects: { Academic_Ability: +5, Mental_Health: -10 },
-          flavor_text: '教授友善地和你聊了几句，但在"考试重点"这个问题上笑而不语。你没套到任何有用的信息，但教授好像对你印象深了一些。',
-        },
-        {
-          text: '装作没看见，低头快走',
-          effects: { Mental_Health: +5 },
-          flavor_text: '你成功假装没看见。有时候，保持距离是最轻松的选择。',
-        },
-      ],
-    }],
-  },
 
   // ════════════════════════════════════════════════════════
   // 地点事件：IR 科研中心
@@ -1121,81 +1028,7 @@ export const EVENTS = {
   // 地点事件：GYM 健身房
   // ════════════════════════════════════════════════════════
 
-  'loc_gym_heavy_lift': {
-    event_id: 'loc_gym_heavy_lift', type: 'location', title: '极限重量',
-    scenes: [{
-      text: '你在健身房挑战深蹲个人极限。还差最后一下，但你的腿已经开始发抖了。',
-      choices: [
-        {
-          text: '咬牙硬蹲！',
-          effects: { Physical_Health: +18, Mental_Health: +12, Academic_Ability: -8 },
-          flavor_text: '你成功突破了极限！多巴胺疯狂分泌，你感觉自己无所不能，但接下来的三天你连楼梯都下不了。',
-        },
-        {
-          text: '安全第一，放弃',
-          effects: { Physical_Health: +8, Mental_Health: -5 },
-          flavor_text: '你把杠铃放回了架子上。虽然没受伤，但隐隐有些挫败感。',
-        },
-      ],
-    }],
-  },
 
-  'loc_gym_yoga': {
-    event_id: 'loc_gym_yoga', type: 'location', title: '冥想与拉伸',
-    scenes: [{
-      text: '你报了一节瑜伽课。教练让你闭上眼睛，清空大脑里所有的 DDL 和雅思单词。',
-      choices: [
-        {
-          text: '彻底放空自己',
-          effects: { Mental_Health: +20, Physical_Health: +12, Money: -10 },
-          flavor_text: '伴随着舒缓的音乐，你感受到了久违的宁静。这钱花得值。',
-        },
-        {
-          text: '闭着眼睛偷偷背单词',
-          effects: { English_Ability: +3, Mental_Health: -12 },
-          flavor_text: '即便在瑜伽垫上，你的大脑依然在高速运转。你记住了几个词根，但下课后感觉比上课前还累。',
-        },
-      ],
-    }],
-  },
-
-  'loc_gym_treadmill_race': {
-    event_id: 'loc_gym_treadmill_race', type: 'location', title: '暗中较劲',
-    scenes: [{
-      text: '你旁边跑步机上的人突然调高了速度。男人的胜负欲让你也不自觉地按下了加速键。',
-      choices: [
-        {
-          text: '跑赢他！冲刺！',
-          effects: { Physical_Health: +15, Mental_Health: +8, Academic_Ability: -8 },
-          flavor_text: '你跑赢了。对方默默调低了速度。你擦着汗走出健身房，步伐比平时轻快了很多。',
-        },
-        {
-          text: '认怂，保持自己的配速',
-          effects: { Physical_Health: +8, Mental_Health: -5 },
-          flavor_text: '你没有上头。成熟的人知道，不是每场较劲都值得参与。',
-        },
-      ],
-    }],
-  },
-
-  'loc_gym_protein_shake': {
-    event_id: 'loc_gym_protein_shake', type: 'location', title: '蛋白粉推销',
-    scenes: [{
-      text: '练完后肌肉酸痛。前台向你推销一款进口高级分离乳清蛋白粉，说能加速恢复，但价格不菲。',
-      choices: [
-        {
-          text: '买！身体是革命的本钱',
-          effects: { Money: -18, Physical_Health: +12 },
-          flavor_text: '你咬牙买下了。蛋白粉的味道还不错，恢复速度确实快了一些。',
-        },
-        {
-          text: '太贵了，回去吃两个鸡蛋',
-          effects: { Money: +8, Physical_Health: +3 },
-          flavor_text: '你礼貌拒绝了推销。食堂的水煮蛋同样含有蛋白质，效果慢一点但便宜实惠。',
-        },
-      ],
-    }],
-  },
 
   // ════════════════════════════════════════════════════════
   // 地点事件：宿舍
@@ -1453,6 +1286,10 @@ export const EVENTS = {
   // 各建筑保底事件（Default / Filler Events）
   // ════════════════════════════════════════════════════════
 
+  'default_fb': {
+    event_id: 'default_fb', type: 'location', title: '基础楼日常',
+    scenes: [{ text: 'FB 的大厅里贴满了各种社团活动海报。你在这里上了一节通识课，阶梯教室里空调的嗡嗡声让你有点犯困。' }]
+  },
   'default_sb': {
     event_id: 'default_sb', type: 'location', title: '理工楼日常',
     scenes: [{ text: '教授今天按部就班地讲完了 PPT。你记了满屏的笔记，下课时教室里充满了收拾书包的声音。' }]
@@ -1465,9 +1302,13 @@ export const EVENTS = {
     event_id: 'default_pb', type: 'location', title: '公共楼日常',
     scenes: [{ text: '你在 PB 穿行，应急通道的楼梯上挤满了来不及等电梯的学生，便利店的关东煮香气飘得很远。今天没什么特别的人和你打招呼。' }]
   },
-  'default_ir': {
-    event_id: 'default_ir', type: 'location', title: '科研中心日常',
+  'default_eb': { // 原 IR 文案移交至此
+    event_id: 'default_eb', type: 'location', title: '工科楼日常',
     scenes: [{ text: '机房电脑的风扇嗡嗡作响，你盯着跑了一半的脚本，确认没有报错后记录下了今天的数据。' }]
+  },
+  'default_ir': { // 编写新的科研中心文案
+    event_id: 'default_ir', type: 'location', title: '科研中心日常',
+    scenes: [{ text: 'IR 的会议室里正在进行一场小型的学术研讨。你整理着最近的文献综述，空气中弥漫着高端咖啡和高端论文的味道。' }]
   },
   'default_gym': {
     event_id: 'default_gym', type: 'location', title: '健身房日常',

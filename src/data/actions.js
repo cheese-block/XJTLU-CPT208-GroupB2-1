@@ -3,6 +3,19 @@
  */
 
 export const ACTIONS = {
+
+  'study_fb': {
+    id: 'study_fb', buildingId: 'fb', label: '上通识课', apCost: 1, icon: 'book',
+    guaranteedEventId: 'default_fb',
+    eventPool: [], // 演示期暂空
+  },
+
+  'work_eb': {
+    id: 'work_eb', buildingId: 'eb', label: '做实验项目', apCost: 1, icon: 'cpu',
+    guaranteedEventId: 'default_eb',
+    eventPool: [],
+  },
+
   'study_class': {
     id: 'study_class', buildingId: 'sb', label: '上专业课', apCost: 1, icon: 'flask-conical',
     guaranteedEventId: 'default_sb', // 新增
@@ -31,13 +44,7 @@ export const ACTIONS = {
   'social_pb': {
     id: 'social_pb', buildingId: 'pb', label: '在 PB 闲逛', apCost: 1, icon: 'users',
     guaranteedEventId: 'default_pb', // 新增
-    eventPool: [
-      'loc_pb_foreigner',
-      'loc_pb_gossip',
-      'loc_pb_convenience',
-      'loc_pb_cross_major',
-      'loc_pb_professor_hallway',
-    ],
+    eventPool: [],
   },
 
   'research_ir': {
@@ -55,12 +62,7 @@ export const ACTIONS = {
   'exercise': {
     id: 'exercise', buildingId: 'gym', label: '去健身房锻炼', apCost: 1, icon: 'dumbbell',
     guaranteedEventId: 'default_gym', // 新增
-    eventPool: [
-      'loc_gym_heavy_lift',
-      'loc_gym_yoga',
-      'loc_gym_treadmill_race',
-      'loc_gym_protein_shake',
-    ],
+    eventPool: [],
   },
 
   'rest': {

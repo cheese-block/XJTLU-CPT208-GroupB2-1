@@ -8,7 +8,7 @@ export const BUILDINGS = [
     lore:        '传说 FB 三楼的某间教室风水极好，坐那里复习的同学成绩都不低——但也可能只是因为那里离厕所最近，节省了时间。',
     photo:       null,
     hotspot:     { x: 15.6, y: 8.7 },
-    actions:     [],
+    actions:     ['study_fb'], // 关联行动
   },
 
   {
@@ -69,7 +69,7 @@ export const BUILDINGS = [
     lore:        'EB 地下室的服务器机房发出的嗡嗡声是很多 SAT 学生的白噪音，据说在那里调 bug 效率特别高，因为你根本不知道外面几点了。',
     photo:       null,
     hotspot:     { x: 70.0, y: 40.3 },
-    actions:     [],
+    actions:     ['work_eb'], // 关联行动
   },
 
   {
