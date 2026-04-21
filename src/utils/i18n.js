@@ -15,6 +15,14 @@ export const DICT = {
   'mascot_quote': { zh: '"申研这件事，<br>越早准备越好。"', en: '"The earlier you prepare,<br>the better."' },
   'school_label': { zh: 'SAT · 先进计算学院', en: 'SAT · School of Advanced Technology' },
 
+  // ── 学院选择 ──
+  'school_select_step': { zh: 'Step 1 of 1', en: 'Step 1 of 1' },
+  'school_select_title': { zh: '选择你的学院', en: 'Choose Your School' },
+  'school_select_desc': { zh: '不同学院的申研路径截然不同。选择你所在的学院，开始你的申研之旅。', en: 'Different schools have entirely different paths for postgraduate applications. Choose yours to begin.' },
+  'school_select_coming_soon': { zh: '敬请期待', en: 'Coming Soon' },
+  'school_select_available': { zh: '可选', en: 'Available' },
+  'school_select_demo_hint': { zh: 'MVP Demo 阶段仅开放 SAT 学院，更多学院将在后续版本推出', en: 'Only SAT is available in the MVP Demo. More schools coming soon.' },
+
   // ── 状态栏 ──
   'stat_ap': { zh: '行动点', en: 'AP' },
   'stat_mental': { zh: '心理', en: 'Mental' },
@@ -46,6 +54,14 @@ export const DICT = {
   },
   'map_no_score': { zh: '暂无', en: 'N/A' },
   'map_no_ielts': { zh: '未出分', en: 'No Score' },
+
+  // ── 月末总结 ──
+  'summary_title': { zh: '学期总结', en: 'Term Summary' },
+  'summary_end': { zh: '结束', en: 'Ended' },
+  'summary_exam_result': { zh: '📝 期末成绩', en: '📝 Final Exam Results' },
+  'summary_gpa': { zh: 'GPA', en: 'GPA' },
+  'summary_next': { zh: '即将进入', en: 'Entering' },
+  'summary_btn_start': { zh: '开始', en: 'Start' },
 };
 
 /**
@@ -55,6 +71,6 @@ export const DICT = {
  */
 export function t(key) {
   const lang = getLang() || 'zh';
-  if (!DICT[key]) return key; // 如果没找到 key，直接返回 key 本身作为降级
+  if (!DICT[key]) return key;
   return DICT[key][lang] || DICT[key]['zh'];
 }
