@@ -4,6 +4,8 @@
 
 import { CONSTANTS } from '../../utils/constants.js';
 import { t } from '../../utils/i18n.js';
+// 【修复】：补充导入 StateManager
+import * as StateManager from '../../state/StateManager.js';
 
 export class StatusBar {
   constructor() {
@@ -94,6 +96,8 @@ export class StatusBar {
   showPreview(effects, hasExactBuff) {
     if (!this._container || !effects) return;
     const statMap = { Mental_Health: 'mental', Physical_Health: 'physical', Money: 'money', Academic_Ability: 'academic', English_Ability: 'english' };
+    
+    // 现在 StateManager 已正确导入，这里不会再报错
     const lang = StateManager.getLang();
 
     Object.entries(effects).forEach(([stat, delta]) => {
