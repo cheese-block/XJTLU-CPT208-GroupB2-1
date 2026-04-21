@@ -234,9 +234,9 @@ function _mountLangButton() {
 
   const btn = document.createElement('button');
   btn.id = 'global-lang-btn';
-  // 【修改】：移回右上角，做成斜线分割的小圆球
+  // 【修复 1】：将 z-[9999] 改为 z-[9900]，使其位于弹窗层 (9990) 之下
   btn.className = `
-    absolute top-5 right-6 z-[9999] 
+    absolute bottom-6 left-6 z-[9900] 
     w-10 h-10 rounded-full 
     bg-white/90 backdrop-blur-md border border-gray-200 
     shadow-md hover:bg-white hover:shadow-lg hover:scale-105 
@@ -254,20 +254,19 @@ function _updateLangButtonVisibility(state) {
   const btn = document.getElementById('global-lang-btn');
   if (!btn) return;
 
-  // 增加 COLLECTION，让图鉴页面也能切换语言
+  // 【修复 2】：移除了 CONSTANTS.GAME_PHASE.COLLECTION
   const show = [
     CONSTANTS.GAME_PHASE.TITLE,
     CONSTANTS.GAME_PHASE.MAP,
     CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
-    CONSTANTS.GAME_PHASE.MONTH_SUMMARY,
-    CONSTANTS.GAME_PHASE.COLLECTION
+    CONSTANTS.GAME_PHASE.MONTH_SUMMARY
   ].includes(state.gamePhase);
   
   if (show) {
     btn.classList.remove('hidden');
     const isZh = getLang() === 'zh';
     
-    // 【新增】：精致的斜线分割布局
+    // 斜线分割布局
     btn.innerHTML = `
       <div class="relative w-full h-full pointer-events-none">
         <span class="absolute top-1.5 left-1.5 text-[0.55rem] font-black ${isZh ? 'text-xjtlu-blue' : 'text-gray-400'} leading-none">中</span>
