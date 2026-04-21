@@ -36,8 +36,13 @@ export class TagShowcaseScreen {
         <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl border-2 border-xjtlu-navy overflow-hidden flex flex-col animate-fade-in">
           
           <div class="bg-xjtlu-navy px-8 py-6 text-center">
-            <h1 class="text-2xl font-black text-white tracking-widest">人生印记复盘</h1>
-            <p class="text-white/70 text-sm mt-2">你在西浦这一年半积累的所有筹码</p>
+            <h1 class="text-2xl font-black text-white tracking-widest">
+              ${isEn ? 'Profile Review' : '人生印记复盘'}
+            </h1>
+            <p class="text-white/70 text-sm mt-2">
+              <!-- 【修改】：文案适配 Demo -->
+              ${isEn ? 'Everything you achieved in this Demo.' : '你在本次 Demo 中积累的所有筹码'}
+            </p>
           </div>
 
           <div class="p-8 flex flex-col gap-8">

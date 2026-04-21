@@ -433,7 +433,8 @@ export function advanceMonth() {
   if (!_state) throw new Error('[StateManager] 状态未初始化');
 
   const newMonth = _state.currentMonth + 1;
-  const isGameEnd = newMonth > 12;
+  // 【修改】：使用常量中的展会版 Demo 最大月份
+  const isGameEnd = newMonth > CONSTANTS.MAX_MONTHS;
 
   if (!isGameEnd) {
     _state.currentMonth = newMonth;

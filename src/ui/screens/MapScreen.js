@@ -475,21 +475,12 @@ export class MapScreen {
     const current = state.currentMonth;
     const lang = StateManager.getLang();
 
-    // 【修改】：双语时间线标签
+    // 【修改】：展会版 Demo 4 个月的现实节点映射
     const MILESTONES = {
-      4:  { label: lang === 'en' ? 'Finals①' : '期末①', theme: 'exam'    },
-      5:  { label: lang === 'en' ? 'Winter'  : '寒假',   theme: 'holiday' },
-      9:  { label: lang === 'en' ? 'Finals②' : '期末②', theme: 'exam'    },
-      10: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
-      11: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
-      12: { label: lang === 'en' ? 'Apply'   : '申请季', theme: 'danger'  },
-    };
-
-    // 【修改】：双语月份缩写
-    const MONTH_SHORT = lang === 'en' ? {
-      1: 'Sep', 2: 'Oct', 3: 'Nov', 4: 'Dec', 5: 'Win', 6: 'Mar', 7: 'Apr', 8: 'May', 9: 'Jun', 10: 'Jul', 11: 'Aug', 12: 'Sep↑'
-    } : {
-      1: '9月', 2: '10月', 3: '11月', 4: '12月', 5: '寒假', 6: '3月', 7: '4月', 8: '5月', 9: '6月', 10: '7月', 11: '8月', 12: '9月↑'
+      1: { label: lang === 'en' ? 'Y3 Sem1' : '大三上', theme: 'exam' },
+      2: { label: lang === 'en' ? 'Y3 Sem2' : '大三下', theme: 'exam' },
+      3: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
+      4: { label: lang === 'en' ? 'Apply'   : '申请季', theme: 'danger' },
     };
 
     const THEME_CLASSES = {
@@ -498,53 +489,45 @@ export class MapScreen {
       danger:  { dot: 'bg-xjtlu-red',    text: 'text-xjtlu-red'    },
     };
 
-    const ticksHTML = Array.from({ length: 12 }, (_, i) => {
+    // 【修改】：展会版 Demo 循环次数改为 CONSTANTS.MAX_MONTHS (4)
+    const ticksHTML = Array.from({ length: CONSTANTS.MAX_MONTHS }, (_, i) => {
       const month     = i + 1;
       const isCurrent = month === current;
       const isPast    = month < current;
       const milestone = MILESTONES[month];
 
+      // 让时间轴适配展会版 Demo
       const dotClass = isCurrent
-        ? 'w-3 h-3 rounded-full bg-xjtlu-blue ring-2 ring-xjtlu-blue ring-offset-1 ring-offset-white'
+        ? 'w-4 h-4 rounded-full bg-xjtlu-blue ring-4 ring-xjtlu-blue/30' // 当前节点放大
         : isPast
-          ? 'w-2 h-2 rounded-full bg-gray-300'
-          : milestone
-            ? `w-2.5 h-2.5 rounded-full ${THEME_CLASSES[milestone.theme].dot}`
-            : 'w-2 h-2 rounded-full bg-gray-300';
+          ? 'w-3 h-3 rounded-full bg-gray-300'
+          : `w-3 h-3 rounded-full ${THEME_CLASSES[milestone.theme].dot}`;
 
       const monthTextClass = isCurrent
-        ? 'font-black text-xjtlu-blue'
+        ? 'font-black text-xjtlu-blue text-sm'
         : isPast
-          ? 'text-gray-300'
-          : milestone
-            ? `font-bold ${THEME_CLASSES[milestone.theme].text}`
-            : 'text-gray-400';
-
-      const milestoneHTML = milestone && !isPast ? `
-        <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-[0.55rem] font-black whitespace-nowrap ${THEME_CLASSES[milestone.theme].text}">
-          ${milestone.label}
-        </span>
-      ` : '';
+          ? 'text-gray-400 font-bold'
+          : `font-bold ${THEME_CLASSES[milestone.theme].text}`;
 
       const arrowHTML = isCurrent ? `
-        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xjtlu-blue text-[0.6rem] font-black leading-none">▼</span>
+        <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-xjtlu-blue text-[0.7rem] font-black leading-none">▼</span>
       ` : '';
 
       return `
-        <div class="relative flex flex-col items-center gap-1 flex-1">
-          ${milestoneHTML}
+        <div class="relative flex flex-col items-center gap-2 flex-1">
           ${arrowHTML}
-          <div class="${dotClass} shrink-0"></div>
-          <span class="text-[0.6rem] ${monthTextClass} leading-none">${MONTH_SHORT[month]}</span>
+          <div class="${dotClass} shrink-0 transition-all duration-300"></div>
+          <span class="text-[0.75rem] ${monthTextClass} leading-none transition-all duration-300">${milestone.label}</span>
         </div>
       `;
     }).join('');
 
+    // 【修改】：展会版 Demo 进度条背景线比例调整
     bar.innerHTML = `
-      <div class="relative flex items-center w-full pt-5 pb-1">
-        <div class="absolute left-[calc(100%/24)] right-[calc(100%/24)] top-[calc(1.25rem+0.375rem)] h-px bg-gray-200 z-0"></div>
-        <div class="absolute left-[calc(100%/24)] top-[calc(1.25rem+0.375rem)] h-px bg-xjtlu-blue/40 z-0 transition-all duration-500"
-             style="width: calc((${current - 1} / 11) * (100% - 100%/12))"></div>
+      <div class="relative flex items-center w-full pt-6 pb-2">
+        <div class="absolute left-[12.5%] right-[12.5%] top-[calc(1.5rem+0.5rem)] h-1 bg-gray-200 z-0 rounded-full"></div>
+        <div class="absolute left-[12.5%] top-[calc(1.5rem+0.5rem)] h-1 bg-xjtlu-blue z-0 transition-all duration-500 rounded-full"
+             style="width: calc((${current - 1} / ${CONSTANTS.MAX_MONTHS - 1}) * 75%)"></div>
         ${ticksHTML}
       </div>
     `;

@@ -30,12 +30,12 @@ export class StatusBar {
 
     this._updateAP(state);
     
-    // 统一更新 5 个维度的进度条（不再传递警告阈值，常态全为西浦蓝）
-    this._updateGenericBar('mental',   state.Mental_Health,   'bg-xjtlu-navy');
-    this._updateGenericBar('physical', state.Physical_Health, 'bg-xjtlu-navy');
-    this._updateGenericBar('money',    state.Money,           'bg-xjtlu-navy');
-    this._updateGenericBar('academic', state.Academic_Ability,'bg-xjtlu-navy');
-    this._updateGenericBar('english',  state.English_Ability, 'bg-xjtlu-navy');
+    // 【修改】：传入各属性的 MAX 值，用于计算进度条百分比
+    this._updateGenericBar('mental',   state.Mental_Health,   'bg-xjtlu-navy', CONSTANTS.MENTAL_HEALTH_MAX);
+    this._updateGenericBar('physical', state.Physical_Health, 'bg-xjtlu-navy', CONSTANTS.PHYSICAL_HEALTH_MAX);
+    this._updateGenericBar('money',    state.Money,           'bg-xjtlu-navy', CONSTANTS.MONEY_MAX);
+    this._updateGenericBar('academic', state.Academic_Ability,'bg-xjtlu-navy', CONSTANTS.ACADEMIC_ABILITY_MAX);
+    this._updateGenericBar('english',  state.English_Ability, 'bg-xjtlu-navy', CONSTANTS.ENGLISH_ABILITY_MAX);
     
     this._updateBuffs(state);
   }
@@ -144,11 +144,13 @@ export class StatusBar {
   // 核心逻辑：进度条更新与闪烁
   // ───────────────────────────────────────────────────────────
 
-  _updateGenericBar(id, value, baseColorClass) {
+  // 【修改】：增加 max 参数，默认为 100
+  _updateGenericBar(id, value, baseColorClass, max = 100) {
     const fill = this._container?.querySelector(`#sb-${id}-fill`);
     if (!fill) return;
 
-    const pct = Math.max(0, Math.min(100, value));
+    // 【修改】：基于传入的 max 计算百分比
+    const pct = Math.max(0, Math.min(100, (value / max) * 100));
     fill.style.width = `${pct}%`;
 
     const prev = this._prevValues[id];

@@ -15,6 +15,8 @@ import { resolveFinalExam }      from './ExamEngine.js';
 import { resolveIeltsExam }      from './ExamEngine.js';
 import { log, deepClone }        from '../utils/helpers.js';
 import * as BuffEngine           from './BuffEngine.js';
+import { showConfirm }           from '../ui/components/ConfirmModal.js';
+import { t }                     from '../utils/i18n.js';
 
 // ─────────────────────────────────────────────────────────────
 // 模块内部引用
@@ -180,13 +182,11 @@ function _resolveEndOfMonth(onMonthEnd) {
 
   _tickBuffDurations();
 
-  // --- 修改：死亡拦截点 2 ---
   const isDead = checkBadEndings();
 
   if (isDead) {
     processEventQueue(() => {
       StateManager.setProcessing(false);
-      // 【修改】：死亡后跳过标签展示，直接展示最终结局
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
     });
     return; 
@@ -194,8 +194,8 @@ function _resolveEndOfMonth(onMonthEnd) {
 
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
   
-  // 第 3 个月（春招季）动态解锁 IA 建筑
-  if (newMonth === 3) {
+  // 展会 Demo 版第 2 个月（春招季）动态解锁 IA 建筑 (原为第 3 个月)
+  if (newMonth === 2) {
     StateManager.unlockBuilding('ia');
   }
 
@@ -203,8 +203,19 @@ function _resolveEndOfMonth(onMonthEnd) {
   StateManager.setProcessing(false);
 
   if (isGameEnd) {
-    // 正常通关流程：保留标签展示页面
-    triggerEnding();
+    // 【修改】：拦截正常通关，弹出 Demo 结束提示
+    const isEn = StateManager.getLang() === 'en';
+    showConfirm({
+      title: isEn ? 'Demo Completed' : 'Demo 体验结束',
+      message: isEn 
+        ? 'Thank you for playing the exhibition demo.\n\nYour profile is now locked. Let\'s see your final admission results.' 
+        : 'Demo 版体验到此结束。\n\n你的申请履历已经锁定，接下来将为你揭晓最终的录取结果。',
+      confirmText: isEn ? 'View Results' : '查看录取结果',
+      cancelText: isEn ? 'Proceed' : '前往结算', // 伪装的取消按钮，同样导向结局
+      confirmVariant: 'primary',
+      onConfirm: () => triggerEnding(),
+      onCancel: () => triggerEnding()
+    });
   } else {
     onMonthEnd?.({ newMonth, examResult });
   }
