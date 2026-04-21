@@ -324,14 +324,14 @@ export class TitleScreen {
   }
 
   /**
-   * 怎么玩：当前 MVP 版本暂未实现，显示提示弹窗。
+   * 怎么玩：游戏玩法提示弹窗。
    */
   _handleHowToPlay() {
     showConfirm({
-      title:        '怎么玩？',
-      message:      '分配每月的行动点（AP），应对突发事件，积累申研条件。\n\n目标：在大四上学期前，拿到一个满意的 Offer。\n\n详细教程将在后续版本推出，敬请期待！',
-      confirmText:  '明白了',
-      cancelText:   '',       // 留空则不显示取消按钮
+      title:        t('how_to_title'),
+      message:      t('how_to_desc').replace(/\n/g, '<br><br>'), // 保持换行格式
+      confirmText:  t('how_to_confirm'),
+      cancelText:   '',
       confirmVariant: 'primary',
       onConfirm:    () => {},
     });
