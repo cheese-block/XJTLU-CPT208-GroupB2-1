@@ -192,32 +192,24 @@ export class TitleScreen {
    */
   _buildContinueBlock(savePreview) {
     return `
-      <!-- 继续游戏按钮（高亮主色） -->
+      <!-- 继续游戏按钮 -->
       <button
         id="btn-continue"
-        class="xjtlu-btn xjtlu-btn--primary w-full
-               justify-center text-base py-3
-               relative overflow-hidden"
+        class="xjtlu-btn xjtlu-btn--primary w-full justify-center text-base py-3 relative overflow-hidden"
       >
         <i data-lucide="play-circle" class="lucide w-5 h-5"></i>
-        继续游戏
+        ${t('btn_continue')}
       </button>
 
       <!-- 存档进度预览卡片 -->
-      <div class="
-        w-full rounded-xl
-        border border-gray-100
-        bg-gray-50
-        px-4 py-3
-        flex items-center gap-3
-      ">
+      <div class="w-full rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 flex items-center gap-3">
         <i data-lucide="save" class="lucide w-4 h-4 text-xjtlu-gray shrink-0"></i>
         <div class="flex flex-col gap-0.5 min-w-0">
           <span class="text-xs font-bold text-xjtlu-navy truncate">
             ${savePreview.phaseLabel} · ${savePreview.monthLabel}
           </span>
           <span class="text-[0.65rem] text-xjtlu-gray">
-            上次存档：${savePreview.timestamp}
+            ${t('last_save')}${savePreview.timestamp}
           </span>
         </div>
       </div>
@@ -305,20 +297,17 @@ export class TitleScreen {
   _handleNewGame(hasSave) {
     if (hasSave) {
       showConfirm({
-        title:          '重新开始',
-        message:        '当前存档将被永久清除，这个操作无法撤销。\n确定要重新开始吗？',
-        confirmText:    '确认重置',
-        cancelText:     '再想想',
+        title:          t('restart_title'),
+        message:        t('restart_desc'),
+        confirmText:    t('restart_btn'),
+        cancelText:     t('cancel'),
         confirmVariant: 'danger',
         onConfirm:      () => {
-          log('info', 'TitleScreen', '用户确认重置游戏');
           StateManager.resetGame();
           StateManager.setGamePhase(CONSTANTS.GAME_PHASE.SCHOOL_SELECT);
         },
       });
     } else {
-      // 无存档，直接进入院系选择
-      log('info', 'TitleScreen', '新游戏开始');
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.SCHOOL_SELECT);
     }
   }
