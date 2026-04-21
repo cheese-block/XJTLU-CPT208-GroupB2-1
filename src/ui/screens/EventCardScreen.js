@@ -148,8 +148,6 @@ export class EventCardScreen {
         // 2. 应用数值变化
         if (Object.keys(finalEffects).length > 0) {
           StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
-          // --- 关键：立即检查死亡逻辑 ---
-          import('../../engine/GameLoop.js').then(m => m.checkBadEndings());
         }
 
         finalTags.forEach(tag => StateManager.addTag(tag));

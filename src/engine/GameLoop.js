@@ -43,44 +43,30 @@ export function initGameLoop(vnScreen, eventCardScreen) {
 
 export function executeAction(actionId, action, onEvent) {
   const state = StateManager.getState();
-
-  // 1. 拦截处理
   if (state.isProcessing) return false;
 
-  // 2. 消耗计算
   const apMod       = BuffEngine.getAPCostModifier(state, actionId);
   const finalApCost = Math.max(0, action.apCost + apMod);
   if (!StateManager.consumeAP(finalApCost)) return false;
 
-  // 3. 进度标签
   if (action.tagsProgress) _trackProgressTag(action.tagsProgress);
 
-  // --- 核心修改：唯一性过滤 + 保底抽卡逻辑 ---
-  
-  // 过滤出未触发过的事件
   const pool = action.eventPool || [];
   const availableEvents = pool.filter(id => !state.triggeredEventIds.includes(id));
   const guaranteedId = action.guaranteedEventId;
-
-  let hitEventId = guaranteedId; // 默认设为保底
+  let hitEventId = guaranteedId;
 
   if (availableEvents.length > 0) {
-    // 设定 80% 的概率出现新事件，20% 的概率出现保底日常
-    const shouldShowNew = Math.random() < 0.8;
-    
-    if (shouldShowNew) {
-      const randomIndex = Math.floor(Math.random() * availableEvents.length);
-      hitEventId = availableEvents[randomIndex];
+    if (Math.random() < 0.8) {
+      hitEventId = availableEvents[Math.floor(Math.random() * availableEvents.length)];
     }
   }
-  // 如果 availableEvents 长度为 0，hitEventId 保持为 guaranteedId
-  
-  // 4. 将抽到的地点事件推入队列
+
   if (hitEventId) {
     StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
   }
 
-  // 初始检查（防止带伤上阵）
+  // 初始检查（以防万一）
   checkBadEndings(); 
 
   StateManager.saveGame();
@@ -114,6 +100,9 @@ export function processEventQueue(onEmpty) {
 }
 
 function _playNextEvent() {
+  // --- 新增：每次从队列取事件前，做一次同步的死亡检查 ---
+  checkBadEndings();
+
   const state = StateManager.getState();
   let eventData = EventEngine.dequeueNextEvent(state);
 
@@ -247,15 +236,17 @@ export function checkBadEndings() {
 
   for (const check of checks) {
     if (check.cond) {
+      log('warn', 'GameLoop', `💀 触发死亡：${check.tag}`);
       StateManager.addTag(check.tag);
       
-      // 1. 核心：清空队列，确保死亡是绝对的终点
-      _clearEventQueue(); 
+      // 清空当前队列，确保死亡是绝对的终点
+      const s = StateManager.getState();
+      while (s.pendingEventQueue.length > 0) {
+        StateManager.dequeueEvent();
+      }
       
-      // 2. 注入死亡叙事，用 enqueueEventBack 确保它排在当前正在显示的 flavor_text 之后
+      // 注入死亡叙事
       StateManager.enqueueEventBack({ eventId: check.evt, source: 'chain' });
-      
-      log('warn', 'GameLoop', `死亡拦截成功：${check.tag}`);
       return true;
     }
   }
