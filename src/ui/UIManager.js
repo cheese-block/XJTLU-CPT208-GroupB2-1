@@ -234,12 +234,13 @@ function _mountLangButton() {
 
   const btn = document.createElement('button');
   btn.id = 'global-lang-btn';
+  // 【修改】：移到左下角 (bottom-6 left-6)，样式更精致
   btn.className = `
-    absolute top-5 right-6 z-[9999] 
-    bg-white/80 backdrop-blur-md border border-gray-200 
-    text-xjtlu-navy font-black text-sm px-3 py-1.5 
-    rounded-full shadow-sm hover:bg-white hover:shadow-md 
-    transition-all flex items-center gap-1.5 hidden
+    absolute bottom-6 left-6 z-[9999] 
+    bg-white/90 backdrop-blur-md border border-gray-200 
+    text-xjtlu-navy font-black text-sm px-4 py-2 
+    rounded-full shadow-lg hover:bg-white hover:shadow-xl hover:-translate-y-0.5
+    transition-all flex items-center gap-2 hidden
   `;
   
   btn.addEventListener('click', () => toggleLanguage());
@@ -253,9 +254,13 @@ function _updateLangButtonVisibility(state) {
   const btn = document.getElementById('global-lang-btn');
   if (!btn) return;
 
-  // 仅在主菜单和地图界面显示
-  const show = state.gamePhase === CONSTANTS.GAME_PHASE.TITLE || 
-               state.gamePhase === CONSTANTS.GAME_PHASE.MAP;
+  // 【修改】：增加 SCHOOL_SELECT 和 MONTH_SUMMARY
+  const show = [
+    CONSTANTS.GAME_PHASE.TITLE,
+    CONSTANTS.GAME_PHASE.MAP,
+    CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
+    CONSTANTS.GAME_PHASE.MONTH_SUMMARY
+  ].includes(state.gamePhase);
   
   if (show) {
     btn.classList.remove('hidden');
