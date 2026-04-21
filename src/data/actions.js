@@ -32,11 +32,6 @@ export const ACTIONS = {
     id: 'study_ielts', buildingId: 'cb', label: '备考雅思', label_en: 'IELTS Prep', apCost: 1, icon: 'languages',
     guaranteedEventId: 'default_cb', // 新增
     eventPool: [
-      'loc_cb_ielts_mock',
-      'loc_cb_seat_war',
-      'loc_cb_couple',
-      'loc_cb_close_time',
-      'loc_cb_lost_found',
       'loc_cb_ielts_opportunity' // 【新增】：雅思考位放出
     ],
   },
