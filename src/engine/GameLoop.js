@@ -75,24 +75,27 @@ export function executeAction(actionId, action, onEvent) {
   }
   // 如果 availableEvents 长度为 0，hitEventId 保持为 guaranteedId
   
-  // --- 修改结束 ---
-
+  // 4. 将抽到的地点事件推入队列
   if (hitEventId) {
     StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
-    log('info', 'GameLoop', `🎯 抽卡结果：${hitEventId} (可用新事件数: ${availableEvents.length})`);
   }
+
+  // 死亡检查：如果满足死亡条件，会注入 death_xxx 事件并清空队列
+  const isDead = checkBadEndings(); 
 
   StateManager.saveGame();
+  StateManager.setProcessing(true);
 
-  const newState = StateManager.getState();
-  if (newState.pendingEventQueue.length > 0) {
-    StateManager.setProcessing(true);
-    processEventQueue(() => {
-      StateManager.setProcessing(false);
+  processEventQueue(() => {
+    StateManager.setProcessing(false);
+    if (isDead) {
+      // 【修改】：死亡后跳过标签展示，直接展示最终结局
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+    } else {
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
       if (onEvent) onEvent();
-    });
-  }
+    }
+  });
 
   return true;
 }
@@ -184,16 +187,21 @@ function _resolveEndOfMonth(onMonthEnd) {
 
   _tickBuffDurations();
 
-  const badEnd = checkBadEndings();
-  if (badEnd) {
-    StateManager.saveGame();
-    StateManager.setProcessing(false);
-    return;
+  // --- 修改：死亡拦截点 2 ---
+  const isDead = checkBadEndings();
+
+  if (isDead) {
+    processEventQueue(() => {
+      StateManager.setProcessing(false);
+      // 【修改】：死亡后跳过标签展示，直接展示最终结局
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+    });
+    return; 
   }
 
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
   
-  // 【新增】：第 3 个月（春招季）动态解锁 IA 建筑
+  // 第 3 个月（春招季）动态解锁 IA 建筑
   if (newMonth === 3) {
     StateManager.unlockBuilding('ia');
   }
@@ -202,6 +210,7 @@ function _resolveEndOfMonth(onMonthEnd) {
   StateManager.setProcessing(false);
 
   if (isGameEnd) {
+    // 正常通关流程：保留标签展示页面
     triggerEnding();
   } else {
     onMonthEnd?.({ newMonth, examResult });
@@ -220,26 +229,36 @@ function _resolveEndOfMonth(onMonthEnd) {
 export function checkBadEndings() {
   const state = StateManager.getState();
 
-  const deathChecks = [
-    { condition: state.Mental_Health <= 0,   tag: '__BAD_END_MENTAL_0__' },
-    { condition: state.Mental_Health >= 100, tag: '__BAD_END_MENTAL_100__' },
-    { condition: state.Physical_Health <= 0,   tag: '__BAD_END_PHYSICAL_0__' },
-    { condition: state.Physical_Health >= 100, tag: '__BAD_END_PHYSICAL_100__' },
-    { condition: state.Money <= 0,   tag: '__BAD_END_MONEY_0__' },
-    { condition: state.Money >= 100, tag: '__BAD_END_MONEY_100__' },
+  const checks = [
+    { cond: state.Mental_Health <= 0,   tag: '__BAD_END_MENTAL_0__',   evt: 'death_mental_0' },
+    { cond: state.Mental_Health >= 100, tag: '__BAD_END_MENTAL_100__', evt: 'death_mental_100' },
+    { cond: state.Physical_Health <= 0, tag: '__BAD_END_PHYSICAL_0__', evt: 'death_physical_0' },
+    { cond: state.Physical_Health >= 100, tag: '__BAD_END_PHYSICAL_100__', evt: 'death_physical_100' },
+    { cond: state.Money <= 0,           tag: '__BAD_END_MONEY_0__',    evt: 'death_money_0' },
+    { cond: state.Money >= 100,         tag: '__BAD_END_MONEY_100__',  evt: 'death_money_100' },
   ];
 
-  for (const check of deathChecks) {
-    if (check.condition) {
-      log('warn', 'GameLoop', `💀 走钢丝失败，触发结局：${check.tag}`);
-      // 【修复】：先添加 Tag，再触发结局阶段切换
+  for (const check of checks) {
+    if (check.cond) {
+      log('warn', 'GameLoop', `💀 触发死亡流程：${check.tag}`);
+      // 1. 立即打上结局标签
       StateManager.addTag(check.tag);
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
-      return true; // 拦截后续流程
+      // 2. 清空当前所有队列，确保死亡事件是唯一且最后的
+      _clearEventQueue(); 
+      // 3. 注入死亡叙事事件
+      StateManager.enqueueEventFront({ eventId: check.evt, source: 'chain' });
+      return true; 
     }
   }
-
   return false;
+}
+
+// 辅助函数：清空队列
+function _clearEventQueue() {
+  const state = StateManager.getState();
+  while (state.pendingEventQueue.length > 0) {
+    StateManager.dequeueEvent();
+  }
 }
 
 // ─────────────────────────────────────────────────────────────

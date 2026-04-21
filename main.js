@@ -45,15 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initUIManager();
 
-  // 【修改点】：在全局监听中加入 Bad End 检查，移除全屏红框警告
+  // 【修改点】：大幅简化全局监听，仅保留数值消费，移除死亡检查
   StateManager.subscribe((state) => {
     StateManager.consumePendingStatChanges();
-
-    // 全局 Bad End 拦截（防止死循环，只有在非结局界面才检查）
-    if (state.gamePhase !== CONSTANTS.GAME_PHASE.ENDING && 
-        state.gamePhase !== CONSTANTS.GAME_PHASE.TAG_SHOWCASE) {
-      checkBadEndings();
-    }
+    // 这里的 checkBadEndings() 删掉，我们已经在 GameLoop 里精准控制了
   });
 
   StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TITLE);
