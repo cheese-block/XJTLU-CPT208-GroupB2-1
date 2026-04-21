@@ -473,26 +473,25 @@ export class MapScreen {
     if (!bar) return;
 
     const current = state.currentMonth;
+    const lang = StateManager.getLang();
 
-    // 关键节点定义：month → { label, color }
-    // color 对应 Tailwind 的文字色与背景色语义
+    // 【修改】：双语时间线标签
     const MILESTONES = {
-      4:  { label: '期末①', theme: 'exam'    },
-      5:  { label: '寒假',   theme: 'holiday' },
-      9:  { label: '期末②', theme: 'exam'    },
-      10: { label: '暑假',   theme: 'holiday' },
-      11: { label: '暑假',   theme: 'holiday' },
-      12: { label: '申请季', theme: 'danger'  },
+      4:  { label: lang === 'en' ? 'Finals①' : '期末①', theme: 'exam'    },
+      5:  { label: lang === 'en' ? 'Winter'  : '寒假',   theme: 'holiday' },
+      9:  { label: lang === 'en' ? 'Finals②' : '期末②', theme: 'exam'    },
+      10: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
+      11: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
+      12: { label: lang === 'en' ? 'Apply'   : '申请季', theme: 'danger'  },
     };
 
-    // 月份 → 现实月份简写（从 constants 截取前 2-3 字）
-    const MONTH_SHORT = {
-      1:  '9月',  2:  '10月', 3:  '11月', 4:  '12月',
-      5:  '寒假', 6:  '3月',  7:  '4月',  8:  '5月',
-      9:  '6月',  10: '7月',  11: '8月',  12: '9月↑',
+    // 【修改】：双语月份缩写
+    const MONTH_SHORT = lang === 'en' ? {
+      1: 'Sep', 2: 'Oct', 3: 'Nov', 4: 'Dec', 5: 'Win', 6: 'Mar', 7: 'Apr', 8: 'May', 9: 'Jun', 10: 'Jul', 11: 'Aug', 12: 'Sep↑'
+    } : {
+      1: '9月', 2: '10月', 3: '11月', 4: '12月', 5: '寒假', 6: '3月', 7: '4月', 8: '5月', 9: '6月', 10: '7月', 11: '8月', 12: '9月↑'
     };
 
-    // 主题 → CSS 类映射
     const THEME_CLASSES = {
       exam:    { dot: 'bg-xjtlu-amber',  text: 'text-xjtlu-amber'  },
       holiday: { dot: 'bg-xjtlu-green',  text: 'text-xjtlu-green'  },
@@ -505,7 +504,6 @@ export class MapScreen {
       const isPast    = month < current;
       const milestone = MILESTONES[month];
 
-      // 刻度点样式
       const dotClass = isCurrent
         ? 'w-3 h-3 rounded-full bg-xjtlu-blue ring-2 ring-xjtlu-blue ring-offset-1 ring-offset-white'
         : isPast
@@ -514,7 +512,6 @@ export class MapScreen {
             ? `w-2.5 h-2.5 rounded-full ${THEME_CLASSES[milestone.theme].dot}`
             : 'w-2 h-2 rounded-full bg-gray-300';
 
-      // 月份文字样式
       const monthTextClass = isCurrent
         ? 'font-black text-xjtlu-blue'
         : isPast
@@ -523,21 +520,14 @@ export class MapScreen {
             ? `font-bold ${THEME_CLASSES[milestone.theme].text}`
             : 'text-gray-400';
 
-      // 关键节点标签（显示在月份文字上方）
       const milestoneHTML = milestone && !isPast ? `
-        <span class="absolute -top-4 left-1/2 -translate-x-1/2
-                     text-[0.55rem] font-black whitespace-nowrap
-                     ${THEME_CLASSES[milestone.theme].text}">
+        <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-[0.55rem] font-black whitespace-nowrap ${THEME_CLASSES[milestone.theme].text}">
           ${milestone.label}
         </span>
       ` : '';
 
-      // 当前月份指示箭头
       const arrowHTML = isCurrent ? `
-        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2
-                     text-xjtlu-blue text-[0.6rem] font-black leading-none">
-          ▼
-        </span>
+        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xjtlu-blue text-[0.6rem] font-black leading-none">▼</span>
       ` : '';
 
       return `
@@ -545,28 +535,16 @@ export class MapScreen {
           ${milestoneHTML}
           ${arrowHTML}
           <div class="${dotClass} shrink-0"></div>
-          <span class="text-[0.6rem] ${monthTextClass} leading-none">
-            ${MONTH_SHORT[month]}
-          </span>
+          <span class="text-[0.6rem] ${monthTextClass} leading-none">${MONTH_SHORT[month]}</span>
         </div>
       `;
     }).join('');
 
-    // 连接线（绝对定位，穿过所有刻度点的中心）
     bar.innerHTML = `
       <div class="relative flex items-center w-full pt-5 pb-1">
-        <!-- 背景连接线 -->
-        <div class="absolute left-[calc(100%/24)] right-[calc(100%/24)]
-                    top-[calc(1.25rem+0.375rem)]
-                    h-px bg-gray-200 z-0">
-        </div>
-        <!-- 已过去的进度线 -->
-        <div class="absolute left-[calc(100%/24)]
-                    top-[calc(1.25rem+0.375rem)]
-                    h-px bg-xjtlu-blue/40 z-0 transition-all duration-500"
-             style="width: calc((${current - 1} / 11) * (100% - 100%/12))">
-        </div>
-        <!-- 刻度组 -->
+        <div class="absolute left-[calc(100%/24)] right-[calc(100%/24)] top-[calc(1.25rem+0.375rem)] h-px bg-gray-200 z-0"></div>
+        <div class="absolute left-[calc(100%/24)] top-[calc(1.25rem+0.375rem)] h-px bg-xjtlu-blue/40 z-0 transition-all duration-500"
+             style="width: calc((${current - 1} / 11) * (100% - 100%/12))"></div>
         ${ticksHTML}
       </div>
     `;
