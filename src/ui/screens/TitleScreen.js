@@ -17,6 +17,7 @@ import * as StateManager from '../../state/StateManager.js';
 import { showConfirm }   from '../components/ConfirmModal.js';
 import { CONSTANTS }     from '../../utils/constants.js';
 import { log }           from '../../utils/helpers.js';
+import { t }             from '../../utils/i18n.js';
 
 export class TitleScreen {
   constructor() {
@@ -132,88 +133,45 @@ export class TitleScreen {
 
             <!-- 学院标签 -->
             <div class="flex items-center gap-2">
-              <span class="
-                tag-badge tag-badge--blue text-xs
-              ">
+              <span class="tag-badge tag-badge--blue text-xs">
                 <i data-lucide="cpu" class="lucide w-3 h-3"></i>
-                SAT · 先进计算学院
+                ${t('school_label')}
               </span>
             </div>
-
             <!-- 底部 flavor text -->
-            <p class="
-              text-center text-xs text-xjtlu-gray
-              max-w-[180px] leading-relaxed
-              italic
-            ">
-              "申研这件事，<br>越早准备越好。"
+            <p class="text-center text-xs text-xjtlu-gray max-w-[180px] leading-relaxed italic">
+              ${t('mascot_quote')}
             </p>
           </div>
 
           <!-- ── 右栏：标题 + 按钮组 ── -->
-          <div class="
-            flex flex-col items-start gap-6
-            animate-fade-in
-            w-full max-w-xs
-          ">
-
-            <!-- 标题文字组 -->
+          <div class="flex flex-col items-start gap-6 animate-fade-in w-full max-w-xs">
             <div class="flex flex-col gap-1">
-              <p class="
-                text-xs font-bold text-xjtlu-blue
-                tracking-[0.25em] uppercase
-              ">XJTLU Postgrad Simulator</p>
-              <h1 class="
-                text-4xl font-black
-                text-xjtlu-navy
-                leading-tight
-              ">
-                西浦<br>申研模拟器
+              <p class="text-xs font-bold text-xjtlu-blue tracking-[0.25em] uppercase">XJTLU Postgrad Simulator</p>
+              <h1 class="text-4xl font-black text-xjtlu-navy leading-tight">
+                ${t('title_main')}
               </h1>
               <p class="text-sm text-xjtlu-gray mt-1 leading-relaxed">
-                每一个抉择，都决定你的 Offer。
+                ${t('title_sub')}
               </p>
             </div>
 
-            <!-- 分割线 -->
             <div class="w-full h-px bg-gray-100"></div>
 
-            <!-- 按钮组 -->
             <div class="flex flex-col gap-3 w-full">
-
               ${hasSave ? this._buildContinueBlock(savePreview) : ''}
-
-              <!-- 新游戏按钮 -->
-              <button
-                id="btn-new-game"
-                class="xjtlu-btn w-full justify-center
-                       ${hasSave
-                         ? 'xjtlu-btn--secondary'
-                         : 'xjtlu-btn--primary text-base py-3'}"
-              >
-                <i data-lucide="${hasSave ? 'rotate-ccw' : 'play'}"
-                   class="lucide w-4 h-4"></i>
-                ${hasSave ? '重新开始' : '开始游戏'}
+              <button id="btn-new-game" class="xjtlu-btn w-full justify-center ${hasSave ? 'xjtlu-btn--secondary' : 'xjtlu-btn--primary text-base py-3'}">
+                <i data-lucide="${hasSave ? 'rotate-ccw' : 'play'}" class="lucide w-4 h-4"></i>
+                ${hasSave ? t('btn_restart') : t('btn_new_game')}
               </button>
-
-              <!-- 怎么玩（占位，后续接 Tutorial）-->
-              <button
-                id="btn-how-to-play"
-                class="xjtlu-btn xjtlu-btn--ghost w-full justify-center"
-              >
+              <button id="btn-how-to-play" class="xjtlu-btn xjtlu-btn--ghost w-full justify-center">
                 <i data-lucide="book-open" class="lucide w-4 h-4"></i>
-                怎么玩？
+                ${t('btn_how_to_play')}
               </button>
-
-              <!-- 结局图鉴按钮 -->
-              <button
-                id="btn-collection"
-                class="xjtlu-btn xjtlu-btn--secondary w-full justify-center"
-              >
+              <button id="btn-collection" class="xjtlu-btn xjtlu-btn--secondary w-full justify-center">
                 <i data-lucide="book-marked" class="lucide w-4 h-4"></i>
-                结局图鉴
+                ${t('btn_collection')}
               </button>
-
             </div>
 
             <!-- 版本号 -->

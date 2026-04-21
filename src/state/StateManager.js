@@ -26,9 +26,10 @@ let _state = null;
 
 // 【新增】：全局持久化状态（独立于单局游戏）
 let _globalState = {
-  playCount: 0,           // 历史开局次数
-  unlockedEndings: [],    // 已解锁的结局 ID 列表
-  unlockedAchievements: []// 预留成就系统
+  playCount: 0,            // 历史开局次数
+  unlockedEndings: [],     // 已解锁的结局 ID 列表
+  unlockedAchievements: [],// 预留成就系统
+  lang: 'zh'               // 【新增】语言偏好
 };
 
 /**
@@ -788,4 +789,19 @@ export function unlockBuilding(buildingId) {
  */
 export function getUnlockedEndings() {
   return [..._globalState.unlockedEndings];
+}
+
+// ─────────────────────────────────────────────────────────────
+// 多语言支持
+// ─────────────────────────────────────────────────────────────
+
+export function getLang() {
+  return _globalState.lang || 'zh';
+}
+
+export function toggleLanguage() {
+  _globalState.lang = _globalState.lang === 'zh' ? 'en' : 'zh';
+  _saveGlobalState();
+  log('info', 'StateManager', `🌐 语言切换为: ${_globalState.lang}`);
+  _notifyChange(); // 通知 UI 重新渲染
 }

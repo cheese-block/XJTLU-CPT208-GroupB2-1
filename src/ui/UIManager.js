@@ -3,7 +3,7 @@
  */
 
 import { CONSTANTS } from '../utils/constants.js';
-import { subscribe, getState } from '../state/StateManager.js';
+import { subscribe, getState, toggleLanguage, getLang } from '../state/StateManager.js';
 import { log } from '../utils/helpers.js';
 import { StatusBar } from './components/StatusBar.js';
 
@@ -21,43 +21,49 @@ let _currentScreen = null;
 /** 当前激活的 gamePhase */
 let _currentPhase = null;
 
+/** 记录当前的语言，用于比对是否需要重绘 */
+let _currentLang = 'zh';
+
 // ─────────────────────────────────────────────────────────────
 // 初始化
 // ─────────────────────────────────────────────────────────────
 
 export function initUIManager() {
-  // 注入状态栏容器到 #app 顶部
+  _currentLang = getLang();
   _mountStatusBarContainer();
+  _mountLangButton(); // 【新增】挂载语言按钮
 
-  // 实例化并挂载 StatusBar
   _statusBar = new StatusBar();
   const sbRoot = document.getElementById('status-bar-root');
-  if (sbRoot) {
-    _statusBar.mount(sbRoot);
-  }
+  if (sbRoot) _statusBar.mount(sbRoot);
 
-  // 订阅状态变化
   subscribe((state) => {
-    // 状态栏：始终更新（除 TITLE 和 SCHOOL_SELECT 界面外不显示）
-    _updateStatusBarVisibility(state);
-    _statusBar?.render(state);
+    // 【新增】语言切换检测与自动重绘
+    const newLang = getLang();
+    if (_currentLang !== newLang) {
+      _currentLang = newLang;
+      // 重新挂载当前 Screen 以应用新语言
+      if (_currentPhase) _switchToPhase(_currentPhase);
+      // 重新挂载状态栏
+      if (sbRoot) _statusBar.mount(sbRoot);
+    }
 
-    // 飘字：消费 pendingStatChanges
+    _updateStatusBarVisibility(state);
+    _updateLangButtonVisibility(state); // 【新增】控制语言按钮显示
+    _statusBar?.render(state);
     _flushFloatingTexts(state);
 
-    // Screen 切换
     if (state.gamePhase !== _currentPhase) {
       _currentPhase = state.gamePhase;
       _switchToPhase(state.gamePhase);
     }
 
-    // 分发给当前 Screen
     if (_currentScreen?.onStateChange) {
       _currentScreen.onStateChange(state);
     }
   });
 
-  log('info', 'UIManager', '✅ 初始化完成（含 StatusBar）');
+  log('info', 'UIManager', '✅ 初始化完成（含 StatusBar & i18n）');
 }
 
 /**
@@ -217,4 +223,49 @@ export function previewEffects(effects, hasExactBuff) {
 
 export function clearPreview() {
   _statusBar?.clearPreview();
+}
+
+/**
+ * 挂载全局语言切换按钮
+ */
+function _mountLangButton() {
+  const app = document.getElementById('app');
+  if (!app || document.getElementById('global-lang-btn')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'global-lang-btn';
+  btn.className = `
+    absolute top-5 right-6 z-[9999] 
+    bg-white/80 backdrop-blur-md border border-gray-200 
+    text-xjtlu-navy font-black text-sm px-3 py-1.5 
+    rounded-full shadow-sm hover:bg-white hover:shadow-md 
+    transition-all flex items-center gap-1.5 hidden
+  `;
+  
+  btn.addEventListener('click', () => toggleLanguage());
+  app.appendChild(btn);
+}
+
+/**
+ * 控制语言按钮的可见性与文本
+ */
+function _updateLangButtonVisibility(state) {
+  const btn = document.getElementById('global-lang-btn');
+  if (!btn) return;
+
+  // 仅在主菜单和地图界面显示
+  const show = state.gamePhase === CONSTANTS.GAME_PHASE.TITLE || 
+               state.gamePhase === CONSTANTS.GAME_PHASE.MAP;
+  
+  if (show) {
+    btn.classList.remove('hidden');
+    const isZh = getLang() === 'zh';
+    btn.innerHTML = `
+      <i data-lucide="languages" class="lucide w-4 h-4"></i>
+      ${isZh ? '中 / EN' : 'EN / 中'}
+    `;
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn });
+  } else {
+    btn.classList.add('hidden');
+  }
 }

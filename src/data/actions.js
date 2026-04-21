@@ -5,19 +5,19 @@
 export const ACTIONS = {
 
   'study_fb': {
-    id: 'study_fb', buildingId: 'fb', label: '上通识课', apCost: 1, icon: 'book',
+    id: 'study_fb', buildingId: 'fb', label: '上通识课', label_en: 'General Course', apCost: 1, icon: 'book',
     guaranteedEventId: 'default_fb',
     eventPool: [], // 演示期暂空
   },
 
   'work_eb': {
-    id: 'work_eb', buildingId: 'eb', label: '做实验项目', apCost: 1, icon: 'cpu',
+    id: 'work_eb', buildingId: 'eb', label: '做实验项目', label_en: 'Lab Project', apCost: 1, icon: 'cpu',
     guaranteedEventId: 'default_eb',
     eventPool: [],
   },
 
   'study_class': {
-    id: 'study_class', buildingId: 'sb', label: '上专业课', apCost: 1, icon: 'flask-conical',
+    id: 'study_class', buildingId: 'sb', label: '上专业课', label_en: 'Major Course', apCost: 1, icon: 'flask-conical',
     guaranteedEventId: 'default_sb', // 新增
     eventPool: [
       'loc_sb_001', 'loc_sb_002', 'loc_sb_003', 'loc_sb_004',
@@ -29,7 +29,7 @@ export const ACTIONS = {
   },
 
   'study_ielts': {
-    id: 'study_ielts', buildingId: 'cb', label: '备考雅思', apCost: 1, icon: 'languages',
+    id: 'study_ielts', buildingId: 'cb', label: '备考雅思', label_en: 'IELTS Prep', apCost: 1, icon: 'languages',
     guaranteedEventId: 'default_cb', // 新增
     eventPool: [
       'loc_cb_ielts_mock',
@@ -42,13 +42,13 @@ export const ACTIONS = {
   },
 
   'social_pb': {
-    id: 'social_pb', buildingId: 'pb', label: '在 PB 闲逛', apCost: 1, icon: 'users',
+    id: 'social_pb', buildingId: 'pb', label: '在 PB 闲逛', label_en: 'Hang out in PB', apCost: 1, icon: 'users',
     guaranteedEventId: 'default_pb', // 新增
     eventPool: [],
   },
 
   'research_ir': {
-    id: 'research_ir', buildingId: 'ir', label: '参与科研项目', apCost: 1, icon: 'microscope',
+    id: 'research_ir', buildingId: 'ir', label: '参与科研项目', label_en: 'Research Project', apCost: 1, icon: 'microscope',
     tagsProgress: 'Research_Exp',
     guaranteedEventId: 'default_ir', // 新增
     eventPool: [
@@ -60,13 +60,13 @@ export const ACTIONS = {
   },
 
   'exercise': {
-    id: 'exercise', buildingId: 'gym', label: '去健身房锻炼', apCost: 1, icon: 'dumbbell',
+    id: 'exercise', buildingId: 'gym', label: '去健身房锻炼', label_en: 'Workout in Gym', apCost: 1, icon: 'dumbbell',
     guaranteedEventId: 'default_gym', // 新增
     eventPool: [],
   },
 
   'rest': {
-    id: 'rest', buildingId: 'dorm', label: '回宿舍休息', apCost: 1, icon: 'moon',
+    id: 'rest', buildingId: 'dorm', label: '回宿舍休息', label_en: 'Rest in Dorm', apCost: 1, icon: 'moon',
     guaranteedEventId: 'default_dorm', // 新增
     eventPool: [
       'loc_dorm_001', 'loc_dorm_002', 'loc_dorm_003', 'loc_dorm_004',
@@ -77,7 +77,7 @@ export const ACTIONS = {
   },
 
   'visit_ia': {
-    id: 'visit_ia', buildingId: 'ia', label: '前往咨询', apCost: 1, icon: 'globe',
+    id: 'visit_ia', buildingId: 'ia', label: '前往咨询', label_en: 'Consulting', apCost: 1, icon: 'globe',
     guaranteedEventId: 'default_ia', // 新增
     eventPool: [
       'agency_part1'
