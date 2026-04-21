@@ -15,6 +15,14 @@ export const DICT = {
   'mascot_quote': { zh: '"申研这件事，<br>越早准备越好。"', en: '"The earlier you prepare,<br>the better."' },
   'school_label': { zh: 'SAT · 先进计算学院', en: 'SAT · School of Advanced Technology' },
 
+  // ── 怎么玩 (How to play) ──
+  'how_to_title': { zh: '怎么玩？', en: 'How to Play?' },
+  'how_to_desc': { 
+    zh: '1. 消耗【行动点】在校园建筑中进行活动。\n2. 注意平衡【心理】、【身体】和【资金】，归零或触顶都会导致游戏直接失败！\n3. 努力提升【学力】和【英语】，它们会在学期末转化为 GPA 和雅思成绩。\n4. 你的最终目标是在大四申请季（Month 12）前，积累足够的硬件与软背景，拿到梦校 Offer。', 
+    en: '1. Spend [AP] to perform actions in campus buildings.\n2. Balance your [Mental], [Physical], and [Money]. Hitting 0 or 100 will result in an instant Game Over!\n3. Improve [Academic] and [English] to boost your GPA and IELTS scores at the end of the term.\n4. Your ultimate goal is to build a strong profile before the Application Season (Month 12) to secure your dream Offer.' 
+  },
+  'how_to_confirm': { zh: '明白了', en: 'Got it' },
+
   // ── 学院选择 ──
   'school_select_step': { zh: 'Step 1 of 1', en: 'Step 1 of 1' },
   'school_select_title': { zh: '选择你的学院', en: 'Choose Your School' },
@@ -62,6 +70,18 @@ export const DICT = {
   'summary_gpa': { zh: 'GPA', en: 'GPA' },
   'summary_next': { zh: '即将进入', en: 'Entering' },
   'summary_btn_start': { zh: '开始', en: 'Start' },
+
+  // ── 结局图鉴 ──
+  'collection_title': { zh: '结局图鉴', en: 'Ending Collection' },
+  'collection_unlocked': { zh: '已解锁', en: 'Unlocked' },
+  'collection_back': { zh: '返回主菜单', en: 'Back to Title' },
+  'collection_locked_title': { zh: '尚未解锁', en: 'Locked' },
+  'collection_locked_desc': { zh: '尚未解锁', en: 'Not Unlocked Yet' },
+  'collection_teacher_review': { zh: '老师的复盘', en: 'Teacher\'s Review' },
+  'collection_theme_perfect': { zh: '完美结局', en: 'Perfect End' },
+  'collection_theme_normal': { zh: '普通结局', en: 'Normal End' },
+  'collection_theme_regret': { zh: '遗憾结局', en: 'Regret End' },
+  'collection_theme_bad': { zh: 'Bad End', en: 'Bad End' },
 };
 
 /**
