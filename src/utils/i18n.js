@@ -15,6 +15,18 @@ export const DICT = {
   'mascot_quote': { zh: '"申研这件事，<br>越早准备越好。"', en: '"The earlier you prepare,<br>the better."' },
   'school_label': { zh: 'SAT · 先进计算学院', en: 'SAT · School of Advanced Technology' },
 
+  // ── 通用 ──
+  'cancel': { zh: '取消', en: 'Cancel' },
+
+  // ── 主菜单补充 ──
+  'last_save': { zh: '上次存档：', en: 'Last save: ' },
+  'restart_title': { zh: '重新开始', en: 'Restart Game' },
+  'restart_desc': { 
+    zh: '当前存档将被永久清除，这个操作无法撤销。\n确定要重新开始吗？', 
+    en: 'Your current save will be permanently deleted. This cannot be undone.\nAre you sure?' 
+  },
+  'restart_btn': { zh: '确认重置', en: 'Confirm Reset' },
+
   // ── 怎么玩 (How to play) ──
   'how_to_title': { zh: '怎么玩？', en: 'How to Play?' },
   'how_to_desc': { 
