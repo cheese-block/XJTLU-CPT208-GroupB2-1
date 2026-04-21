@@ -55,60 +55,27 @@ export function showConfirm({
     primary: 'xjtlu-btn--primary',
   }[confirmVariant] ?? 'xjtlu-btn--danger';
 
-  // 构建弹窗 HTML
+  // 【修改】：动态判断是否渲染取消按钮
+  const cancelButtonHTML = cancelText ? `
+    <button id="modal-cancel-btn" class="xjtlu-btn xjtlu-btn--secondary text-sm px-4 py-2">
+      <i data-lucide="x" class="lucide w-4 h-4"></i>
+      ${cancelText}
+    </button>
+  ` : '';
+
   const html = `
-    <!-- 半透明遮罩 -->
-    <div
-      id="modal-backdrop"
-      class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-      aria-hidden="true"
-    ></div>
-
-    <!-- 弹窗卡片 -->
-    <div
-      id="modal-card"
-      role="alertdialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      aria-describedby="modal-message"
-      class="relative z-10 bg-white rounded-2xl shadow-2xl
-             border-2 border-xjtlu-navy
-             w-full max-w-sm mx-4
-             p-6 flex flex-col gap-4
-             animate-fade-in"
-    >
-      <!-- 标题行 -->
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true"></div>
+    <div id="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-message"
+         class="relative z-10 bg-white rounded-2xl shadow-2xl border-2 border-xjtlu-navy w-full max-w-sm mx-4 p-6 flex flex-col gap-4 animate-fade-in">
       <div class="flex items-center gap-2">
-        <i data-lucide="alert-triangle"
-           class="lucide w-5 h-5 text-xjtlu-red shrink-0"></i>
-        <h2
-          id="modal-title"
-          class="text-base font-black text-xjtlu-navy"
-        >${title}</h2>
+        <i data-lucide="alert-triangle" class="lucide w-5 h-5 text-xjtlu-red shrink-0"></i>
+        <h2 id="modal-title" class="text-base font-black text-xjtlu-navy">${title}</h2>
       </div>
-
-      <!-- 分割线 -->
       <div class="h-px bg-gray-100"></div>
-
-      <!-- 正文 -->
-      <p
-        id="modal-message"
-        class="text-sm text-gray-600 leading-relaxed"
-      >${message}</p>
-
-      <!-- 操作按钮组 -->
+      <p id="modal-message" class="text-sm text-gray-600 leading-relaxed">${message}</p>
       <div class="flex gap-3 justify-end pt-1">
-        <button
-          id="modal-cancel-btn"
-          class="xjtlu-btn xjtlu-btn--secondary text-sm px-4 py-2"
-        >
-          <i data-lucide="x" class="lucide w-4 h-4"></i>
-          ${cancelText}
-        </button>
-        <button
-          id="modal-confirm-btn"
-          class="xjtlu-btn ${variantClass} text-sm px-4 py-2"
-        >
+        ${cancelButtonHTML}
+        <button id="modal-confirm-btn" class="xjtlu-btn ${variantClass} text-sm px-4 py-2 ${!cancelText ? 'w-full justify-center' : ''}">
           <i data-lucide="check" class="lucide w-4 h-4"></i>
           ${confirmText}
         </button>
@@ -129,23 +96,23 @@ export function showConfirm({
 
   const handleCancel = () => {
     hideConfirm();
-    onCancel?.();
+    if (onCancel) onCancel();
+    // 如果没有 onCancel 且是单按钮模式，点击遮罩或 ESC 等同于点击确认
+    else if (!cancelText && onConfirm) onConfirm();
   };
 
-  document.getElementById('modal-cancel-btn')?.addEventListener('click', handleCancel);
-
-  // 点击遮罩关闭（等同于取消）
+  if (cancelText) {
+    document.getElementById('modal-cancel-btn')?.addEventListener('click', handleCancel);
+  }
+  
   document.getElementById('modal-backdrop')?.addEventListener('click', handleCancel);
 
-  // ESC 键关闭
-  _escHandler = (e) => {
-    if (e.key === 'Escape') handleCancel();
-  };
+  _escHandler = (e) => { if (e.key === 'Escape') handleCancel(); };
   document.addEventListener('keydown', _escHandler);
 
-  // 焦点管理：自动聚焦取消按钮（破坏性操作默认聚焦安全选项）
   setTimeout(() => {
-    document.getElementById('modal-cancel-btn')?.focus();
+    const focusBtn = document.getElementById(cancelText ? 'modal-cancel-btn' : 'modal-confirm-btn');
+    focusBtn?.focus();
   }, 50);
 }
 

@@ -29,9 +29,10 @@ export const DICT = {
 
   // ── 怎么玩 (How to play) ──
   'how_to_title': { zh: '怎么玩？', en: 'How to Play?' },
+  // 【修改】：适配 4 个月展会版文本
   'how_to_desc': { 
-    zh: '1. 消耗【行动点】在校园建筑中进行活动。\n2. 注意平衡【心理】、【身体】和【资金】，归零或触顶都会导致游戏直接失败！\n3. 努力提升【学力】和【英语】，它们会在学期末转化为 GPA 和雅思成绩。\n4. 你的最终目标是在大四申请季（Month 12）前，积累足够的硬件与软背景，拿到梦校 Offer。', 
-    en: '1. Spend [AP] to perform actions in campus buildings.\n2. Balance your [Mental], [Physical], and [Money]. Hitting 0 or 100 will result in an instant Game Over!\n3. Improve [Academic] and [English] to boost your GPA and IELTS scores at the end of the term.\n4. Your ultimate goal is to build a strong profile before the Application Season (Month 12) to secure your dream Offer.' 
+    zh: '1. 消耗【行动点】在校园建筑中进行活动。\n2. 注意平衡【心理】、【身体】和【资金】，归零或触顶都会导致游戏直接失败！\n3. 努力提升【学力】和【英语】，它们会在最终期末转化为 GPA 和雅思成绩。\n4. 本次 Demo 浓缩为 4 个关键阶段。请合理规划，在申请季结束前积累足够的筹码，拿到梦校 Offer。', 
+    en: '1. Spend [AP] to perform actions in campus buildings.\n2. Balance your [Mental], [Physical], and [Money]. Hitting 0 or 100 will result in an instant Game Over!\n3. Improve [Academic] and [English] to boost your GPA and IELTS scores.\n4. This Demo is compressed into 4 key stages. Plan wisely to build a strong profile before the Application Season ends.' 
   },
   'how_to_confirm': { zh: '明白了', en: 'Got it' },
 

@@ -9,9 +9,16 @@ export class TagShowcaseScreen {
 
   mount(container, state) {
     this._container = container;
-    container.innerHTML = this._buildHTML(state);
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-    this._bindEvents();
+    // 【修复】：加入 try-catch 防止未知 Tag 导致渲染崩溃白屏
+    try {
+      container.innerHTML = this._buildHTML(state);
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      this._bindEvents();
+    } catch (error) {
+      console.error('[TagShowcaseScreen] 渲染失败:', error);
+      // 如果崩溃，强制跳转到最终结局，避免卡死在白屏
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+    }
   }
 
   unmount() {

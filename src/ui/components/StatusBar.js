@@ -144,36 +144,36 @@ export class StatusBar {
   // 核心逻辑：进度条更新与闪烁
   // ───────────────────────────────────────────────────────────
 
-  // 【修改】：增加 max 参数，默认为 100
+  // 【修改】：强化 max 的默认值和计算逻辑，确保不会出现 NaN 或越界
   _updateGenericBar(id, value, baseColorClass, max = 100) {
     const fill = this._container?.querySelector(`#sb-${id}-fill`);
     if (!fill) return;
 
-    // 【修改】：基于传入的 max 计算百分比
-    const pct = Math.max(0, Math.min(100, (value / max) * 100));
+    // 强制转换为数字，防止因意外的数据类型导致比例计算错误
+    const safeValue = Number(value) || 0;
+    const safeMax = Number(max) || 100;
+    
+    // 计算百分比并严格限制在 0-100 之间
+    const pct = Math.max(0, Math.min(100, (safeValue / safeMax) * 100));
     fill.style.width = `${pct}%`;
 
     const prev = this._prevValues[id];
     
-    // 如果数值发生了变化，触发瞬时颜色闪烁
-    if (prev !== undefined && prev !== value) {
-      const isIncrease = value > prev;
+    if (prev !== undefined && prev !== safeValue) {
+      const isIncrease = safeValue > prev;
       const flashColor = isIncrease ? 'bg-xjtlu-green' : 'bg-xjtlu-red';
 
-      // 移除基础色，加入闪烁色
       fill.classList.remove(baseColorClass);
       fill.classList.add(flashColor);
 
-      // 400ms 后恢复基础色
       setTimeout(() => {
         fill.classList.remove(flashColor);
         fill.classList.add(baseColorClass);
       }, 400);
     }
 
-    this._prevValues[id] = value;
+    this._prevValues[id] = safeValue;
   }
-
   _updateAP(state) {
     const pips = this._container?.querySelector('#sb-ap-pips');
     if (!pips) return;
