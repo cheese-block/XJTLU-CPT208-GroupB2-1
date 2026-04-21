@@ -234,9 +234,9 @@ function _mountLangButton() {
 
   const btn = document.createElement('button');
   btn.id = 'global-lang-btn';
-  // 【修复 1】：将 z-[9999] 改为 z-[9900]，使其位于弹窗层 (9990) 之下
+  // 【修改】：初始位置移到右上角 (top-6 right-6)
   btn.className = `
-    absolute bottom-6 left-6 z-[9900] 
+    absolute top-6 right-6 z-[9900] 
     w-10 h-10 rounded-full 
     bg-white/90 backdrop-blur-md border border-gray-200 
     shadow-md hover:bg-white hover:shadow-lg hover:scale-105 
@@ -254,7 +254,6 @@ function _updateLangButtonVisibility(state) {
   const btn = document.getElementById('global-lang-btn');
   if (!btn) return;
 
-  // 【修复 2】：移除了 CONSTANTS.GAME_PHASE.COLLECTION
   const show = [
     CONSTANTS.GAME_PHASE.TITLE,
     CONSTANTS.GAME_PHASE.MAP,
@@ -265,6 +264,15 @@ function _updateLangButtonVisibility(state) {
   if (show) {
     btn.classList.remove('hidden');
     const isZh = getLang() === 'zh';
+    
+    // 【新增】：动态避让顶部的状态栏
+    if (state.gamePhase === CONSTANTS.GAME_PHASE.MAP) {
+      btn.classList.remove('top-6');
+      btn.classList.add('top-20'); // 状态栏高度加上留白
+    } else {
+      btn.classList.remove('top-20');
+      btn.classList.add('top-6');
+    }
     
     // 斜线分割布局
     btn.innerHTML = `
