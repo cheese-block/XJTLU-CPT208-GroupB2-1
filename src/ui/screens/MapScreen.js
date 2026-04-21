@@ -339,9 +339,10 @@ export class MapScreen {
     const playCount = StateManager.getPlayCount();
     let tutorialEventId = null;
 
-    if (playCount <= 1) {
+    // 【修复】：playCount 为 0 时是第一周目，为 1 时是第二周目
+    if (playCount === 0) {
       tutorialEventId = 'tutorial_intro_1'; // 一周目详细引导
-    } else if (playCount === 2) {
+    } else if (playCount === 1) {
       tutorialEventId = 'tutorial_intro_2'; // 二周目简短警告
     } else {
       // 三周目及以上，直接跳过引导，写入标记
@@ -350,7 +351,7 @@ export class MapScreen {
       return;
     }
 
-    log('info', 'MapScreen', `🎓 触发轮回引导（第 ${playCount} 周目）`);
+    log('info', 'MapScreen', `🎓 触发轮回引导（第 ${playCount + 1} 周目）`);
 
     // 将引导事件注入队列头部
     StateManager.enqueueEventFront({
