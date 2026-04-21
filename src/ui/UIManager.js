@@ -75,7 +75,7 @@ function _mountStatusBarContainer() {
 
   const root = document.createElement('div');
   root.id        = 'status-bar-root';
-  // 【修改】：将 z-50 改为 z-[300]，确保在事件卡片之上
+  // 确保在事件卡片之上
   root.className = 'absolute top-0 left-0 right-0 z-[300]';
 
   app.insertBefore(root, app.firstChild);
@@ -90,10 +90,13 @@ function _updateStatusBarVisibility(state) {
   const root = document.getElementById('status-bar-root');
   if (!root) return;
 
+  // 【修改】：将 TAG_SHOWCASE 和 ENDING 加入隐藏列表，保持沉浸感
   const hideOnPhases = [
     CONSTANTS.GAME_PHASE.TITLE,
     CONSTANTS.GAME_PHASE.SCHOOL_SELECT,
     CONSTANTS.GAME_PHASE.COLLECTION,
+    CONSTANTS.GAME_PHASE.TAG_SHOWCASE,
+    CONSTANTS.GAME_PHASE.ENDING,
   ];
 
   const shouldHide = hideOnPhases.includes(state.gamePhase);
