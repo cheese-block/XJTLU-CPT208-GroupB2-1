@@ -82,6 +82,10 @@ export class EventCardScreen {
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: this._container });
   }
 
+  // ───────────────────────────────────────────────────────────
+  // 渲染选项（修复：支持数值/标签判定变体文本）
+  // ───────────────────────────────────────────────────────────
+
   _renderChoices(container, choices) {
     const state = StateManager.getState();
     const playerTags = state.tags || [];
@@ -105,7 +109,7 @@ export class EventCardScreen {
       `;
     }).join('');
 
-    // 绑定事件
+    // 绑定点击事件
     const btns = container.querySelectorAll('.ec-btn:not([disabled])');
     btns.forEach(btn => {
       const choice = choices[btn.dataset.index];
@@ -115,14 +119,65 @@ export class EventCardScreen {
       
       btn.addEventListener('click', () => {
         clearPreview();
-        if (choice.effects) StateManager.applyStatDelta(choice.effects, this._buildEffectLabels(choice.effects));
-        if (choice.tags_added) choice.tags_added.forEach(tag => StateManager.addTag(tag));
-        if (choice.next_event_id) StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
+
+        // --- 新增：变体判定逻辑 ---
+        const currentState = StateManager.getState();
+        const currentTags = currentState.tags || [];
+        let activeVariant = null;
+
+        if (choice.flavor_text_variants) {
+          for (const variant of choice.flavor_text_variants) {
+            // 标签检查
+            const tagPass = !variant.required_tag || currentTags.includes(variant.required_tag);
+            // 数值检查
+            let statPass = true;
+            if (variant.required_stat) {
+              const { stat, min, max } = variant.required_stat;
+              const val = currentState[stat] ?? 0;
+              if (min !== undefined && val < min) statPass = false;
+              if (max !== undefined && val > max) statPass = false;
+            }
+
+            if (tagPass && statPass) {
+              activeVariant = variant;
+              break; // 匹配到第一个满足条件的
+            }
+          }
+        }
+
+        // 合并效果与标签
+        const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
+        const finalTags    = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
+
+        // 修改状态
+        if (Object.keys(finalEffects).length > 0) {
+          StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
+        }
+        finalTags.forEach(tag => StateManager.addTag(tag));
+        if (choice.next_event_id) {
+          StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
+        }
         StateManager.saveGame();
+
+        // 拼接最终显示的 Flavor Text
+        let finalFlavorText = choice.flavor_text || '';
+        if (activeVariant?.text) {
+          const separator = finalFlavorText ? '\n\n' : '';
+          // 颜色标记（根据变体类型）
+          let colorClass = 'text-xjtlu-blue';
+          if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
+          if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
+          
+          finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
+        }
+        // --- 变体判定结束 ---
         
-        // 如果选项有额外文本，作为下一幕显示；否则直接推进
-        if (choice.flavor_text) {
-          this._event.scenes.splice(this._sceneIndex + 1, 0, { text: choice.flavor_text, tip: choice.tip });
+        if (finalFlavorText) {
+          // 将结果作为下一幕插入并播放
+          this._event.scenes.splice(this._sceneIndex + 1, 0, { 
+            text: finalFlavorText, 
+            tip: choice.tip 
+          });
         }
         this._playScene(this._sceneIndex + 1);
       });
