@@ -320,14 +320,14 @@ export const EVENTS = {
         choices: [
           {
             text:       '机构甲："早鸟优惠"全款——今天签约享 15% 折扣，需一次性付清。零录取则扣除行政建档费和翻译费后退还剩余。',
-            effects:    { Agency_Score: -20, Money: -45 },
+            effects:    { Agency_Score: -20, Money: -15 },
             next_event_id: 'agency_settlement',
             flavor_text: '15% 的折扣让你非常心动。你拿起了签字笔……',
             tip:        '强烈建议阶段性付款。退款条款必须明确"全拒得"的具体退款比例，警惕"酌情扣除部分费用"这种模糊字眼。',
           },
           {
             text:       '机构乙："阶段付款"无折扣——费用分三期，首个 Offer 后付尾款。全拒得服务费 100% 全退，但申请费需额外自理。',
-            effects:    { Agency_Score: +15, Money: -15 },
+            effects:    { Agency_Score: +15, Money: -20 },
             next_event_id: 'agency_settlement',
             flavor_text: '没有折扣让你有些肉痛，而且还需要额外自理申请费。但分期付款确实减轻了当下的资金压力。你拿起了签字笔……',
             tip:        '阶段性付款能最大程度约束中介的后期服务质量。提前确认附加费用，避免后期隐形消费扯皮。',
@@ -408,7 +408,7 @@ export const EVENTS = {
         choices: [
           {
             text:       '全力冲刺雅思，报名封闭强化班',
-            effects:    { English_Ability: +5, Mental_Health: -20, Money: -25 },
+            effects:    { English_Ability: +5, Mental_Health: -20, Money: -20 },
             tags_added: [],
             flavor_text: '你交了学费，每天八小时高强度刷题。暑假结束时，你的耳朵对英音产生了条件反射，但连续的熬夜让你的黑眼圈深了不少。',
             tip:        '语言成绩是很多人的阿喀琉斯之踵。集中精力解决它是非常务实的选择。',
@@ -422,7 +422,7 @@ export const EVENTS = {
           },
           {
             text:       '好好休息，为大四养精蓄锐',
-            effects:    { Mental_Health: +30, Physical_Health: +25 },
+            effects:    { Mental_Health: +20, Physical_Health: +20 },
             tags_added: [],
             flavor_text: '你拒绝了所有的内卷邀约，睡到自然醒，追完了几部剧。开学时你神清气爽——但隐约觉得，同学们的简历似乎比你厚了一大截。',
             tip:        '休息固然重要，但在竞争白热化的申请季前夕选择彻底躺平，可能需要你在大四付出成倍的代价来偿还。',
@@ -446,7 +446,7 @@ export const EVENTS = {
         choices: [
           {
             text:    '立刻报名，背水一战',
-            effects: { Money: -20 },
+            effects: { Money: 15 },
             flavor_text: '你咬咬牙交了报名费。没有退路了。',
             next_event_id: 'ielts_exam_result',
           },
@@ -562,11 +562,11 @@ export const EVENTS = {
       choices: [
         {
           text: '靠意志力硬抗青轴的物理超度',
-          effects: { Mental_Health: -25, Academic_Ability: +4 }
+          effects: { Mental_Health: -20, Academic_Ability: +4 }
         },
         {
           text: '去星巴克点杯美式接着学',
-          effects: { Money: -30, Mental_Health: +15, Academic_Ability: +7 }
+          effects: { Money: -10, Mental_Health: +15, Academic_Ability: +6 }
         }
       ]
     }]
@@ -640,7 +640,7 @@ export const EVENTS = {
         },
         {
           text: '不信邪，再买一瓶，试图用第二瓶把第一瓶砸下来',
-          effects: { Money: -15, Mental_Health: -20 },
+          effects: { Money: -15, Mental_Health: 15 },
           flavor_text: '现在有两瓶可乐卡在半空中。'
         }
       ]
@@ -853,7 +853,7 @@ export const EVENTS = {
         },
         {
           text: '换个地方，买副耳机',
-          effects: { Money: -20, English_Ability: +5, Mental_Health: +5 },
+          effects: { Money: 15, English_Ability: +5, Mental_Health: +5 },
           flavor_text: '你果断换了位置，买了副降噪耳机。从此世界清净了，英语水平也稳步提升。',
         },
       ],
@@ -911,7 +911,7 @@ export const EVENTS = {
         choices: [
           {
             text:    '管不了那么多了，先锁考位！',
-            effects: { Mental_Health: -5, Money: -20 },
+            effects: { Mental_Health: -5, Money: 15 },
             flavor_text: '你颤抖着扫码付了款。看着日历上标红的考试日期，你的心跳开始加速，接下来的几周注定是地狱模式。',
             next_event_id: 'ielts_exam_result',
           },
