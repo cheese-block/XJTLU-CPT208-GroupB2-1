@@ -200,7 +200,8 @@ export class SchoolSelectScreen {
           <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isAvailable ? 'bg-xjtlu-blue/10 school-card__icon-wrap' : 'bg-gray-200'}">
             <i data-lucide="${school.icon}" class="lucide w-5 h-5 ${isAvailable ? 'text-xjtlu-blue school-card__icon' : 'text-gray-400'}"></i>
           </div>
-          <div class="min-w-0 pr-10">
+          <!-- 【修复】：增加 pr-16 防止长文本遮挡右上角徽章 -->
+          <div class="min-w-0 pr-16">
             <p class="font-black text-sm leading-tight school-card__name">${sName}</p>
             <p class="text-[0.65rem] mt-0.5 school-card__abbr ${isAvailable ? 'text-xjtlu-gray' : 'text-gray-400'}">
               ${school.abbr}
