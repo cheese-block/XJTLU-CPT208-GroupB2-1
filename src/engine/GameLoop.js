@@ -80,16 +80,20 @@ export function executeAction(actionId, action, onEvent) {
     StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
   }
 
-  // 死亡检查：如果满足死亡条件，会注入 death_xxx 事件并清空队列
-  const isDead = checkBadEndings(); 
+  // 初始检查（防止带伤上阵）
+  checkBadEndings(); 
 
   StateManager.saveGame();
   StateManager.setProcessing(true);
 
   processEventQueue(() => {
     StateManager.setProcessing(false);
+    
+    // 动态检查：队列处理完后，看一眼玩家现在是不是死了
+    const currentState = StateManager.getState();
+    const isDead = currentState.tags.some(t => t.startsWith('__BAD_END_'));
+
     if (isDead) {
-      // 【修改】：死亡后跳过标签展示，直接展示最终结局
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
     } else {
       StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
@@ -228,6 +232,9 @@ function _resolveEndOfMonth(onMonthEnd) {
  */
 export function checkBadEndings() {
   const state = StateManager.getState();
+  
+  // 已经死过了就不要重复触发死亡流程
+  if (state.tags.some(t => t.startsWith('__BAD_END_'))) return true;
 
   const checks = [
     { cond: state.Mental_Health <= 0,   tag: '__BAD_END_MENTAL_0__',   evt: 'death_mental_0' },
@@ -240,23 +247,25 @@ export function checkBadEndings() {
 
   for (const check of checks) {
     if (check.cond) {
-      log('warn', 'GameLoop', `💀 触发死亡流程：${check.tag}`);
-      // 1. 立即打上结局标签
       StateManager.addTag(check.tag);
-      // 2. 清空当前所有队列，确保死亡事件是唯一且最后的
+      
+      // 1. 核心：清空队列，确保死亡是绝对的终点
       _clearEventQueue(); 
-      // 3. 注入死亡叙事事件
-      StateManager.enqueueEventFront({ eventId: check.evt, source: 'chain' });
-      return true; 
+      
+      // 2. 注入死亡叙事，用 enqueueEventBack 确保它排在当前正在显示的 flavor_text 之后
+      StateManager.enqueueEventBack({ eventId: check.evt, source: 'chain' });
+      
+      log('warn', 'GameLoop', `死亡拦截成功：${check.tag}`);
+      return true;
     }
   }
   return false;
 }
 
-// 辅助函数：清空队列
+// 内部辅助，如果不想单独定义可以写在 checkBadEndings 里面
 function _clearEventQueue() {
-  const state = StateManager.getState();
-  while (state.pendingEventQueue.length > 0) {
+  const s = StateManager.getState();
+  while (s.pendingEventQueue.length > 0) {
     StateManager.dequeueEvent();
   }
 }

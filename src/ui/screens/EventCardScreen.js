@@ -120,7 +120,7 @@ export class EventCardScreen {
       btn.addEventListener('click', () => {
         clearPreview();
 
-        // --- 新增：变体判定逻辑 ---
+        // 1. 判定变体逻辑（同 VNScreen，确保得分判定生效）
         const currentState = StateManager.getState();
         const currentTags = currentState.tags || [];
         let activeVariant = null;
@@ -137,11 +137,7 @@ export class EventCardScreen {
               if (min !== undefined && val < min) statPass = false;
               if (max !== undefined && val > max) statPass = false;
             }
-
-            if (tagPass && statPass) {
-              activeVariant = variant;
-              break; // 匹配到第一个满足条件的
-            }
+            if (tagPass && statPass) { activeVariant = variant; break; }
           }
         }
 
@@ -149,35 +145,31 @@ export class EventCardScreen {
         const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
         const finalTags    = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
 
-        // 修改状态
+        // 2. 应用数值变化
         if (Object.keys(finalEffects).length > 0) {
           StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
+          // --- 关键：立即检查死亡逻辑 ---
+          import('../../engine/GameLoop.js').then(m => m.checkBadEndings());
         }
+
         finalTags.forEach(tag => StateManager.addTag(tag));
         if (choice.next_event_id) {
           StateManager.enqueueEventFront({ eventId: choice.next_event_id, source: 'chain' });
         }
         StateManager.saveGame();
-
-        // 拼接最终显示的 Flavor Text
+        
+        // 3. 处理 Flavor Text
         let finalFlavorText = choice.flavor_text || '';
         if (activeVariant?.text) {
-          const separator = finalFlavorText ? '\n\n' : '';
-          // 颜色标记（根据变体类型）
+          const separator = finalFlavorText ? '<br><br>' : '';
           let colorClass = 'text-xjtlu-blue';
           if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
           if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
-          
           finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
         }
-        // --- 变体判定结束 ---
-        
+
         if (finalFlavorText) {
-          // 将结果作为下一幕插入并播放
-          this._event.scenes.splice(this._sceneIndex + 1, 0, { 
-            text: finalFlavorText, 
-            tip: choice.tip 
-          });
+          this._event.scenes.splice(this._sceneIndex + 1, 0, { text: finalFlavorText, tip: choice.tip });
         }
         this._playScene(this._sceneIndex + 1);
       });

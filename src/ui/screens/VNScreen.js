@@ -258,6 +258,8 @@ _playScene(index) {
 
     if (Object.keys(finalEffects).length > 0) {
       StateManager.applyStatDelta(finalEffects, this._buildEffectLabels(finalEffects));
+      // --- 新增：数值变动后立即检查死亡 ---
+      import('../../engine/GameLoop.js').then(m => m.checkBadEndings());
     }
     finalTags.forEach(tag => StateManager.addTag(tag));
     
