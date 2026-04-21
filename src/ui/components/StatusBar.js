@@ -30,7 +30,7 @@ export class StatusBar {
 
     this._updateAP(state);
     
-    // 【修改】：传入各属性的 MAX 值，用于计算进度条百分比
+    // 使用 CONSTANTS 中定义的 MAX 值
     this._updateGenericBar('mental',   state.Mental_Health,   'bg-xjtlu-navy', CONSTANTS.MENTAL_HEALTH_MAX);
     this._updateGenericBar('physical', state.Physical_Health, 'bg-xjtlu-navy', CONSTANTS.PHYSICAL_HEALTH_MAX);
     this._updateGenericBar('money',    state.Money,           'bg-xjtlu-navy', CONSTANTS.MONEY_MAX);

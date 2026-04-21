@@ -38,14 +38,14 @@ export const CONSTANTS = Object.freeze({
   MONEY_MIN:                 0,
 
   // ─────────────────────────────────────────────────────────
-  // 【目标属性 B类：英语、学力】(积累型，越高越好)
+  // 【目标属性 B类：英语、学力】(积累型，越高越好)(展会版上限下调至 50)
   // ─────────────────────────────────────────────────────────
-  ENGLISH_ABILITY_INIT:  40,
-  ENGLISH_ABILITY_MAX:  100,
+  ENGLISH_ABILITY_INIT:  15,
+  ENGLISH_ABILITY_MAX:   50,
   ENGLISH_ABILITY_MIN:    0,
 
   ACADEMIC_ABILITY_INIT: 0,
-  ACADEMIC_ABILITY_MAX:  100,
+  ACADEMIC_ABILITY_MAX:  50,
   ACADEMIC_ABILITY_MIN:  0,
 
   // ─────────────────────────────────────────────────────────
@@ -54,26 +54,26 @@ export const CONSTANTS = Object.freeze({
   RANDOM_EVENT_BASE_PROB: 0.20,  // 每次消耗 AP 后触发随机事件的基础概率（20%）
 
   // ─────────────────────────────────────────────────────────
-  // 【雅思出分阈值】
+  // 【雅思出分阈值】(按 50 分上限等比例缩放)
   //   按 minAbility 从高到低排列，取第一个满足条件的
   // ─────────────────────────────────────────────────────────
   IELTS_THRESHOLDS: [
-    { minAbility: 85, tag: 'IELTS_7.5', band: '7.5' },
-    { minAbility: 70, tag: 'IELTS_7.0', band: '7.0' },
-    { minAbility: 55, tag: 'IELTS_6.5', band: '6.5' },
-    { minAbility: 40, tag: 'IELTS_6.0', band: '6.0' },
-    { minAbility:  0, tag: 'IELTS_5.5', band: '5.5' }, // 兜底
+    { minAbility: 42, tag: 'IELTS_7.5', band: '7.5' }, // 原 85
+    { minAbility: 35, tag: 'IELTS_7.0', band: '7.0' }, // 原 70
+    { minAbility: 27, tag: 'IELTS_6.5', band: '6.5' }, // 原 55
+    { minAbility: 20, tag: 'IELTS_6.0', band: '6.0' }, // 原 40
+    { minAbility:  0, tag: 'IELTS_5.5', band: '5.5' },
   ],
 
   // ─────────────────────────────────────────────────────────
-  // 【GPA 转换阈值】
+  // 【GPA 转换阈值】(按 50 分上限等比例缩放)
   //   Academic_Ability → GPA 数值 + 标签
   // ─────────────────────────────────────────────────────────
   GPA_THRESHOLDS: [
-    { minAbility: 80, gpa: 3.8, tag: 'GPA_Top'  },
-    { minAbility: 60, gpa: 3.3, tag: 'GPA_High' },
-    { minAbility: 40, gpa: 2.8, tag: 'GPA_Mid'  },
-    { minAbility:  0, gpa: 2.2, tag: 'GPA_Low'  }, // 兜底
+    { minAbility: 40, gpa: 3.8, tag: 'GPA_Top'  }, // 原 80
+    { minAbility: 30, gpa: 3.3, tag: 'GPA_High' }, // 原 60
+    { minAbility: 20, gpa: 2.8, tag: 'GPA_Mid'  }, // 原 40
+    { minAbility:  0, gpa: 2.2, tag: 'GPA_Low'  },
   ],
 
   // ─────────────────────────────────────────────────────────

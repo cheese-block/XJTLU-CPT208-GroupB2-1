@@ -30,6 +30,7 @@ export class TagShowcaseScreen {
   _buildHTML(state) {
     const tags = state.tags || [];
     const softScore = calculateSoftScore(tags);
+    const isEn = StateManager.getLang() === 'en'; // 【新增定义】
     
     // 过滤掉所有不应展示给玩家的内部临时标签
     const HIDDEN_TAG_PREFIXES = ['__', 'Agency_'];

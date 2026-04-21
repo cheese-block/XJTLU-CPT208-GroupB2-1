@@ -171,17 +171,18 @@ export function resolveMonthEnd(onMonthEnd) {
   });
 }
 
+// 修改 _resolveEndOfMonth 方法中的逻辑
 function _resolveEndOfMonth(onMonthEnd) {
   const state = StateManager.getState();
 
   let examResult = null;
-  if (CONSTANTS.SEMESTER_END_MONTHS.includes(state.currentMonth)) {
+  // 检查是否是期末月（Demo 第4个月强制结算 GPA）
+  if (CONSTANTS.SEMESTER_END_MONTHS.includes(state.currentMonth) || state.currentMonth === CONSTANTS.MAX_MONTHS) {
     examResult = resolveFinalExam(state);
     log('info', 'GameLoop', `📝 期末结算：GPA ${examResult.gpa}`);
   }
 
   _tickBuffDurations();
-
   const isDead = checkBadEndings();
 
   if (isDead) {
@@ -193,11 +194,6 @@ function _resolveEndOfMonth(onMonthEnd) {
   }
 
   const { newMonth, isGameEnd } = StateManager.advanceMonth();
-  
-  if (newMonth === 2) {
-    StateManager.unlockBuilding('ia');
-  }
-
   StateManager.saveGame();
   StateManager.setProcessing(false);
 
@@ -206,14 +202,18 @@ function _resolveEndOfMonth(onMonthEnd) {
     showConfirm({
       title: isEn ? 'Demo Completed' : 'Demo 体验结束',
       message: isEn 
-        ? 'Thank you for playing the exhibition demo.\n\nYour profile is now locked. Let\'s see your final admission results.' 
-        : 'Demo 版体验到此结束。\n\n你的申请履历已经锁定，接下来将为你揭晓最终的录取结果。',
-      confirmText: isEn ? 'View Results' : '查看录取结果',
-      cancelText: '', // 【修改】：设为空，隐藏取消按钮
+        ? 'Your profile is now locked. Let\'s review your journey.' 
+        : 'Demo 版体验到此结束。\n\n你的申请履历已经锁定，在查看录取结果前，先复盘一下你的表现。',
+      confirmText: isEn ? 'Review Profile' : '开始复盘',
+      cancelText: '', 
       confirmVariant: 'primary',
-      onConfirm: () => triggerEnding()
+      onConfirm: () => {
+        // 【修复点】：跳转至标签展示页（复盘界面）
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TAG_SHOWCASE);
+      }
     });
   } else {
+    // 正常月份推进，回调 MapScreen 展示 MonthSummaryScreen
     onMonthEnd?.({ newMonth, examResult });
   }
 }

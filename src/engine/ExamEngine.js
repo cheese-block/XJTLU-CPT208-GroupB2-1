@@ -70,14 +70,15 @@ export function calculateGPA(ability) {
   return { gpa: 2.2, tag: 'GPA_Low' };
 }
 
+// 修改 _buildExamSummary 方法
 function _buildExamSummary(gpa, tag, ability) {
-  // 【修复】：加入 GPA_Top 的判定
+  // 展会版不再提及具体分数，只提及表现等级
   if (tag === 'GPA_Top' || tag === 'GPA_High') {
-    return `本学期学力积累 ${ability} 分，期末 GPA ${gpa}，表现优秀。成绩单上又多了一行亮眼的数字。`;
+    return `本学期你的专业课表现极其出色，期末 GPA 达到了 ${gpa}。这对申请名校是极大的助力。`;
   } else if (tag === 'GPA_Mid') {
-    return `本学期学力积累 ${ability} 分，期末 GPA ${gpa}，表现中规中矩。申研时这个成绩可能需要用其他材料来补强。`;
+    return `本学期你的专业课表现平稳，期末 GPA 为 ${gpa}。这是一个稳健的成绩，但可能需要更强的软背景来支撑。`;
   } else {
-    return `本学期学力积累 ${ability} 分，期末 GPA ${gpa}，表现不尽如人意。这对申研竞争力是个不小的打击。`;
+    return `本学期你的专业课表现不尽如人意，期末 GPA 仅为 ${gpa}。这可能会限制你申请院校的选择范围。`;
   }
 }
 
