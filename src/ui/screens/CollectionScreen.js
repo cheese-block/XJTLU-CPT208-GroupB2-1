@@ -83,7 +83,7 @@ export class CollectionScreen {
     `;
   }
 
-  _buildCard(ending, isUnlocked) {
+_buildCard(ending, isUnlocked) {
     const THEME = {
       success: { border: 'border-green-300', bg: 'bg-green-50', icon: 'award', iconCls: 'text-green-600', badge: 'bg-green-100 text-green-700', label: t('collection_theme_perfect') },
       primary: { border: 'border-blue-300', bg: 'bg-blue-50', icon: 'mail-check', iconCls: 'text-blue-600', badge: 'bg-blue-100 text-blue-700', label: t('collection_theme_normal') },
@@ -101,7 +101,8 @@ export class CollectionScreen {
               <i data-lucide="lock" class="lucide w-5 h-5 text-gray-300"></i>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center gap-1">
-              <h3 class="text-sm font-black text-gray-400 leading-tight">${t('collection_locked_title')}</h3>
+              <!-- 【修复】：恢复原结局名称，不再使用统一的 locked_title -->
+              <h3 class="text-sm font-black text-gray-400 leading-tight">${ending.title}</h3>
               <span class="text-[0.6rem] text-gray-300">${t('collection_locked_desc')}</span>
             </div>
           </div>
