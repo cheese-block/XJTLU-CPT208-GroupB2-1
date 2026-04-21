@@ -100,12 +100,10 @@ export class StatusBar {
     if (!this._container || !effects) return;
 
     const statMap = {
-      Mental_Health: 'mental',
-      Physical_Health: 'physical',
-      Money: 'money',
-      Academic_Ability: 'academic',
-      English_Ability: 'english'
+      Mental_Health: 'mental', Physical_Health: 'physical', Money: 'money',
+      Academic_Ability: 'academic', English_Ability: 'english'
     };
+    const lang = StateManager.getLang();
 
     Object.entries(effects).forEach(([stat, delta]) => {
       if (delta === 0) return;
@@ -117,9 +115,9 @@ export class StatusBar {
 
       const dot = this._container.querySelector(`#sb-${id}-preview-dot`);
       if (dot) {
-        dot.textContent = isLarge ? '大' : '小';
+        // 【修改】：英文显示 B/S，中文显示 大/小
+        dot.textContent = lang === 'en' ? (isLarge ? 'B' : 'S') : (isLarge ? '大' : '小');
         dot.style.opacity = '1';
-        // 【修改】：确保这里的 className 尺寸也同步更新为 w-3.5 h-3.5
         dot.className = "w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black flex items-center justify-center transition-all duration-200 ml-1 shadow-sm";
       }
 
