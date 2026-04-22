@@ -115,7 +115,7 @@ export const EVENTS = {
   // 特殊大事件（Scheduled Events）
   // ════════════════════════════════════════════════════════
 
-  // 【新增】：IA 建筑解锁提示
+  // IA 建筑解锁提示
   'unlock_ia_notice': {
     event_id:      'unlock_ia_notice',
     type:          'scheduled',
@@ -128,6 +128,7 @@ export const EVENTS = {
       {
         text: '申研是一场信息战。也许你该去趟 <span class="text-xjtlu-blue font-bold">IA（国际学术交流中心）</span> 看看了，那里是各大机构和校方合作宣讲的集散地。',
         tip:  '新建筑【IA】已解锁！在地图上点击蓝色高亮的 IA 建筑，可以开始接触并筛选留学中介。',
+        unlock_building: ['ia'] // 【新增】：声明式解锁建筑，引擎读到此幕时会自动解锁
       }
     ],
   },

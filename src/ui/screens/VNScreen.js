@@ -89,7 +89,7 @@ export class VNScreen {
   // 场景推进
   // ───────────────────────────────────────────────────────────
 
-_playScene(index) {
+  _playScene(index) {
     const scenes = this._event?.scenes;
     log('debug', 'VNScreen', `_playScene(${index})，共 ${scenes?.length} 个场景`);
 
@@ -101,6 +101,11 @@ _playScene(index) {
 
     this._sceneIndex = index;
     const scene      = scenes[index];
+
+    // 【新增】：解析声明式建筑解锁
+    if (scene.unlock_building) {
+      scene.unlock_building.forEach(bId => StateManager.unlockBuilding(bId));
+    }
 
     this._updateBackground(scene.bg ?? null);
 

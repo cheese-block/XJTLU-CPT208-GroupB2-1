@@ -100,8 +100,9 @@ export class MapScreen {
       if (building) this._renderInfoPanel(building);
     }
 
+    this._updatePins(state); // 【新增】：响应式更新地图 Pin 状态
     this._renderPlayerStatus(state);
-    this._renderTimeline(state); // 【新增】
+    this._renderTimeline(state);
   }
 
   // ───────────────────────────────────────────────────────────
@@ -264,6 +265,26 @@ export class MapScreen {
     }
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 响应式更新 Pin 状态
+  // ───────────────────────────────────────────────────────────
+  _updatePins(state) {
+    const unlocked = state.unlockedBuildings || [];
+    this._container?.querySelectorAll('.map-pin').forEach(pin => {
+      const bId = pin.dataset.buildingId;
+      const isAction = unlocked.includes(bId);
+      
+      // 动态切换样式类
+      if (isAction) {
+        pin.classList.remove('map-pin--info');
+        pin.classList.add('map-pin--action');
+      } else {
+        pin.classList.remove('map-pin--action');
+        pin.classList.add('map-pin--info');
+      }
+    });
   }
 
   // ───────────────────────────────────────────────────────────

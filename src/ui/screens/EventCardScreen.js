@@ -40,7 +40,12 @@ export class EventCardScreen {
     this._sceneIndex = index;
     const scene = scenes[index];
 
-    // 【修复】：场景自带的基础 effects 应该在进入场景时立即结算
+    // 【新增】：解析声明式建筑解锁
+    if (scene.unlock_building) {
+      scene.unlock_building.forEach(bId => StateManager.unlockBuilding(bId));
+    }
+
+    // 场景自带的基础 effects 应该在进入场景时立即结算
     if (scene.effects && Object.keys(scene.effects).length > 0) {
        StateManager.applyStatDelta(scene.effects, this._buildEffectLabels(scene.effects));
        // 结算后清空，防止在某些极端情况下重复触发（此时操作的是 GameLoop 传来的深拷贝副本，很安全）

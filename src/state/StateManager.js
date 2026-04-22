@@ -441,10 +441,7 @@ export function advanceMonth() {
     _state.currentPhase = CONSTANTS.MONTH_TO_PHASE[newMonth];
     resetAPForNewMonth();
 
-    // 【修复】：只要进入第二月，强制解锁 IA 建筑，确保 UI 状态更新
-    if (newMonth === 2) {
-      StateManager.unlockBuilding('ia');
-    }
+    // 【移除】了这里原本关于 newMonth === 2 时强制 unlockBuilding('ia') 的硬编码
 
     if (CONSTANTS.SEMESTER_START_MONTHS.includes(newMonth)) {
       _state.Academic_Ability = 0;
