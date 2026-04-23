@@ -39,7 +39,7 @@ export function resolveFinalExam(state) {
     { Academic_Ability: '学力' }
   );
 
-  // 心理健康影响
+  // 心理健康的影响
   const mentalDelta = gpa >= 3.3 ? +10 : gpa >= 2.8 ? 0 : -15;
   if (mentalDelta !== 0) {
     StateManager.applyStatDelta(
