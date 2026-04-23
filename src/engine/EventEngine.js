@@ -31,8 +31,10 @@ export function buildEventPool(state) {
   return Object.values(EVENTS).filter(event => {
     if (event.type !== 'random') return false;
 
-    // 唯一性：已触发过的不再触发
-    if (state.triggeredEventIds.includes(event.event_id)) return false;
+    // 唯一性：已触发过 且 不可重复，才被排除
+    if (state.triggeredEventIds.includes(event.event_id) && !event.repeatable) {
+      return false; 
+    }
 
     // 月份限制
     if (event.available_months &&

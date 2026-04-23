@@ -51,81 +51,60 @@ export class MonthSummaryScreen {
     if (!this._container) return;
 
     const lang = StateManager.getLang();
+    const isDemoEnd = prevMonth === CONSTANTS.MAX_MONTHS; // 是否是第4个月
 
     // 动态翻译月份和阶段
     const getMonthName = (m) => {
       const mapEn = { 1:'Sep', 2:'Oct', 3:'Nov', 4:'Dec', 5:'Winter Break', 6:'Mar', 7:'Apr', 8:'May', 9:'Jun', 10:'Summer Break', 11:'Summer Break', 12:'Application Season' };
       return lang === 'en' ? mapEn[m] : (CONSTANTS.MONTH_TO_REALWORLD[m] ?? `Month ${m}`);
     };
-    const getPhaseName = (p) => {
-      const mapEn = { Y3_SEM1: 'Y3 Sem 1', Y3_WINTER: 'Winter', Y3_SEM2: 'Y3 Sem 2', Y3_SUMMER: 'Summer', Y4_SEM1: 'Y4 Sem 1' };
-      return lang === 'en' ? mapEn[p] : (CONSTANTS.PHASE_LABELS[p] ?? '');
-    };
-
-    const prevLabel = getMonthName(prevMonth);
-    const newLabel  = getMonthName(newMonth);
-    const newPhase  = getPhaseName(CONSTANTS.MONTH_TO_PHASE[newMonth]);
 
     const isGoodGpa = examResult?.tag === 'GPA_Top' || examResult?.tag === 'GPA_High';
     const isMidGpa  = examResult?.tag === 'GPA_Mid';
 
-    // 处理 ExamEngine 返回的 summary (简单映射)
-    let finalSummary = examResult?.summary || '';
-    if (lang === 'en' && examResult) {
-      if (examResult.tag === 'GPA_Top' || examResult.tag === 'GPA_High') {
-        finalSummary = `Accumulated ${state.Academic_Ability} Academic pts. Final GPA is ${examResult.gpa}. Excellent performance. A brilliant line on your transcript.`;
-      } else if (examResult.tag === 'GPA_Mid') {
-        finalSummary = `Accumulated ${state.Academic_Ability} Academic pts. Final GPA is ${examResult.gpa}. Average performance. You might need other materials to boost your profile.`;
-      } else {
-        finalSummary = `Accumulated ${state.Academic_Ability} Academic pts. Final GPA is ${examResult.gpa}. Poor performance. A heavy blow to your application competitiveness.`;
-      }
-    }
-
+    // 构建标题和状态描述
+    const cardTitle = isDemoEnd ? t('summary_title_final') : t('summary_title');
+    const cardStatus = isDemoEnd ? t('summary_locked') : `${getMonthName(prevMonth)} ${t('summary_end')}`;
+    
     this._container.innerHTML = `
       <div class="w-full h-full flex items-center justify-center bg-white px-6 relative">
         <div class="summary-card w-full max-w-md flex flex-col gap-6 animate-fade-in z-10">
 
           <div class="flex flex-col gap-1">
-            <p class="text-xs font-bold text-xjtlu-blue tracking-widest uppercase">
-              ${t('summary_title')}
-            </p>
-            <h1 class="text-2xl font-black text-xjtlu-navy">
-              ${prevLabel} ${t('summary_end')}
-            </h1>
+            <p class="text-xs font-bold text-xjtlu-blue tracking-widest uppercase">${cardTitle}</p>
+            <h1 class="text-2xl font-black text-xjtlu-navy">${cardStatus}</h1>
           </div>
 
           <div class="h-px bg-gray-100"></div>
 
           ${examResult ? `
             <div class="flex flex-col gap-3">
-              <p class="text-xs font-bold text-xjtlu-gray tracking-wider uppercase">
-                ${t('summary_exam_result')}
-              </p>
+              <p class="text-xs font-bold text-xjtlu-gray tracking-wider uppercase">${t('summary_exam_result')}</p>
               <div class="flex items-center justify-between bg-xjtlu-blue/5 rounded-xl px-4 py-3 border border-xjtlu-blue/20">
-                <span class="text-sm text-gray-600">${getPhaseName(examResult.phase)} ${t('summary_gpa')}</span>
+                <span class="text-sm text-gray-600">${t('summary_gpa')}</span>
                 <span class="text-2xl font-black ${isGoodGpa ? 'text-xjtlu-green' : isMidGpa ? 'text-xjtlu-blue' : 'text-xjtlu-red'}">
                   ${examResult.gpa}
                 </span>
               </div>
-              <p class="text-xs text-gray-500 leading-relaxed">
-                ${finalSummary}
-              </p>
+              <p class="text-xs text-gray-500 leading-relaxed">${examResult.summary}</p>
             </div>
             <div class="h-px bg-gray-100"></div>
           ` : ''}
 
+          <!-- 下一阶段提示区 -->
           <div class="flex items-center gap-3 text-sm text-xjtlu-gray">
-            <i data-lucide="arrow-right-circle" class="lucide w-5 h-5 text-xjtlu-blue shrink-0"></i>
-            <span>
-              ${t('summary_next')}
-              <span class="font-black text-xjtlu-navy">${newLabel}</span>
-              <span class="text-xs ml-1">${newPhase}</span>
-            </span>
+            <i data-lucide="${isDemoEnd ? 'send' : 'arrow-right-circle'}" class="lucide w-5 h-5 text-xjtlu-blue shrink-0"></i>
+            <div class="flex flex-col">
+              <span class="font-bold text-xjtlu-navy">
+                ${isDemoEnd ? t('summary_next_final') : `${t('summary_next')} ${getMonthName(newMonth)}`}
+              </span>
+              <span class="text-[0.7rem]">${isDemoEnd ? t('summary_next_desc_final') : ''}</span>
+            </div>
           </div>
 
           <button id="btn-next-month" class="xjtlu-btn xjtlu-btn--primary w-full justify-center text-base py-3">
-            <i data-lucide="play-circle" class="lucide w-5 h-5"></i>
-            ${t('summary_btn_start')} ${newLabel}
+            <i data-lucide="${isDemoEnd ? 'mail' : 'play-circle'}" class="lucide w-5 h-5"></i>
+            ${isDemoEnd ? t('summary_btn_submit') : `${t('summary_btn_start')} ${getMonthName(newMonth)}`}
           </button>
 
         </div>
@@ -133,10 +112,7 @@ export class MonthSummaryScreen {
     `;
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
-
-    this._container.querySelector('#btn-next-month')?.addEventListener('click', () => {
-      this._onConfirm?.();
-    });
+    this._container.querySelector('#btn-next-month')?.addEventListener('click', () => this._onConfirm?.());
   }
 
   _buildStatRow(label, value, warnThreshold) {

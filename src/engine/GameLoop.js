@@ -54,39 +54,46 @@ export function executeAction(actionId, action, onEvent) {
   if (action.tagsProgress) _trackProgressTag(action.tagsProgress);
 
   const pool = action.eventPool || [];
-  const availableEvents = pool.filter(id => !state.triggeredEventIds.includes(id));
-  const guaranteedId = action.guaranteedEventId;
-  let hitEventId = guaranteedId;
+  
+  // 【关键修复】：引入 EVENTS 配置判断，如果是 repeatable，就算触发过也不过滤
+  import('../data/events.js').then(({ EVENTS }) => {
+    const availableEvents = pool.filter(id => {
+      const isTriggered = state.triggeredEventIds.includes(id);
+      const isRepeatable = EVENTS[id]?.repeatable === true;
+      return !isTriggered || isRepeatable; 
+    });
 
-  if (availableEvents.length > 0) {
-    if (Math.random() < 0.8) {
-      hitEventId = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+    const guaranteedId = action.guaranteedEventId;
+    let hitEventId = guaranteedId;
+
+    if (availableEvents.length > 0) {
+      if (Math.random() < 0.8) {
+        hitEventId = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+      }
     }
-  }
 
-  if (hitEventId) {
-    StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
-  }
-
-  // 初始检查（以防万一）
-  checkBadEndings(); 
-
-  StateManager.saveGame();
-  StateManager.setProcessing(true);
-
-  processEventQueue(() => {
-    StateManager.setProcessing(false);
-    
-    // 动态检查：队列处理完后，看一眼玩家现在是不是死了
-    const currentState = StateManager.getState();
-    const isDead = currentState.tags.some(t => t.startsWith('__BAD_END_'));
-
-    if (isDead) {
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
-    } else {
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-      if (onEvent) onEvent();
+    if (hitEventId) {
+      StateManager.enqueueEventFront({ eventId: hitEventId, source: 'location' });
     }
+
+    checkBadEndings(); 
+
+    StateManager.saveGame();
+    StateManager.setProcessing(true);
+
+    processEventQueue(() => {
+      StateManager.setProcessing(false);
+      
+      const currentState = StateManager.getState();
+      const isDead = currentState.tags.some(t => t.startsWith('__BAD_END_'));
+
+      if (isDead) {
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      } else {
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+        if (onEvent) onEvent();
+      }
+    });
   });
 
   return true;
@@ -211,7 +218,6 @@ export function resolveMonthEnd(onMonthEnd) {
           
           StateManager.setProcessing(true); // 再次上锁
           processEventQueue(() => {
-            // 【关键修复 2】：大结局卡片点完后，也要解除死锁
             StateManager.setProcessing(false); 
             
             const isEn = StateManager.getLang() === 'en';
@@ -220,6 +226,8 @@ export function resolveMonthEnd(onMonthEnd) {
               message: isEn ? 'Review your journey.' : '你的申请履历已经锁定，开始复盘。',
               confirmText: isEn ? 'Review' : '开始复盘',
               cancelText: '',
+              // 【修改点】：由默认的 danger 改为 primary，按钮将变为西浦蓝色
+              confirmVariant: 'primary', 
               onConfirm: () => StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TAG_SHOWCASE)
             });
           });
@@ -262,9 +270,8 @@ export function checkBadEndings() {
       log('warn', 'GameLoop', `💀 触发死亡：${check.tag}`);
       StateManager.addTag(check.tag);
       
-      // 清空当前队列，确保死亡是绝对的终点
-      const s = StateManager.getState();
-      while (s.pendingEventQueue.length > 0) {
+      // 【关键修复】：每次循环都重新获取最新的状态长度，防止无限死循环卡死浏览器
+      while (StateManager.getState().pendingEventQueue.length > 0) {
         StateManager.dequeueEvent();
       }
       
@@ -274,14 +281,6 @@ export function checkBadEndings() {
     }
   }
   return false;
-}
-
-// 内部辅助，如果不想单独定义可以写在 checkBadEndings 里面
-function _clearEventQueue() {
-  const s = StateManager.getState();
-  while (s.pendingEventQueue.length > 0) {
-    StateManager.dequeueEvent();
-  }
 }
 
 // ─────────────────────────────────────────────────────────────

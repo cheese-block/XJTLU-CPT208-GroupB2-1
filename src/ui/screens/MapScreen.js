@@ -350,7 +350,6 @@ export class MapScreen {
     const playCount = StateManager.getPlayCount();
     let tutorialEventId = null;
 
-    // 【修复】：playCount 为 0 时是第一周目，为 1 时是第二周目
     if (playCount === 0) {
       tutorialEventId = 'tutorial_intro_1'; // 一周目详细引导
     } else if (playCount === 1) {
@@ -374,11 +373,31 @@ export class MapScreen {
     setTimeout(() => {
       import('../../engine/GameLoop.js').then(({ processEventQueue }) => {
         processEventQueue(() => {
-          // 引导结束后：写入"已看过"标签，返回地图
+          // 剧情播放完毕，写入"已看过"标签
           StateManager.addTag('__TUTORIAL_DONE__');
           StateManager.saveGame();
-          StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
-          log('info', 'MapScreen', '✅ 引导完成');
+          
+          // 【新增】：如果是一周目，弹出开发者寄语
+          if (playCount === 0) {
+            const isEn = StateManager.getLang() === 'en';
+            showConfirm({
+              title: isEn ? "💌 Developer's Note" : "💌 开发者寄语：致先行体验者",
+              message: isEn 
+                ? "Welcome to the MVP Demo of 'XJTLU Postgrad Simulator' by GroupB2-1!<br><br>To fit the event's pace, we've <b>compressed the timeline into 4 months (4 rounds)</b>. Please plan your Action Points (AP) wisely and note the following constraints:<br><br>📍 <b>Exploration</b><br>The <b>blue pins</b> on the map indicate actionable buildings, while <b>grey pins</b> are currently for display and info only.<br>Due to the Demo's scope, only <b>[SA~SD], [Dorm], and [Library CB]</b> feature extensive random event pools.<br><br>🎓 <b>Main Story Alert</b><br>Watch for new building unlocks (e.g., <b>IA Building</b> in Month 2). Visiting there will trigger the <b>'Agent Turmoil'</b> core storyline, which significantly impacts your final ending.<br><br>Good luck securing your dream Offer!" 
+                : "欢迎体验由 GroupB2-1 开发的《西浦申研模拟器》MVP 测试版！<br><br>为了适配展会节奏，我们将原本的申请季<b>浓缩为了 4 个月（即 4 个回合）</b>。请合理规划行动点（AP），并留意以下限制：<br><br>📍 <b>探索范围</b><br>校园平面图上建筑对应的<b>蓝色图钉</b>代表可执行行动的建筑，<b>灰色图钉</b>目前仅作校园风貌展示及科普。<br>而由于 Demo 性质和工作量上的考虑，目前仅有<b>【科学楼 SA~SD】、【宿舍】、【图书馆 CB】</b>拥有较深的随机事件池。<br><br>🎓 <b>主线提醒</b><br>请留意地图上的新建筑解锁提醒（如第 2 个月开启的 <b>IA 楼</b>）。前往那里将触发影响游戏结局的【中介风云】核心事件线。<br><br>祝你在游玩过程中达成好结局，拿到梦校的 Offer！",
+              confirmText: isEn ? "Got it, let's suffer!" : "我已了解，开始体验。",
+              cancelText: "", // 单按钮模式
+              confirmVariant: "primary",
+              onConfirm: () => {
+                StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+                log('info', 'MapScreen', '✅ 引导与寄语完成');
+              }
+            });
+          } else {
+            // 二周目及以上，直接返回地图
+            StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+            log('info', 'MapScreen', '✅ 引导完成');
+          }
         });
       });
     }, 500);

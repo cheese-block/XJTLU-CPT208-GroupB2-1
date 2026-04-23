@@ -78,11 +78,16 @@ export const DICT = {
 
   // ── 月末总结 ──
   'summary_title': { zh: '学期总结', en: 'Term Summary' },
+  'summary_title_final': { zh: '申研阶段性总结', en: 'Final Profile Review' }, // 新增
   'summary_end': { zh: '结束', en: 'Ended' },
-  'summary_exam_result': { zh: '📝 期末成绩', en: '📝 Final Exam Results' },
-  'summary_gpa': { zh: 'GPA', en: 'GPA' },
+  'summary_locked': { zh: '申研履历已锁定', en: 'Application Profile Locked' }, // 新增
+  'summary_exam_result': { zh: '📝 履历封笔之战', en: '📝 Final GPA Settlement' }, // 修改
+  'summary_gpa': { zh: '最终 GPA', en: 'Final GPA' }, // 修改
   'summary_next': { zh: '即将进入', en: 'Entering' },
+  'summary_next_final': { zh: '接下来的流程', en: 'Next Step' }, // 新增
+  'summary_next_desc_final': { zh: '投递申请并查看录取结果', en: 'Submit Application & Reveal Result' }, // 新增
   'summary_btn_start': { zh: '开始', en: 'Start' },
+  'summary_btn_submit': { zh: '去投递申请 (Submit)', en: 'Submit Application' }, // 新增
 
   // ── 结局图鉴 ──
   'collection_title': { zh: '结局图鉴', en: 'Ending Collection' },

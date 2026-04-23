@@ -16,7 +16,7 @@ export const EVENTS = {
       {
         text: '“你就是这届新来的卷王吗？”\n\n（一个眼袋发黑的半透明学长飘在你的床头。）',
         choices: [
-          { text: '（点头）' }
+          { text: '也许是？' }
         ]
       },
       {
@@ -32,14 +32,26 @@ export const EVENTS = {
         ]
       },
       {
-        text: '“为了让你的头发在脑袋上多留一阵子，尽力保持顶上那几股数值的平衡吧。不要归零，也别试图彻底塞满它们，走极端只会引来毁灭。”',
+        text: '“为了让你的头发在脑袋上多留一阵子，尽力保持顶上那几股数值的平衡吧。【心理】、【身体】、【资金】，不要归零，也别试图彻底塞满它们。持中守正，方能长久。\n\n好吧其实是作者意图增加游戏性的小巧思，请你接受。”',
+        choices: [
+          { text: '哦……' }
+        ]
+      },
+      {
+        text: '“但在那之外，【学力】和【英语】是你冲刺名校的弹药。期末考试会清算你的学力，雅思考试会检验你的英语。\n\n不过，没必要为了刷分就死磕在科学楼里。这学校的各个建筑在数值影响上其实差不太多，多去别处转转，说不定能触发什么奇遇。”',
+        choices: [
+          { text: '听着真麻烦。' }
+        ]
+      },
+      {
+        text: '“申研就是这样。对了，如果你还有余力，记得在校园里多留意那些能增加你【软背景】的机会。现在光有分数可卷不过别人。”',
         choices: [
           { text: '那我该怎么做抉择？' }
         ]
       },
       {
         text: '“当你手握选项时，你会看到那些浮动的圆点。直觉会指引你……\n\n现在就做个决定吧：桌上这杯过期三天的冰美式，你要喝掉提神吗？”',
-        tip:  '鼠标悬浮选项即可查看圆点。灰色代表将有变化，圆点内容预示变动幅度。',
+        tip:  '鼠标悬浮选项即可预览数值变化圆点。圆点的位置代表该数值将有变化，圆点内容预示变动幅度。',
         choices: [
           {
             text: '闭着眼睛灌下去',
@@ -87,7 +99,7 @@ export const EVENTS = {
         ]
       },
       {
-        text: '“据说只有传说中『保录中介』才能让我们愉快地花钱免除这些受诅咒的劳役，但是他们当真存在吗？”',
+        text: '“据说只有传说中的『保录中介』才能让我们愉快地花钱免除这些受诅咒的劳役，但是他们当真存在吗？”',
         choices: [
           { 
             text: '不，捷径并不存在。',
@@ -137,17 +149,17 @@ export const EVENTS = {
     event_id:      'sem1_final_exam',
     type:          'scheduled',
     trigger_month: 4,
-    title:         '大三上 · 期末考试',
+    title:         '履历封笔之战',
     scenes: [
       {
         text: '十二月，苏州的妖风裹挟着湿冷吹过校园。SA 楼的走廊里贴满了各种复习资料，CB 图书馆的座位从清晨六点半就被占满。期末周，到了。',
       },
       {
-        text: '你翻开堆积如山的课件，开始了最后的冲刺。这学期你在专业课上流下的每一滴汗水，都将在接下来几天内转化为成绩单上冷冰冰的数字。',
-        tip:  '核心要点：西浦采用百分制与 GPA 双轨制。对于申请英系名校，均分（百分制）往往比 GPA 更加致命。一门核心专业课的拉胯，可能需要三门选修课才能补回来。',
+        text: '你翻开堆积如山的习题集和试卷，开始了最后的冲刺。这学期你在专业课上流下的每一滴汗水，都将在接下来几天内转化为成绩单上冷冰冰的数字。',
+        tip:  '西浦采用百分制与 GPA 双轨制。对于申请英系名校，均分（百分制）往往比 GPA 更加致命。一门核心专业课的拉胯，可能需要三门选修课才能补回来。',
       },
       {
-        text: '最后一门考试结束，你走出考场，冬日的阳光有些刺眼。不管结果如何，大三上学期已经成为历史了。',
+        text: '最后一门考试结束，你走出考场，冬日的阳光有些刺眼。不管结果如何，在西浦的生活已经成为历史了。',
       },
     ],
   },
@@ -164,7 +176,7 @@ export const EVENTS = {
             text:       '"急什么，等 7 月放暑假了再慢慢看，先搞期末。"',
             effects:    { Agency_Score: -10 },
             tags_added: ['Agency_Wait'],
-            flavor_text: '室友点点头觉得有理。你心安理得地打开了专业课 PPT，决定把这个让人焦虑的问题推迟到暑假再面对。',
+            flavor_text: '回宿舍后你心安理得地打开了专业课 PPT，打算先把今天的学校课程解决。你决定把这个找中介让人焦虑的问题推迟到暑假再面对。',
             tip:        '时间规划雷区：找中介的最晚时间是暑假前！拖到 7-8 月才定中介，会导致背景提升和文书头脑风暴的时间极其被动。',
           },
           {
@@ -172,14 +184,14 @@ export const EVENTS = {
             effects:    { Agency_Score: +10 },
             next_event_id: 'agency_investigation',
             tags_added: ['Agency_Start'],
-            flavor_text: '你深吸了一口气，虽然专业课压力很大，但你清楚申研是一场持久战，早起的鸟儿才有虫吃。',
+            flavor_text: '你稍微感到有些紧张，虽然专业课压力很大，但你清楚申研是一场持久战，早起的鸟儿才有虫吃。',
             tip:        '最佳时间：建议在申请季当年的春节后 (2-4月) 开始接触和筛选中介，为后续的背景提升留出充足时间。',
           },
           {
             text:       '"中介都是骗钱的，我要全程 DIY！"',
             effects:    {},
             tags_added: ['DIY_Applicant'],
-            flavor_text: '你决定把命运交给自己。省下了几万块钱，但接下来的选校、网申、写文书，将是一场孤独且硬核的战斗。',
+            flavor_text: '你决定把命运交给自己。省下了几万块钱，但接下来的选校、网申、写文书，将是一场孤独且硬核的战斗。（在可能的完整版中可能会开发 DIY 挑战支线，敬请期待）',
             tip:        '硬核之路：DIY 能最大程度锻炼信息检索能力，但需要极强的时间管理、抗压能力和英语写作功底。',
           },
         ],
@@ -293,18 +305,18 @@ export const EVENTS = {
         text: '接下来，你询问了最核心的文书创作和后期团队的安排。',
         choices: [
           {
-            text:       '机构甲："矩阵式流水线"——即使某个环节的老师请假，系统也会无缝指派同级别专家接手，绝对不耽误进度。',
-            effects:    { Agency_Score: -15 },
-            next_event_id: 'agency_consult_3',
-            flavor_text: '"矩阵式团队"听起来非常专业，你觉得这种大机构的标准化流程能保证文书的下限。',
-            tip:        '所谓"无缝接手"往往是频繁更换顾问的遮羞布。流水线作业极易导致文书千篇一律，缺乏个人特色。',
-          },
-          {
-            text:       '机构乙："专属责任制"——唯一主负责顾问，名字写在合同里，文书从零开始写，出稿周期可能比同行多一周。',
+            text:       '机构甲："专属责任制"——唯一主负责顾问，名字写在合同里，文书从零开始写，出稿周期可能比同行多一周。',
             effects:    { Agency_Score: +15 },
             next_event_id: 'agency_consult_3',
             flavor_text: '专属负责听起来不错，但"不套模板"、"出稿慢"让你有些担心赶不上第一批申请的早班车。',
             tip:        '确保合同中书写顾问姓名，防止签约后频繁换人。优秀的文书必须经过深度的个人挖掘。',
+          },
+          {
+            text:       '机构乙："矩阵式流水线"——即使某个环节的老师请假，系统也会无缝指派同级别专家接手，绝对不耽误进度。',
+            effects:    { Agency_Score: -15 },
+            next_event_id: 'agency_consult_3',
+            flavor_text: '"矩阵式团队"听起来非常专业，你觉得这种大机构的标准化流程能保证文书的下限。',
+            tip:        '所谓"无缝接手"往往是频繁更换顾问的遮羞布。流水线作业极易导致文书千篇一律，缺乏个人特色。',
           },
         ],
       },
@@ -409,7 +421,7 @@ export const EVENTS = {
         choices: [
           {
             text:       '全力冲刺雅思，报名封闭强化班',
-            effects:    { English_Ability: +5, Mental_Health: -20, Money: -20 },
+            effects:    { English_Ability: +6, Mental_Health: -15, Money: -15 },
             tags_added: [],
             flavor_text: '你交了学费，每天八小时高强度刷题。暑假结束时，你的耳朵对英音产生了条件反射，但连续的熬夜让你的黑眼圈深了不少。',
             tip:        '语言成绩是很多人的阿喀琉斯之踵。集中精力解决它是非常务实的选择。',
@@ -447,7 +459,7 @@ export const EVENTS = {
         choices: [
           {
             text:    '立刻报名，背水一战',
-            effects: { Money: 15 },
+            effects: { Money: -10 },
             flavor_text: '你咬咬牙交了报名费。没有退路了。',
             next_event_id: 'ielts_exam_result',
           },
@@ -469,11 +481,11 @@ export const EVENTS = {
     title:         '递交申请：掷出命运的骰子',
     scenes: [
       {
-        text: '大四九月。申请季正式拉开帷幕。你坐在电脑前，盯着十几所学校的网申系统。一年半的准备，浓缩成了这个界面上的几个填写框。',
+        text: '大四九月。申请季正式拉开帷幕。你坐在电脑前，盯着十几所学校的网申系统。这一年半（以及过去三年）的准备，浓缩成了这个界面上的几个填写框。',
       },
       {
-        text: 'PS 改了十几稿，推荐信找了三位教授，成绩单已经盖章扫描。你检查了最后一遍材料，你的履历，就是你这一年半的全部答案。',
-        tip:  '申请材料清单：个人陈述 (PS)、推荐信 (LoR)、简历 (CV)、成绩单 (Transcript)、语言成绩。缺一不可。',
+        text: 'PS 改了十几稿，推荐信找了三位教授，成绩单已经盖章扫描。你检查了最后一遍材料，你的履历，就是你这四年的全部答案。',
+        tip:  '申请季核心：材料递交只是第一步。在真实的申请中，后续的面试邀约、占位费缴纳、甚至是配语言班（Pre-sessional）的决策，同样决定了你最终的去向。',
       },
       {
         text: '你深吸一口气，点下了 Submit 按钮。\n\n屏幕上弹出了绿色的 "Application Submitted"。\n\n接下来，只能交给时间了。',
@@ -510,11 +522,11 @@ export const EVENTS = {
       choices: [
         {
           text: '就这样吧，提前一小时下课去打游戏',
-          effects: { Mental_Health: +20, Academic_Ability: +3 }
+          effects: { Mental_Health: +15, Academic_Ability: +3 }
         },
         {
           text: '觉得这数据好得不真实，坚持换个仪器重测',
-          effects: { Academic_Ability: +7, Mental_Health: -10 },
+          effects: { Academic_Ability: +8, Mental_Health: -10 },
           flavor_text: '第二组数据烂得像一坨泥。你完全不能理解发生了什么。'
         }
       ]
@@ -563,11 +575,11 @@ export const EVENTS = {
       choices: [
         {
           text: '靠意志力硬抗青轴的物理超度',
-          effects: { Mental_Health: -20, Academic_Ability: +4 }
+          effects: { Mental_Health: -15, Academic_Ability: +3 }
         },
         {
           text: '去星巴克点杯美式接着学',
-          effects: { Money: -10, Mental_Health: +15, Academic_Ability: +6 }
+          effects: { Money: -8, Mental_Health: +10, Academic_Ability: +6 }
         }
       ]
     }]
@@ -580,12 +592,12 @@ export const EVENTS = {
       choices: [
         {
           text: '诚实低头："I copied it from StackOverflow."',
-          effects: { Mental_Health: +10, Academic_Ability: -3 },
+          effects: { Mental_Health: +5, Academic_Ability: -2 },
           flavor_text: 'TA 叹了口气，放过了你。'
         },
         {
           text: '强行现编一段听起来很高级的技术原理解释',
-          effects: { English_Ability: +2, Mental_Health: -15, Academic_Ability: +4 }
+          effects: { English_Ability: +2, Mental_Health: -10, Academic_Ability: +4 }
         }
       ]
     }]
@@ -603,7 +615,7 @@ export const EVENTS = {
         },
         {
           text: '认命了，把书包顶在头上冲进暴雨里',
-          effects: { Physical_Health: -25, Mental_Health: +10, Money: -5 },
+          effects: { Physical_Health: -20, Mental_Health: +10, Money: -5 },
           flavor_text: '你在雨中狂奔，突然觉得这种电影主角般的悲惨经历还挺解压的。'
         }
       ]
@@ -617,7 +629,7 @@ export const EVENTS = {
       choices: [
         {
           text: '弯着腰像特工一样潜行到前排去签字',
-          effects: { Mental_Health: -15, Academic_Ability: +3 },
+          effects: { Mental_Health: -15, Academic_Ability: +4 },
           flavor_text: '很多学生看到了你奇异搞笑的行为。'
         },
         {
@@ -636,12 +648,12 @@ export const EVENTS = {
       choices: [
         {
           text: '左右观察无人，对着机器狠狠踹了一脚',
-          effects: { Physical_Health: -5, Mental_Health: +15 },
+          effects: { Physical_Health: -5, Mental_Health: +5 },
           flavor_text: '可乐没掉下来，而你的脚趾隐隐作痛。但至少你的郁闷减轻了一些。'
         },
         {
           text: '不信邪，再买一瓶，试图用第二瓶把第一瓶砸下来',
-          effects: { Money: -15, Mental_Health: 15 },
+          effects: { Money: -10, Mental_Health: -10 },
           flavor_text: '现在有两瓶可乐卡在半空中。'
         }
       ]
@@ -655,12 +667,12 @@ export const EVENTS = {
       choices: [
         {
           text: '咬牙转账',
-          effects: { Money: -15, Academic_Ability: +9 }
+          effects: { Money: -13, Academic_Ability: +10 }
         },
         {
           text: '决定靠自己啃 PPT',
-          effects: { Mental_Health: -15, Academic_Ability: +4 },
-          flavor_text: '你花了一整晚自己整理重点，虽然学到了一点，但总觉得别人在走捷径，越想越气。'
+          effects: { Mental_Health: -13, Academic_Ability: +5 },
+          flavor_text: '你花了一整晚自己整理重点，虽然学到了很多，但总觉得别人在走捷径，越想越气。'
         }
       ]
     }]
@@ -673,12 +685,12 @@ export const EVENTS = {
       choices: [
         {
           text: '用同义词替换大法把每一句话都改得面目全非',
-          effects: { Mental_Health: -15, Academic_Ability: +4, English_Ability: +2 },
+          effects: { Mental_Health: -13, Academic_Ability: +5, English_Ability: +3 },
           flavor_text: '查重率降到了 15%。但你交上去的已经不是一篇论文，而是一堆毫无逻辑的单词拼盘。'
         },
         {
           text: '花钱开一个 AI 降重软件的高级会员',
-          effects: { Money: -15, Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 }
+          effects: { Money: -10, Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 }
         }
       ]
     }]
@@ -691,11 +703,11 @@ export const EVENTS = {
       choices: [
         {
           text: '赞美教授！立刻回宿舍《原神》启动',
-          effects: { Mental_Health: +25 }
+          effects: { Mental_Health: +15 }
         },
         {
           text: '既然没压力了，反而静下心来把它当练习做一遍',
-          effects: { Academic_Ability: +12, Mental_Health: +10 },
+          effects: { Academic_Ability: +9, Mental_Health: +10 },
           flavor_text: '没有分数压迫的纯粹求知，让你体验到了久违的学术快感。'
         }
       ]
@@ -709,12 +721,12 @@ export const EVENTS = {
       choices: [
         {
           text: '冲一个礼拜高级会员，一键全部自动修改',
-          effects: { Money: -15, Academic_Ability: +10, English_Ability: -2 },
+          effects: { Money: -10,  Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 },
           flavor_text: '文章看起来非常地道。不过你完全不知道它帮你改了什么，你的语感甚至退化了。'
         },
         {
           text: '坚决不充钱，自己对着词典一个个扒出来改掉',
-          effects: { Mental_Health: -20, English_Ability: +3, Academic_Ability: +6 }
+          effects: { Mental_Health: -15, English_Ability: +3, Academic_Ability: +6 }
         }
       ]
     }]
@@ -726,11 +738,12 @@ export const EVENTS = {
       text: '你提前十分钟走进 SA 的教室，坐下听了一会儿才发现，台上讲的是隔壁专业的课。但教授讲的一个理论似乎能解决你最近的疑惑。',
       choices: [
         {
-          text: '假装自己就是这个专业的，津津有味地听完',
-          effects: { Academic_Ability: +8, English_Ability: +1 }
+          text: '假装自己就是这个专业的，试着听课看看是否能有所收获',
+          effects: { Academic_Ability: +7, English_Ability: +1 },
+          flavor_text: '也许你真的能成为复合型人才。'
         },
         {
-          text: '觉得太尴尬了，趁教授转身写板书时溜走',
+          text: '太尴尬了，趁教授转身写板书时溜走',
           effects: { Mental_Health: -5 }
         }
       ]
@@ -745,12 +758,12 @@ export const EVENTS = {
         {
           text: '据为己有，有便宜不占王八蛋',
           effects: { Academic_Ability: +10, Mental_Health: +15 },
-          flavor_text: '你白嫖了学霸的智慧结晶，感觉自己今天赚翻了。'
+          flavor_text: '你白嫖了学霸的智慧结晶，感觉很赚。'
         },
         {
           text: '追出教室，把书交给了正在找东西的学霸本人',
           effects: { Mental_Health: +5, English_Ability: +2 },
-          flavor_text: '学霸是个留学生，他对你千恩万谢，你们用英语聊了十分钟。'
+          flavor_text: '学霸是个留学生，他很感谢你。你们用英语聊了一会。'
         }
       ]
     }]
@@ -763,8 +776,8 @@ export const EVENTS = {
       choices: [
         {
           text: '去健身房，一边在跑步机上快走一边看文献',
-          effects: { Physical_Health: +8, Academic_Ability: +3, Mental_Health: -15 },
-          flavor_text: '你既锻炼了身体又看了书，但这种一心二用让你觉得活着好累。'
+          effects: { Physical_Health: +8, Academic_Ability: +3, Mental_Health: -10 },
+          flavor_text: '你既锻炼了身体又看了书，但这种一心二用让你觉得心累。'
         },
         {
           text: '抛开一切罪恶感，去操场结结实实地跑了五公里',
@@ -786,7 +799,7 @@ export const EVENTS = {
         choices: [
           {
             text:       '这是千载难逢的机会，我卖身了！',
-            effects:    { Mental_Health: -20, Physical_Health: -15, Academic_Ability: +5 },
+            effects:    { Mental_Health: -20, Physical_Health: -15, Academic_Ability: +10 },
             tags_added: ['Research_Exp'],
             flavor_text: '你加入了课题组，开始了每周跑实验室、通宵看外文文献的日子。你获得了宝贵的科研经历，代价是你的发际线退后了一厘米。',
           },
@@ -808,8 +821,8 @@ export const EVENTS = {
     event_id:         'loc_cb_ielts_opportunity',
     type:             'location',
     title:            '极限捡漏',
-    // 依然限制只有在没考到最高分时才会触发
-    forbidden_tags:   ['IELTS_7.5'],  
+    repeatable:       true,           // 【新增】：声明此事件可多次触发
+    forbidden_tags:   ['IELTS_7.5'],  // 考到最高分后不再触发
     scenes: [
       {
         text: '你在图书馆刷题刷得头昏脑涨，随手刷新了一下雅思报名官网。居然刷出了下个月初的一个退考考位！距离报名截止只剩十分钟了。报名费 2170 元。',
@@ -817,13 +830,12 @@ export const EVENTS = {
         choices: [
           {
             text:    '管不了那么多了，先锁考位！',
-            effects: { Mental_Health: -5, Money: 15 },
+            effects: { Mental_Health: -5, Money: -10 },
             flavor_text: '你颤抖着扫码付了款。看着日历上标红的考试日期，你的心跳开始加速，接下来的几周注定是地狱模式。',
             next_event_id: 'ielts_exam_result',
           },
           {
             text:    '理智点，我连剑桥 14 都没刷完……',
-            effects: { Mental_Health: +5 },
           },
         ],
       },
@@ -947,12 +959,12 @@ export const EVENTS = {
       choices: [
         {
           text: '挂到闲鱼上，半价打包出给大一新生',
-          effects: { Money: +15, English_Ability: -2, Mental_Health: +10 },
+          effects: { Money: +10, English_Ability: -2, Mental_Health: +10 },
           flavor_text: '看着微信到账提示，你感到一阵轻松。你不仅卖掉了书，还卖掉了对英语的最后一丝负罪感。'
         },
         {
           text: '撤下显示器，强迫自己做一套听力',
-          effects: { Mental_Health: -15, English_Ability: +3 }
+          effects: { Mental_Health: -15, English_Ability: +4 }
         }
       ]
     }]
@@ -965,12 +977,12 @@ export const EVENTS = {
       choices: [
         {
           text: '加入这场盛宴，连汤都喝干净',
-          effects: { Money: +15, Physical_Health: -10, Mental_Health: +15 },
+          effects: { Money: +10, Physical_Health: -10, Mental_Health: +15 },
           flavor_text: '高钠碳水带来的快乐是无与伦比的，哪怕第二天早上你肿得像个发面馒头。'
         },
         {
           text: '坚守健康底线，花钱点一份轻食沙拉',
-          effects: { Money: -10, Mental_Health: -5 },
+          effects: { Money: -8, Physical_Health: +3, Mental_Health: -8 },
           flavor_text: '仔细想想花钱吃草何意味，看着室友们大快朵颐，你觉得自己既破财又憋屈。'
         }
       ]
@@ -984,11 +996,11 @@ export const EVENTS = {
       choices: [
         {
           text: '戴上降噪耳机，在床上背单词',
-          effects: { English_Ability: +3, Physical_Health: -10, Mental_Health: -15 }
+          effects: { English_Ability: +3, Physical_Health: -10, Mental_Health: -10 }
         },
         {
           text: '这能学得进？一起开黑算了',
-          effects: { Mental_Health: +20, Physical_Health: -10, Academic_Ability: -2 },
+          effects: { Mental_Health: +15, Physical_Health: -10, Academic_Ability: -2 },
           flavor_text: '你用一波五杀拯救了室友的排位分，也摧毁了你明天早八的起床意志。'
         }
       ]
@@ -1007,7 +1019,7 @@ export const EVENTS = {
         },
         {
           text: '被焦虑感逼迫，选择去刷专业课习题',
-          effects: { Mental_Health: -15, Academic_Ability: +10 }
+          effects: { Mental_Health: -15, Academic_Ability: +8 }
         }
       ]
     }]
@@ -1020,8 +1032,8 @@ export const EVENTS = {
       choices: [
         {
           text: '没玩过这游戏不配说自己是笔电小子！',
-          effects: { Money: -10, Mental_Health: +15, Academic_Ability: -2 },
-          flavor_text: '《宇宙机○人》不如《黑○话》一根！'
+          effects: { Money: -7, Mental_Health: +15, Academic_Ability: -2 },
+          flavor_text: '《宇宙机○人》不如《黑○话》一根。'
         },
         {
           text: '不买，去 B 站看 UP 主的实况视频，聊以解馋',
@@ -1039,12 +1051,12 @@ export const EVENTS = {
       choices: [
         {
           text: '收钱办事，重构那坨意大利面代码',
-          effects: { Money: +20, Academic_Ability: +10, Mental_Health: -15 },
+          effects: { Money: +15, Academic_Ability: +10, Mental_Health: -15 },
           flavor_text: '你赚了钱，顺便把知识点吃透了，不过你看他代码时气的差点脑溢血。'
         },
         {
           text: '嫌麻烦拒绝，有这时间不如玩原神',
-          effects: { Mental_Health: +5, Money: -5 }
+          effects: { Mental_Health: +8, Money: -5 }
         }
       ]
     }]
@@ -1119,7 +1131,7 @@ export const EVENTS = {
         },
         {
           text: '“能干嘛？进厂打螺丝呗。”戴上耳塞强行睡觉',
-          effects: { Physical_Health: +10, Mental_Health: -10, English_Ability: +2 },
+          effects: { Physical_Health: +10, Mental_Health: -10, English_Ability: +3 },
           flavor_text: '你在梦里竟然梦到自己在国外的流水线工厂打黑工。'
         }
       ]
@@ -1137,7 +1149,7 @@ export const EVENTS = {
         },
         {
           text: '都放洗衣液了有啥关系，直接洗',
-          effects: { Physical_Health: -15, Mental_Health: -10, Money: +5 },
+          effects: { Physical_Health: -13, Mental_Health: -10, Money: +5 },
           flavor_text: '“为啥老发痒？”'
         }
       ]
@@ -1151,7 +1163,7 @@ export const EVENTS = {
       choices: [
         {
           text: '挂在二手群里，以低廉的价格卖给不知情的学弟',
-          effects: { Money: +15, Mental_Health: -10 },
+          effects: { Money: +12, Mental_Health: -10 },
           flavor_text: '钱到账了。但你总怕半夜学弟捂着肚子来敲门暗杀你，良心受到了隐隐的谴责。'
         },
         {
@@ -1174,7 +1186,7 @@ export const EVENTS = {
         choices: [
           {
             text:       '👍',
-            effects:    { English_Ability: +3, Mental_Health: -10, Physical_Health: -5 },
+            effects:    { English_Ability: +4, Mental_Health: -10, Physical_Health: -5 },
             tags_added: ['Study_Buddy'],
             flavor_text: '你们达成了神圣的契约。虽然每天早起极其痛苦，但在互相鄙视的驱动下，你确实比一个人单打独斗有效率多了。',
           },

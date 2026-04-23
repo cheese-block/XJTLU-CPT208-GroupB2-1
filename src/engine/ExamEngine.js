@@ -72,13 +72,20 @@ export function calculateGPA(ability) {
 
 // 修改 _buildExamSummary 方法
 function _buildExamSummary(gpa, tag, ability) {
-  // 展会版不再提及具体分数，只提及表现等级
+  const isEn = StateManager.getLang() === 'en';
+  
   if (tag === 'GPA_Top' || tag === 'GPA_High') {
-    return `本学期你的专业课表现极其出色，期末 GPA 达到了 ${gpa}。这对申请名校是极大的助力。`;
+    return isEn 
+      ? `Your high GPA (${gpa}) is a solid entry ticket to top-tier universities. You have a great advantage in the initial screening.`
+      : `你的均分 (${gpa}) 非常亮眼。这让你在面对 G5 或顶尖名校的筛选时，已经握住了一张坚实的入场券。`;
   } else if (tag === 'GPA_Mid') {
-    return `本学期你的专业课表现平稳，期末 GPA 为 ${gpa}。这是一个稳健的成绩，但可能需要更强的软背景来支撑。`;
+    return isEn
+      ? `Your GPA (${gpa}) is decent. It's a stable start, but you'll need a stronger SOP or soft background to stand out.`
+      : `你的均分 (${gpa}) 处于中游。这是一个稳健的开端，但这意味着你需要在文书和软背景上展现出更多独特性。`;
   } else {
-    return `本学期你的专业课表现不尽如人意，期末 GPA 仅为 ${gpa}。这可能会限制你申请院校的选择范围。`;
+    return isEn
+      ? `Your GPA (${gpa}) is relatively low. You may need a more realistic university list or an outstanding research background to compensate.`
+      : `你的均分 (${gpa}) 偏低。这会是你申请中的软肋，你可能需要更务实的选校策略，或寄希望于惊人的科研经历。`;
   }
 }
 
