@@ -159,26 +159,39 @@ function _playNextEvent() {
 // 月末结算
 // ─────────────────────────────────────────────────────────────
 
-// --- 重构 resolveMonthEnd，编排大结局顺序 ---
 export function resolveMonthEnd(onMonthEnd) {
   const state = StateManager.getState();
-  StateManager.setProcessing(true);
+  StateManager.setProcessing(true); // 上锁
 
   // 1. 注入并处理当月 Scheduled 事件（如期末考试 VN）
   EventEngine.checkScheduledEvents(state);
 
   processEventQueue(() => {
+    // 【关键修复 1】：队列处理完，意味着强制事件已经播完，解除死锁！
+    StateManager.setProcessing(false);
+
     const stateAfterEvents = StateManager.getState();
     
-    // 2. 计算成绩
+    // 2. 检查事件播放途中是否因为数值崩溃导致死亡
+    const isDead = stateAfterEvents.tags.some(t => t.startsWith('__BAD_END_'));
+    if (isDead) {
+      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      return;
+    }
+
+    // 3. 计算期末成绩
     let examResult = null;
-    if (stateAfterEvents.currentMonth === CONSTANTS.MAX_MONTHS) {
+    if (CONSTANTS.SEMESTER_END_MONTHS.includes(stateAfterEvents.currentMonth) || stateAfterEvents.currentMonth === CONSTANTS.MAX_MONTHS) {
       examResult = resolveFinalExam(stateAfterEvents);
     }
 
-    // 3. 检查死亡
+    // 如果考完试因为成绩太差导致心理归零，立即触发死亡清算
     if (checkBadEndings()) {
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      StateManager.setProcessing(true);
+      processEventQueue(() => {
+        StateManager.setProcessing(false);
+        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
+      });
       return;
     }
 
@@ -187,7 +200,6 @@ export function resolveMonthEnd(onMonthEnd) {
 
     if (isGameEnd) {
       // --- 大结局特殊流程 ---
-      // 先展示学期总结
       window._pendingMonthSummary = {
         prevMonth: CONSTANTS.MAX_MONTHS,
         newMonth: CONSTANTS.MAX_MONTHS,
@@ -196,8 +208,12 @@ export function resolveMonthEnd(onMonthEnd) {
         onConfirm: () => {
           // 总结确认后，注入“提交申请”事件卡片
           StateManager.enqueueEventFront({ eventId: 'final_application', source: 'scheduled' });
+          
+          StateManager.setProcessing(true); // 再次上锁
           processEventQueue(() => {
-            // 申请卡片点完后，弹出 Demo 结束弹窗
+            // 【关键修复 2】：大结局卡片点完后，也要解除死锁
+            StateManager.setProcessing(false); 
+            
             const isEn = StateManager.getLang() === 'en';
             showConfirm({
               title: isEn ? 'Demo Completed' : 'Demo 体验结束',
@@ -215,53 +231,6 @@ export function resolveMonthEnd(onMonthEnd) {
       onMonthEnd?.({ newMonth: stateAfterEvents.currentMonth + 1, examResult });
     }
   });
-}
-
-// 修改 _resolveEndOfMonth 方法中的逻辑
-function _resolveEndOfMonth(onMonthEnd) {
-  const state = StateManager.getState();
-
-  let examResult = null;
-  // 检查是否是期末月（Demo 第4个月强制结算 GPA）
-  if (CONSTANTS.SEMESTER_END_MONTHS.includes(state.currentMonth) || state.currentMonth === CONSTANTS.MAX_MONTHS) {
-    examResult = resolveFinalExam(state);
-    log('info', 'GameLoop', `📝 期末结算：GPA ${examResult.gpa}`);
-  }
-
-  _tickBuffDurations();
-  const isDead = checkBadEndings();
-
-  if (isDead) {
-    processEventQueue(() => {
-      StateManager.setProcessing(false);
-      StateManager.setGamePhase(CONSTANTS.GAME_PHASE.ENDING);
-    });
-    return; 
-  }
-
-  const { newMonth, isGameEnd } = StateManager.advanceMonth();
-  StateManager.saveGame();
-  StateManager.setProcessing(false);
-
-  if (isGameEnd) {
-    const isEn = StateManager.getLang() === 'en';
-    showConfirm({
-      title: isEn ? 'Demo Completed' : 'Demo 体验结束',
-      message: isEn 
-        ? 'Your profile is now locked. Let\'s review your journey.' 
-        : 'Demo 版体验到此结束。\n\n你的申请履历已经锁定，在查看录取结果前，先复盘一下你的表现。',
-      confirmText: isEn ? 'Review Profile' : '开始复盘',
-      cancelText: '', 
-      confirmVariant: 'primary',
-      onConfirm: () => {
-        // 【修复点】：跳转至标签展示页（复盘界面）
-        StateManager.setGamePhase(CONSTANTS.GAME_PHASE.TAG_SHOWCASE);
-      }
-    });
-  } else {
-    // 正常月份推进，回调 MapScreen 展示 MonthSummaryScreen
-    onMonthEnd?.({ newMonth, examResult });
-  }
 }
 
 // ─────────────────────────────────────────────────────────────
