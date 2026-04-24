@@ -9,6 +9,7 @@
 import { CONSTANTS }     from '../utils/constants.js';
 import * as StateManager from '../state/StateManager.js';
 import { clamp, log }    from '../utils/helpers.js';
+import { t }             from '../utils/i18n.js';
 
 // ─────────────────────────────────────────────────────────────
 // 期末考试
@@ -36,7 +37,7 @@ export function resolveFinalExam(state) {
   // 清零学力（下学期重置）
   StateManager.applyStatDelta(
     { Academic_Ability: -ability },
-    { Academic_Ability: '学力' }
+    { Academic_Ability: t('stat_academic') }
   );
 
   // 心理健康的影响
@@ -44,7 +45,7 @@ export function resolveFinalExam(state) {
   if (mentalDelta !== 0) {
     StateManager.applyStatDelta(
       { Mental_Health: mentalDelta },
-      { Mental_Health: '心理健康' }
+      { Mental_Health: t('stat_mental') }
     );
   }
 
@@ -70,22 +71,13 @@ export function calculateGPA(ability) {
   return { gpa: 2.2, tag: 'GPA_Low' };
 }
 
-// 修改 _buildExamSummary 方法
 function _buildExamSummary(gpa, tag, ability) {
-  const isEn = StateManager.getLang() === 'en';
-  
   if (tag === 'GPA_Top' || tag === 'GPA_High') {
-    return isEn 
-      ? `Your high GPA (${gpa}) is a solid entry ticket to top-tier universities. You have a great advantage in the initial screening.`
-      : `你的均分 (${gpa}) 非常亮眼。这让你在面对 G5 或顶尖名校的筛选时，已经握住了一张坚实的入场券。`;
+    return t('exam_gpa_top_desc').replace('{gpa}', gpa);
   } else if (tag === 'GPA_Mid') {
-    return isEn
-      ? `Your GPA (${gpa}) is decent. It's a stable start, but you'll need a stronger SOP or soft background to stand out.`
-      : `你的均分 (${gpa}) 处于中游。这是一个稳健的开端，但这意味着你需要在文书和软背景上展现出更多独特性。`;
+    return t('exam_gpa_mid_desc').replace('{gpa}', gpa);
   } else {
-    return isEn
-      ? `Your GPA (${gpa}) is relatively low. You may need a more realistic university list or an outstanding research background to compensate.`
-      : `你的均分 (${gpa}) 偏低。这会是你申请中的软肋，你可能需要更务实的选校策略，或寄希望于惊人的科研经历。`;
+    return t('exam_gpa_low_desc').replace('{gpa}', gpa);
   }
 }
 
@@ -119,7 +111,7 @@ export function resolveIeltsExam(state) {
 
   StateManager.applyStatDelta(
     { Mental_Health: mentalDelta },
-    { Mental_Health: '心理健康' }
+    { Mental_Health: t('stat_mental') }
   );
 
   const summary = _buildIeltsSummary(band, band_num);
@@ -145,10 +137,10 @@ export function calculateIeltsTag(ability) {
 
 function _buildIeltsSummary(band, band_num) {
   if (band_num >= 7.0) {
-    return `雅思成绩 ${band} 分！达到了大多数 G5 院校的语言要求，这个成绩可以安心提交申请了。`;
+    return t('exam_ielts_high_desc').replace('{band}', band);
   } else if (band_num >= 6.5) {
-    return `雅思成绩 ${band} 分，达到了部分学校的要求，但申请顶尖院校可能仍有压力。考虑是否要再冲一次。`;
+    return t('exam_ielts_mid_desc').replace('{band}', band);
   } else {
-    return `雅思成绩 ${band} 分，未达到多数目标院校的要求。需要继续备考，尽快重考。`;
+    return t('exam_ielts_low_desc').replace('{band}', band);
   }
 }

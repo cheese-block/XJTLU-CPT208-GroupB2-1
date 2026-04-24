@@ -12,7 +12,7 @@
 import { ENDINGS }       from '../../data/endings.js';
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
-import { t }             from '../../utils/i18n.js';
+import { t, resolveI18nText } from '../../utils/i18n.js';
 
 export class CollectionScreen {
   constructor() {
@@ -83,7 +83,7 @@ export class CollectionScreen {
     `;
   }
 
-_buildCard(ending, isUnlocked) {
+  _buildCard(ending, isUnlocked) {
     const THEME = {
       success: { border: 'border-green-300', bg: 'bg-green-50', icon: 'award', iconCls: 'text-green-600', badge: 'bg-green-100 text-green-700', label: t('collection_theme_perfect') },
       primary: { border: 'border-blue-300', bg: 'bg-blue-50', icon: 'mail-check', iconCls: 'text-blue-600', badge: 'bg-blue-100 text-blue-700', label: t('collection_theme_normal') },
@@ -101,8 +101,7 @@ _buildCard(ending, isUnlocked) {
               <i data-lucide="lock" class="lucide w-5 h-5 text-gray-300"></i>
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center gap-1">
-              <!-- 【修复】：恢复原结局名称，不再使用统一的 locked_title -->
-              <h3 class="text-sm font-black text-gray-400 leading-tight">${ending.title}</h3>
+              <h3 class="text-sm font-black text-gray-400 leading-tight">${resolveI18nText(ending.title)}</h3>
               <span class="text-[0.6rem] text-gray-300">${t('collection_locked_desc')}</span>
             </div>
           </div>
@@ -118,19 +117,19 @@ _buildCard(ending, isUnlocked) {
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-sm font-black text-xjtlu-navy leading-tight">${ending.title}</h3>
+              <h3 class="text-sm font-black text-xjtlu-navy leading-tight">${resolveI18nText(ending.title)}</h3>
               <span class="text-[0.6rem] font-bold px-2 py-0.5 rounded-full ${theme.badge}">${theme.label}</span>
             </div>
           </div>
         </div>
         <div class="h-px bg-gray-100"></div>
-        <p class="text-xs text-gray-600 leading-relaxed flex-1">${ending.description}</p>
+        <p class="text-xs text-gray-600 leading-relaxed flex-1">${resolveI18nText(ending.description)}</p>
         <div class="bg-yellow-50 border-l-3 border-xjtlu-yellow pl-3 pr-2 py-2 rounded-r-lg">
           <div class="flex items-center gap-1.5 mb-0.5">
             <i data-lucide="lightbulb" class="lucide w-3 h-3 text-xjtlu-yellow shrink-0"></i>
             <span class="text-[0.6rem] font-bold text-yellow-700 uppercase tracking-wider">${t('collection_teacher_review')}</span>
           </div>
-          <p class="text-[0.7rem] text-yellow-800 leading-relaxed">${ending.tip}</p>
+          <p class="text-[0.7rem] text-yellow-800 leading-relaxed">${resolveI18nText(ending.tip)}</p>
         </div>
       </div>
     `;

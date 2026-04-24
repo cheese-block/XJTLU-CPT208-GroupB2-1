@@ -8,7 +8,7 @@
  *   - 支持知识提示框（knowledge_tip）的特殊样式
  */
 
-import { t } from '../../utils/i18n.js';
+import { t, resolveI18nText } from '../../utils/i18n.js';
 
 export class DialogBox {
   constructor() {
@@ -31,9 +31,9 @@ export class DialogBox {
 
   /**
    * @param {object} options
-   * @param {string}   options.text
-   * @param {string}   [options.speaker]
-   * @param {string}   [options.tip]
+   * @param {string|object} options.text
+   * @param {string|object} [options.speaker]
+   * @param {string|object} [options.tip]
    * @param {object}   [options.effects]   数值得失
    * @param {object}   [options.effectLabels] 显示名称
    * @param {boolean}  [options.showHint]
@@ -48,10 +48,11 @@ export class DialogBox {
     effectLabels = {},
     showHint     = true,
     onComplete   = null,
-    hasExactBuff = false, // 【修复】：正确接收透视 Buff 标志
+    hasExactBuff = false,
   }) {
     this._stopTyping();
-    this._fullText   = text;
+    const resolvedText = resolveI18nText(text);
+    this._fullText   = resolvedText;
     this._onComplete = onComplete;
 
     const speakerEl  = this._container?.querySelector('#vn-speaker');
@@ -64,24 +65,25 @@ export class DialogBox {
 
     // 发言人
     if (speakerEl) {
-      speakerEl.textContent = speaker;
-      speakerEl.classList.toggle('hidden', !speaker);
+      const resolvedSpeaker = resolveI18nText(speaker);
+      speakerEl.textContent = resolvedSpeaker;
+      speakerEl.classList.toggle('hidden', !resolvedSpeaker);
     }
 
     // 知识提示
     if (tipEl) {
-      tipEl.innerHTML = tip
+      const resolvedTip = resolveI18nText(tip);
+      tipEl.innerHTML = resolvedTip
         ? `<i data-lucide="lightbulb" class="lucide w-3.5 h-3.5 shrink-0"></i>
-           <span>${tip}</span>`
+           <span>${resolvedTip}</span>`
         : '';
-      tipEl.classList.toggle('hidden', !tip);
-      if (tip && typeof lucide !== 'undefined') lucide.createIcons();
+      tipEl.classList.toggle('hidden', !resolvedTip);
+      if (resolvedTip && typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     // 数值得失（选择后或纯剧情触发后显示）
     if (effectsEl) {
       if (effects && Object.keys(effects).length > 0) {
-        // 【修复】：直接使用解构出来的 hasExactBuff
         effectsEl.innerHTML = Object.entries(effects)
           .filter(([, delta]) => delta !== 0)
           .map(([stat, delta]) => {
@@ -103,7 +105,12 @@ export class DialogBox {
               // 模糊模式：文字描述
               const colorCls = isPos ? 'text-xjtlu-green' : 'text-xjtlu-red';
               const bgCls    = isPos ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100';
-              const desc     = `${isLarge ? '大幅' : '小幅'}${isPos ? '提升' : '下降'}`;
+              
+              const key = isPos 
+                ? (isLarge ? 'stat_desc_large_pos' : 'stat_desc_small_pos')
+                : (isLarge ? 'stat_desc_large_neg' : 'stat_desc_small_neg');
+              const desc = t(key);
+              
               return `
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-bold ${colorCls} ${bgCls}">
                   ${label} ${desc}
@@ -123,13 +130,13 @@ export class DialogBox {
     textEl.innerHTML = ''; 
 
     // 如果是包含 HTML 标签的文本（如拼接了 span），直接显示，跳过打字机
-    if (text.includes('<span') || text.includes('<br>')) {
-      textEl.innerHTML = text;
+    if (resolvedText.includes('<span') || resolvedText.includes('<br>')) {
+      textEl.innerHTML = resolvedText;
       if (hintEl && showHint) hintEl.classList.remove('hidden');
       this._onComplete?.();
     } else {
       // 纯文本依然保留打字机效果
-      this._typeText(text, textEl, () => {
+      this._typeText(resolvedText, textEl, () => {
         if (hintEl && showHint) hintEl.classList.remove('hidden');
         this._onComplete?.();
       });

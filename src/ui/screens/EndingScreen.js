@@ -1,6 +1,7 @@
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
 import { determineEnding } from '../../engine/EndingEngine.js';
+import { resolveI18nText, t } from '../../utils/i18n.js';
 
 export class EndingScreen {
   constructor() {
@@ -52,23 +53,23 @@ export class EndingScreen {
               <i data-lucide="${theme.icon}" class="lucide w-10 h-10 ${theme.text}"></i>
             </div>
             <p class="text-xs font-bold ${theme.text} tracking-[0.2em] uppercase mb-2">Final Result</p>
-            <h1 class="text-4xl font-black text-gray-900">${ending.title}</h1>
+            <h1 class="text-4xl font-black text-gray-900">${resolveI18nText(ending.title)}</h1>
           </div>
 
           <!-- 正文描述 -->
           <div class="px-8 py-8 flex flex-col gap-6">
             <p class="text-gray-700 leading-relaxed text-lg">
-              ${ending.description}
+              ${resolveI18nText(ending.description)}
             </p>
 
             <!-- 知识点复盘 -->
             <div class="bg-gray-50 border-l-4 border-xjtlu-yellow p-4 rounded-r-lg mt-2">
               <div class="flex items-center gap-2 mb-1">
                 <i data-lucide="lightbulb" class="lucide w-4 h-4 text-xjtlu-yellow"></i>
-                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">老师的复盘</span>
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">${t('ending_tip_title')}</span>
               </div>
               <p class="text-sm text-gray-600 leading-relaxed">
-                ${ending.tip}
+                ${resolveI18nText(ending.tip)}
               </p>
             </div>
           </div>
@@ -77,7 +78,7 @@ export class EndingScreen {
           <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex gap-4">
             <button id="btn-restart" class="xjtlu-btn xjtlu-btn--primary w-full justify-center py-3 text-base">
               <i data-lucide="rotate-ccw" class="lucide w-5 h-5"></i>
-              重新开始游戏
+              ${t('ending_restart_btn')}
             </button>
           </div>
 

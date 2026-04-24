@@ -50,14 +50,10 @@ export class MonthSummaryScreen {
     this._onConfirm = onConfirm;
     if (!this._container) return;
 
-    const lang = StateManager.getLang();
     const isDemoEnd = prevMonth === CONSTANTS.MAX_MONTHS; // 是否是第4个月
 
     // 动态翻译月份和阶段
-    const getMonthName = (m) => {
-      const mapEn = { 1:'Sep', 2:'Oct', 3:'Nov', 4:'Dec', 5:'Winter Break', 6:'Mar', 7:'Apr', 8:'May', 9:'Jun', 10:'Summer Break', 11:'Summer Break', 12:'Application Season' };
-      return lang === 'en' ? mapEn[m] : (CONSTANTS.MONTH_TO_REALWORLD[m] ?? `Month ${m}`);
-    };
+    const getMonthName = (m) => t(`month_${m}`);
 
     const isGoodGpa = examResult?.tag === 'GPA_Top' || examResult?.tag === 'GPA_High';
     const isMidGpa  = examResult?.tag === 'GPA_Mid';

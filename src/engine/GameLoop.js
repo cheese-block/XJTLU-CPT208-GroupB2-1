@@ -128,13 +128,13 @@ function _playNextEvent() {
     if (eventData.scenes && eventData.scenes.length > 1) {
       const band = result.band;
       let evaluation = '';
-      if (band === '7.5') evaluation = '远超预期！';
-      else if (band === '7.0') evaluation = '达到了目标！';
-      else if (band === '6.5') evaluation = '勉强够用。';
-      else if (band === '6.0') evaluation = '不太理想。';
-      else evaluation = '需要继续努力。';
+      if (band === '7.5') evaluation = t('ielts_eval_75');
+      else if (band === '7.0') evaluation = t('ielts_eval_70');
+      else if (band === '6.5') evaluation = t('ielts_eval_65');
+      else if (band === '6.0') evaluation = t('ielts_eval_60');
+      else evaluation = t('ielts_eval_low');
       
-      eventData.scenes[1].text = `雅思成绩：${band} 分。\n\n${evaluation}\n\n${result.summary}`;
+      eventData.scenes[1].text = `${t('ielts_score_label')}${band}\n\n${evaluation}\n\n${result.summary}`;
     }
   }
 
@@ -220,11 +220,10 @@ export function resolveMonthEnd(onMonthEnd) {
           processEventQueue(() => {
             StateManager.setProcessing(false); 
             
-            const isEn = StateManager.getLang() === 'en';
             showConfirm({
-              title: isEn ? 'Demo Completed' : 'Demo 体验结束',
-              message: isEn ? 'Review your journey.' : '你的申请履历已经锁定，开始复盘。',
-              confirmText: isEn ? 'Review' : '开始复盘',
+              title: t('demo_end_title'),
+              message: t('demo_end_msg'),
+              confirmText: t('demo_end_btn'),
               cancelText: '',
               // 【修改点】：由默认的 danger 改为 primary，按钮将变为西浦蓝色
               confirmVariant: 'primary', 

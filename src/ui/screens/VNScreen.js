@@ -4,7 +4,7 @@
 
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
-import { resolveI18nText } from '../../utils/i18n.js';
+import { resolveI18nText, t } from '../../utils/i18n.js';
 import { DialogBox }     from '../components/DialogBox.js';
 import { ChoicePanel }   from '../components/ChoicePanel.js';
 import { log }           from '../../utils/helpers.js';
@@ -389,17 +389,17 @@ export class VNScreen {
 
   _buildEffectLabels(effects) {
     const labelMap = {
-      Mental_Health:    '心理健康',
-      Physical_Health:  '身体健康',
-      Money:            '资金',
-      Academic_Ability: '学力',
-      English_Ability:  '英语能力',
-      AP:               '行动点',
-      Agency_Score:     '中介指数', // 【新增】飘字翻译
+      Mental_Health:    'stat_mental',
+      Physical_Health:  'stat_physical',
+      Money:            'stat_money',
+      Academic_Ability: 'stat_academic',
+      English_Ability:  'stat_english',
+      AP:               'stat_ap',
+      Agency_Score:     'stat_agency_score',
     };
     const result = {};
     Object.keys(effects ?? {}).forEach(key => {
-      result[key] = labelMap[key] ?? key;
+      result[key] = t(labelMap[key] || key);
     });
     return result;
   }

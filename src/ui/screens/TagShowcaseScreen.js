@@ -1,6 +1,7 @@
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
 import { calculateSoftScore } from '../../engine/EndingEngine.js';
+import { t } from '../../utils/i18n.js';
 
 export class TagShowcaseScreen {
   constructor() {
@@ -9,7 +10,7 @@ export class TagShowcaseScreen {
 
   mount(container, state) {
     this._container = container;
-    // 【修复】：加入 try-catch 防止未知 Tag 导致渲染崩溃白屏
+    // 【修复】：加入 try-catch 防止未知 Tag导致渲染崩溃白屏
     try {
       container.innerHTML = this._buildHTML(state);
       if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -30,7 +31,6 @@ export class TagShowcaseScreen {
   _buildHTML(state) {
     const tags = state.tags || [];
     const softScore = calculateSoftScore(tags);
-    const isEn = StateManager.getLang() === 'en'; // 【新增定义】
     
     // 过滤掉所有不应展示给玩家的内部临时标签
     const HIDDEN_TAG_PREFIXES = ['__', 'Agency_'];
@@ -45,11 +45,10 @@ export class TagShowcaseScreen {
           
           <div class="bg-xjtlu-navy px-8 py-6 text-center">
             <h1 class="text-2xl font-black text-white tracking-widest">
-              ${isEn ? 'Profile Review' : '人生印记复盘'}
+              ${t('tag_showcase_title')}
             </h1>
             <p class="text-white/70 text-sm mt-2">
-              <!-- 【修改】：文案适配 Demo -->
-              ${isEn ? 'Everything you achieved in this Demo.' : '你在本次 Demo 中积累的所有筹码'}
+              ${t('tag_showcase_desc')}
             </p>
           </div>
 
@@ -57,7 +56,7 @@ export class TagShowcaseScreen {
             
             <!-- 标签墙 -->
             <div class="flex flex-col gap-3">
-              <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">获得的所有标签</span>
+              <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">${t('tag_showcase_label')}</span>
               <div class="flex flex-wrap gap-2">
                 ${mappedTags.length > 0 
                   ? mappedTags.map(t => `
@@ -69,7 +68,7 @@ export class TagShowcaseScreen {
                         ${t.label}
                       </span>
                     `).join('')
-                  : `<span class="text-gray-400 italic text-sm">空空如也...</span>`
+                  : `<span class="text-gray-400 italic text-sm">${t('tag_showcase_empty')}</span>`
                 }
               </div>
             </div>
@@ -79,8 +78,8 @@ export class TagShowcaseScreen {
             <!-- 软背景评分 -->
             <div class="flex items-center justify-between bg-blue-50 rounded-xl p-4 border border-blue-100">
               <div class="flex flex-col">
-                <span class="text-sm font-bold text-xjtlu-navy">软背景综合评分</span>
-                <span class="text-xs text-xjtlu-gray mt-1">影响顶尖名校录取的关键隐藏分</span>
+                <span class="text-sm font-bold text-xjtlu-navy">${t('tag_showcase_soft_title')}</span>
+                <span class="text-xs text-xjtlu-gray mt-1">${t('tag_showcase_soft_desc')}</span>
               </div>
               <span class="text-3xl font-black text-xjtlu-blue">${softScore}</span>
             </div>
@@ -89,7 +88,7 @@ export class TagShowcaseScreen {
 
           <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end">
             <button id="btn-reveal-ending" class="xjtlu-btn xjtlu-btn--primary text-base px-8 py-3">
-              查看最终录取结果
+              ${t('tag_showcase_btn')}
               <i data-lucide="arrow-right" class="lucide w-5 h-5"></i>
             </button>
           </div>
@@ -107,26 +106,25 @@ export class TagShowcaseScreen {
 
   _mapTagToUI(tag) {
     const dict = {
-      'GPA_Top':  { label: 'GPA 3.8 优秀', icon: 'graduation-cap', colorCls: 'tag-badge--blue', desc: 'GPA 达到 3.8，顶尖水平，G5 的敲门砖。' },
-      'GPA_High': { label: '高 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--blue', desc: 'GPA 大于 3.3，极具竞争力。' },
-      'GPA_Mid':  { label: '中等 GPA', icon: 'graduation-cap', colorCls: 'tag-badge--gray', desc: 'GPA 在 2.8 - 3.3 之间，中规中矩。' },
-      'GPA_Low':  { label: '低 GPA', icon: 'alert-triangle', colorCls: 'tag-badge--red', desc: 'GPA 低于 2.8，申请阻力很大。' },
-      'IELTS_7.5':{ label: '雅思 7.5', icon: 'languages', colorCls: 'tag-badge--blue', desc: '横扫绝大多数名校语言要求。' },
-      'IELTS_7.0':{ label: '雅思 7.0', icon: 'languages', colorCls: 'tag-badge--blue', desc: '满足绝大多数名校语言要求。' },
-      'IELTS_6.5':{ label: '雅思 6.5', icon: 'languages', colorCls: 'tag-badge--gray', desc: '刚好够用，部分名校可能需配语言班。' },
-      'IELTS_6.0':{ label: '雅思 6.0', icon: 'languages', colorCls: 'tag-badge--red', desc: '语言成绩偏低，选择受限。' },
-      'IELTS_5.5':{ label: '雅思 5.5', icon: 'alert-triangle', colorCls: 'tag-badge--red', desc: '基本无缘直录，必须读语言班。' },
-      'Internship_Exp': { label: '实习经历', icon: 'briefcase', colorCls: 'tag-badge--green', desc: '真实的职场经历，软背景加分。' },
-      'Research_Exp':   { label: '科研经历', icon: 'microscope', colorCls: 'tag-badge--green', desc: '参与过教授项目，极具含金量。' },
-      'Reliable_Agency':{ label: '靠谱中介', icon: 'shield-check', colorCls: 'tag-badge--green', desc: '避开了申请路上的大坑。' },
-      'Perfect_Agency': { label: '契约守护者', icon: 'file-check', colorCls: 'tag-badge--blue', desc: '你签订了一份极其稳健的合同，并将申请主动权牢牢握在手中。' },
-      'Reliable_Agency':{ label: '靠谱中介', icon: 'shield-check', colorCls: 'tag-badge--green', desc: '成功避开了申请路上的大坑，获得了一个合格的辅助。' },
-      'Scam_Agency':    { label: '黑中介受害者', icon: 'skull', colorCls: 'tag-badge--red', desc: '在一声声“保录”中迷失，失去了申请账号的控制权，前途未卜。' },
-      'DIY_Applicant':  { label: '硬核 DIY', icon: 'user-cog', colorCls: 'tag-badge--yellow', desc: '不依赖任何外部机构，独立完成了复杂的申研全流程。' },
-      'Study_Buddy':    { label: '雅思搭子', icon: 'users', colorCls: 'tag-badge--yellow', desc: '有人陪伴的备考之路。' },
-      'Anxious':        { label: '曾陷入焦虑', icon: 'frown', colorCls: 'tag-badge--gray', desc: '心理健康曾亮起红灯。' },
-      'Sick':           { label: '曾大病一场', icon: 'thermometer', colorCls: 'tag-badge--gray', desc: '身体曾发出严重警告。' },
+      'GPA_Top':  { label: t('tag_gpa_top_label'),  icon: 'graduation-cap', colorCls: 'tag-badge--blue',  desc: t('tag_gpa_top_desc') },
+      'GPA_High': { label: t('tag_gpa_high_label'), icon: 'graduation-cap', colorCls: 'tag-badge--blue',  desc: t('tag_gpa_high_desc') },
+      'GPA_Mid':  { label: t('tag_gpa_mid_label'),  icon: 'graduation-cap', colorCls: 'tag-badge--gray',  desc: t('tag_gpa_mid_desc') },
+      'GPA_Low':  { label: t('tag_gpa_low_label'),  icon: 'alert-triangle', colorCls: 'tag-badge--red',   desc: t('tag_gpa_low_desc') },
+      'IELTS_7.5':{ label: t('tag_ielts_75_label'), icon: 'languages',      colorCls: 'tag-badge--blue',  desc: t('tag_ielts_75_desc') },
+      'IELTS_7.0':{ label: t('tag_ielts_70_label'), icon: 'languages',      colorCls: 'tag-badge--blue',  desc: t('tag_ielts_70_desc') },
+      'IELTS_6.5':{ label: t('tag_ielts_65_label'), icon: 'languages',      colorCls: 'tag-badge--gray',  desc: t('tag_ielts_65_desc') },
+      'IELTS_6.0':{ label: t('tag_ielts_60_label'), icon: 'languages',      colorCls: 'tag-badge--red',   desc: t('tag_ielts_60_desc') },
+      'IELTS_5.5':{ label: t('tag_ielts_55_label'), icon: 'alert-triangle', colorCls: 'tag-badge--red',   desc: t('tag_ielts_55_desc') },
+      'Internship_Exp': { label: t('tag_internship_label'), icon: 'briefcase', colorCls: 'tag-badge--green', desc: t('tag_internship_desc') },
+      'Research_Exp':   { label: t('tag_research_label'),   icon: 'microscope', colorCls: 'tag-badge--green', desc: t('tag_research_desc') },
+      'Perfect_Agency': { label: t('tag_perfect_agency_label'), icon: 'file-check', colorCls: 'tag-badge--blue', desc: t('tag_perfect_agency_desc') },
+      'Reliable_Agency':{ label: t('tag_reliable_agency_label'),icon: 'shield-check',colorCls: 'tag-badge--green',desc: t('tag_reliable_agency_desc') },
+      'Scam_Agency':    { label: t('tag_scam_agency_label'),    icon: 'skull',       colorCls: 'tag-badge--red',   desc: t('tag_scam_agency_desc') },
+      'DIY_Applicant':  { label: t('tag_diy_label'),           icon: 'user-cog',    colorCls: 'tag-badge--yellow',desc: t('tag_diy_desc') },
+      'Study_Buddy':    { label: t('tag_study_buddy_label'),    icon: 'users',       colorCls: 'tag-badge--yellow',desc: t('tag_study_buddy_desc') },
+      'Anxious':        { label: t('tag_anxious_label'),        icon: 'frown',       colorCls: 'tag-badge--gray',  desc: t('tag_anxious_desc') },
+      'Sick':           { label: t('tag_sick_label'),           icon: 'thermometer', colorCls: 'tag-badge--gray',  desc: t('tag_sick_desc') },
     };
-    return dict[tag] || { label: tag, icon: 'tag', colorCls: 'tag-badge--gray', desc: '未知印记' };
+    return dict[tag] || { label: tag, icon: 'tag', colorCls: 'tag-badge--gray', desc: t('tag_unknown_label') };
   }
 }

@@ -58,7 +58,7 @@ export class EventCardScreen {
     const textEl = this._container.querySelector('#ec-text');
     const tipEl = this._container.querySelector('#ec-tip');
     
-    titleEl.textContent = resolveI18nText(this._event.title, 'Event');
+    titleEl.textContent = resolveI18nText(this._event.title, t('ec_card_title'));
     textEl.innerHTML = resolveI18nText(scene.text, '').replace(/\n/g, '<br>');
     
     const sceneTip = resolveI18nText(scene.tip, '');
@@ -183,16 +183,16 @@ export class EventCardScreen {
 
   _buildEffectLabels(effects) {
     const labelMap = {
-      Mental_Health:    '心理健康',
-      Physical_Health:  '身体健康',
-      Money:            '资金',
-      Academic_Ability: '学力',
-      English_Ability:  '英语能力',
-      AP:               '行动点',
+      Mental_Health:    'stat_mental',
+      Physical_Health:  'stat_physical',
+      Money:            'stat_money',
+      Academic_Ability: 'stat_academic',
+      English_Ability:  'stat_english',
+      AP:               'stat_ap',
     };
     const result = {};
     Object.keys(effects ?? {}).forEach(key => {
-      result[key] = labelMap[key] ?? key;
+      result[key] = t(labelMap[key] || key);
     });
     return result;
   }
@@ -213,7 +213,7 @@ export class EventCardScreen {
             <div>
               <div class="flex items-center gap-2 mb-4">
                 <i data-lucide="compass" class="lucide w-5 h-5 text-xjtlu-blue"></i>
-                <h2 id="ec-title" class="text-base font-black text-xjtlu-navy tracking-widest">事件</h2>
+                <h2 id="ec-title" class="text-base font-black text-xjtlu-navy tracking-widest">${t('ec_card_title')}</h2>
               </div>
               <p id="ec-text" class="text-[0.95rem] text-gray-700 leading-relaxed font-medium"></p>
             </div>
@@ -224,7 +224,7 @@ export class EventCardScreen {
 
           <!-- 右侧：选项区 (40%) -->
           <div class="md:w-2/5 p-6 bg-white flex flex-col justify-center">
-            <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">请做出抉择</p>
+            <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">${t('ec_choice_prompt')}</p>
             <div id="ec-choices" class="flex flex-col gap-3">
               <!-- 动态注入按钮 -->
             </div>

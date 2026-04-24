@@ -51,7 +51,7 @@ export class ChoicePanel {
     this._container.style.pointerEvents = 'auto';
   }
 
-_renderSingle(choices, playerTags, hasExactBuff) {
+  _renderSingle(choices, playerTags, hasExactBuff) {
     this._container.innerHTML = `
       <div class="vn-choices">
         ${choices.map((choice, i) => {
@@ -121,11 +121,11 @@ _renderSingle(choices, playerTags, hasExactBuff) {
     };
 
     const labelMap = {
-      Mental_Health:    '心理',
-      Physical_Health:  '身体',
-      Money:            '资金',
-      Academic_Ability: '学力',
-      English_Ability:  '英语',
+      Mental_Health:    'stat_mental',
+      Physical_Health:  'stat_physical',
+      Money:            'stat_money',
+      Academic_Ability: 'stat_academic',
+      English_Ability:  'stat_english',
     };
 
     return Object.entries(effects).map(([stat, delta]) => {
@@ -133,6 +133,7 @@ _renderSingle(choices, playerTags, hasExactBuff) {
       
       const icon = iconMap[stat] || 'circle';
       const isPositive = delta > 0;
+      const statLabel = t(labelMap[stat] || stat);
       
       // 如果有透视 Buff，直接显示具体数字
       if (hasExactBuff) {
@@ -140,7 +141,7 @@ _renderSingle(choices, playerTags, hasExactBuff) {
         return `
           <div class="flex items-center gap-1 text-xs font-black ${colorCls}">
             <i data-lucide="${icon}" class="lucide w-3.5 h-3.5"></i>
-            ${isPositive ? '+' : ''}${delta} ${labelMap[stat]}
+            ${isPositive ? '+' : ''}${delta} ${statLabel}
           </div>
         `;
       }
@@ -149,9 +150,12 @@ _renderSingle(choices, playerTags, hasExactBuff) {
       // 设定阈值：绝对值 >= 15 视为大改变
       const isLarge = Math.abs(delta) >= 15;
       const dotSize = isLarge ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5';
-      // 【修改】：统一为中性灰色，隐藏增减方向
       const dotColor = 'bg-gray-400';
-      const tooltip = `${labelMap[stat]}将发生${isLarge ? '显著' : '些许'}变化`;
+      
+      const changeText = t(isLarge ? 'stat_change_large' : 'stat_change_small');
+      const tooltip = t('stat_change_tooltip')
+        .replace('{stat}', statLabel)
+        .replace('{change}', changeText);
 
       return `
         <div class="flex flex-col items-center gap-1" title="${tooltip}">

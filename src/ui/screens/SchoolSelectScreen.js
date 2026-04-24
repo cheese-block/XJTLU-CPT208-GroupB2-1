@@ -10,7 +10,7 @@
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
 import { log }           from '../../utils/helpers.js';
-import { t }             from '../../utils/i18n.js';
+import { t, resolveI18nText } from '../../utils/i18n.js';
 
 // ─────────────────────────────────────────────────────────────
 // 学院数据
@@ -18,93 +18,90 @@ import { t }             from '../../utils/i18n.js';
 const SCHOOLS = [
   {
     id:          'SAT',
-    name:        '先进计算学院',
-    englishName: 'School of Advanced Technology',
+    title:       { zh: '先进计算学院', en: 'School of Advanced Technology' },
     abbr:        'SAT',
     icon:        'cpu',
     color:       'blue',
     available:   true,
-    tags:        ['计算机科学', '人工智能', '电子工程'],
-    tags_en:     ['CS', 'AI', 'EEE'],
-    applyTraits: ['重视数学成绩', '看重科研背景', '竞争激烈'],
-    applyTraits_en: ['Math Focus', 'Research Matters', 'Highly Competitive'],
-    description: '西浦最大的工科学院，毕业生主要申请英美计算机、数据科学及电子工程方向研究生。申请竞争激烈，GPA 和科研经历是核心竞争力。',
-    description_en: 'The largest engineering school. Graduates mainly apply for CS, Data Science, and EEE programs in the UK/US. GPA and research experience are key.',
+    tags:        { zh: ['计算机科学', '人工智能', '电子工程'], en: ['CS', 'AI', 'EEE'] },
+    applyTraits: { 
+      zh: ['重视数学成绩', '看重科研背景', '竞争激烈'], 
+      en: ['Math Focus', 'Research Matters', 'Highly Competitive'] 
+    },
+    description: {
+      zh: '西浦最大的工科学院，毕业生主要申请英美计算机、数据科学及电子工程方向研究生。申请竞争激烈，GPA 和科研经历是核心竞争力。',
+      en: 'The largest engineering school. Graduates mainly apply for CS, Data Science, and EEE programs in the UK/US. GPA and research experience are key.'
+    },
   },
   {
     id:          'IBSS',
-    name:        '艾尔伯特商学院',
-    englishName: 'International Business School Suzhou',
+    title:       { zh: '艾尔伯特商学院', en: 'International Business School Suzhou' },
     abbr:        'IBSS',
     icon:        'trending-up',
     color:       'gray',
     available:   false,
-    tags:        ['金融', '管理', '市场营销'],
-    tags_en:     ['Finance', 'Management', 'Marketing'],
-    applyTraits: ['重视实习经历', '需要雅思高分', '商科竞争大'],
-    applyTraits_en: ['Internships Focus', 'High IELTS Req', 'Huge Competition'],
-    description: '敬请期待',
-    description_en: 'Coming Soon',
+    tags:        { zh: ['金融', '管理', '市场营销'], en: ['Finance', 'Management', 'Marketing'] },
+    applyTraits: { 
+      zh: ['重视实习经历', '需要雅思高分', '商科竞争大'], 
+      en: ['Internships Focus', 'High IELTS Req', 'Huge Competition'] 
+    },
+    description: { zh: '敬请期待', en: 'Coming Soon' },
   },
   {
     id:          'DES',
-    name:        '设计学院',
-    englishName: 'School of Design',
+    title:       { zh: '设计学院', en: 'School of Design' },
     abbr:        'DES',
     icon:        'pen-tool',
     color:       'gray',
     available:   false,
-    tags:        ['工业设计', 'UI/UX', '视觉传达'],
-    tags_en:     ['Industrial', 'UI/UX', 'Visual Comm'],
-    applyTraits: ['作品集为王', '创意思维', '跨学科背景'],
-    applyTraits_en: ['Portfolio is King', 'Creative Thinking', 'Interdisciplinary'],
-    description: '敬请期待',
-    description_en: 'Coming Soon',
+    tags:        { zh: ['工业设计', 'UI/UX', '视觉传达'], en: ['Industrial', 'UI/UX', 'Visual Comm'] },
+    applyTraits: { 
+      zh: ['作品集为王', '创意思维', '跨学科背景'], 
+      en: ['Portfolio is King', 'Creative Thinking', 'Interdisciplinary'] 
+    },
+    description: { zh: '敬请期待', en: 'Coming Soon' },
   },
   {
     id:          'SCI',
-    name:        '理学院',
-    englishName: 'School of Science',
+    title:       { zh: '理学院', en: 'School of Science' },
     abbr:        'SCI',
     icon:        'flask-conical',
     color:       'gray',
     available:   false,
-    tags:        ['数学', '物理', '化学'],
-    tags_en:     ['Math', 'Physics', 'Chemistry'],
-    applyTraits: ['科研为核心', '博士申请居多', '奖学金竞争'],
-    applyTraits_en: ['Research-centric', 'Mostly PhD Apps', 'Scholarship Comp'],
-    description: '敬请期待',
-    description_en: 'Coming Soon',
+    tags:        { zh: ['数学', '物理', '化学'], en: ['Math', 'Physics', 'Chemistry'] },
+    applyTraits: { 
+      zh: ['科研为核心', '博士申请居多', '奖学金竞争'], 
+      en: ['Research-centric', 'Mostly PhD Apps', 'Scholarship Comp'] 
+    },
+    description: { zh: '敬请期待', en: 'Coming Soon' },
   },
   {
     id:          'AHL',
-    name:        '人文社科学院',
-    englishName: 'School of Arts, Humanities and Languages',
+    title:       { zh: '人文社科学院', en: 'School of Arts, Humanities and Languages' },
     abbr:        'AHL',
     icon:        'book-marked',
     color:       'gray',
     available:   false,
-    tags:        ['英语', '传媒', '社会学'],
-    tags_en:     ['English', 'Media', 'Sociology'],
-    applyTraits: ['文书质量关键', '语言要求高', '方向多元'],
-    applyTraits_en: ['Essay Quality is Key', 'High Lang Req', 'Diverse Paths'],
-    description: '敬请期待',
-    description_en: 'Coming Soon',
+    tags:        { zh: ['英语', '传媒', '社会学'], en: ['English', 'Media', 'Sociology'] },
+    applyTraits: { 
+      zh: ['文书质量关键', '语言要求高', '方向多元'], 
+      en: ['Essay Quality is Key', 'High Lang Req', 'Diverse Paths'] 
+    },
+    description: { zh: '敬请期待', en: 'Coming Soon' },
   },
   {
     id:          'ARCH',
-    name:        '建筑学院',
-    englishName: 'School of Architecture',
+    title:       { zh: '建筑学院', en: 'School of Architecture' },
     abbr:        'ARCH',
     icon:        'building-2',
     color:       'gray',
     available:   false,
-    tags:        ['建筑设计', '城市规划', '景观'],
-    tags_en:     ['Architecture', 'Urban Planning', 'Landscape'],
-    applyTraits: ['作品集决定命运', '5年制', '出路广泛'],
-    applyTraits_en: ['Portfolio is Destiny', '5-Year Prog', 'Broad Prospects'],
-    description: '敬请期待',
-    description_en: 'Coming Soon',
+    tags:        { zh: ['建筑设计', '城市规划', '景观'], en: ['Architecture', 'Urban Planning', 'Landscape'] },
+    applyTraits: { 
+      zh: ['作品集决定命运', '5年制', '出路广泛'], 
+      en: ['Portfolio is Destiny', '5-Year Prog', 'Broad Prospects'] 
+    },
+    description: { zh: '敬请期待', en: 'Coming Soon' },
   },
 ];
 
@@ -175,10 +172,12 @@ export class SchoolSelectScreen {
     const isAvailable = school.available;
     const lang = StateManager.getLang();
 
-    const sName = lang === 'en' ? school.englishName : school.name;
-    const sDesc = lang === 'en' ? school.description_en : school.description;
-    const sTags = lang === 'en' ? school.tags_en : school.tags;
-    const sTraits = lang === 'en' ? school.applyTraits_en : school.applyTraits;
+    const sName = resolveI18nText(school.title);
+    const sDesc = resolveI18nText(school.description);
+    
+    // 处理数组类型的国际化
+    const sTags = Array.isArray(school.tags) ? school.tags : (school.tags[lang] || school.tags['zh']);
+    const sTraits = Array.isArray(school.applyTraits) ? school.applyTraits : (school.applyTraits[lang] || school.applyTraits['zh']);
 
     const cardBase = `
       relative flex flex-col gap-3 p-5 rounded-2xl border-2 transition-all duration-200

@@ -14,6 +14,7 @@
  *     onConfirm: () => { ... },
  *   });
  */
+import { t } from '../../utils/i18n.js';
 
 /** 当前弹窗的 DOM 元素（单例）*/
 let _modalEl = null;
@@ -30,10 +31,10 @@ let _modalEl = null;
  * @param {function} [options.onCancel]     取消回调（可选）
  */
 export function showConfirm({
-  title         = '确认操作',
+  title         = t('modal_default_title'),
   message       = '',
-  confirmText   = '确认',
-  cancelText    = '取消',
+  confirmText   = t('modal_default_confirm'),
+  cancelText    = t('modal_default_cancel'),
   confirmVariant = 'danger',
   onConfirm,
   onCancel,

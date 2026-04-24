@@ -23,7 +23,7 @@ import { executeAction, resolveMonthEnd, processEventQueue } from '../../engine/
 import { MapDebugTool }   from '../MapHotspot.js';
 import { log }            from '../../utils/helpers.js';
 import { showConfirm }    from '../components/ConfirmModal.js';
-import { t }              from '../../utils/i18n.js';
+import { t, resolveI18nText } from '../../utils/i18n.js';
 
 export class MapScreen {
   constructor() {
@@ -113,8 +113,7 @@ export class MapScreen {
     const pinsHTML = BUILDINGS.map(b => {
       const isAction   = this._state?.unlockedBuildings?.includes(b.id);
       const shortLabel = this._getShortLabel(b.id);
-      // 英文环境下，如果名字太长可以用 englishName，但 Pin 标签通常用缩写，所以这里用 shortLabel
-      const titleName  = StateManager.getLang() === 'en' ? b.englishName : b.name;
+      const titleName  = resolveI18nText(b.title || b.name);
       return `
         <button
           class="map-pin ${isAction ? 'map-pin--action' : 'map-pin--info'}"
@@ -379,13 +378,10 @@ export class MapScreen {
           
           // 【新增】：如果是一周目，弹出开发者寄语
           if (playCount === 0) {
-            const isEn = StateManager.getLang() === 'en';
             showConfirm({
-              title: isEn ? "💌 Developer's Note" : "💌 开发者寄语：致先行体验者",
-              message: isEn 
-                ? "Welcome to the MVP Demo of 'XJTLU Postgrad Simulator' by GroupB2-1!<br><br>To fit the event's pace, we've <b>compressed the timeline into 4 months (4 rounds)</b>. Please plan your Action Points (AP) wisely and note the following constraints:<br><br>📍 <b>Exploration</b><br>The <b>blue pins</b> on the map indicate actionable buildings, while <b>grey pins</b> are currently for display and info only.<br>Due to the Demo's scope, only <b>[SA~SD], [Dorm], and [Library CB]</b> feature extensive random event pools.<br><br>🎓 <b>Main Story Alert</b><br>Watch for new building unlocks (e.g., <b>IA Building</b> in Month 2). Visiting there will trigger the <b>'Agent Turmoil'</b> core storyline, which significantly impacts your final ending.<br><br>Good luck securing your dream Offer!" 
-                : "欢迎体验由 GroupB2-1 开发的《西浦申研模拟器》MVP 测试版！<br><br>为了适配展会节奏，我们将原本的申请季<b>浓缩为了 4 个月（即 4 个回合）</b>。请合理规划行动点（AP），并留意以下限制：<br><br>📍 <b>探索范围</b><br>校园平面图上建筑对应的<b>蓝色图钉</b>代表可执行行动的建筑，<b>灰色图钉</b>目前仅作校园风貌展示及科普。<br>而由于 Demo 性质和工作量上的考虑，目前仅有<b>【科学楼 SA~SD】、【宿舍】、【图书馆 CB】</b>拥有较深的随机事件池。<br><br>🎓 <b>主线提醒</b><br>请留意地图上的新建筑解锁提醒（如第 2 个月开启的 <b>IA 楼</b>）。前往那里将触发影响游戏结局的【中介风云】核心事件线。<br><br>祝你在游玩过程中达成好结局，拿到梦校的 Offer！",
-              confirmText: isEn ? "Got it, let's suffer!" : "我已了解，开始体验。",
+              title: t('map_tutorial_title'),
+              message: t('map_tutorial_msg'),
+              confirmText: t('map_tutorial_btn'),
               cancelText: "", // 单按钮模式
               confirmVariant: "primary",
               onConfirm: () => {
@@ -423,22 +419,14 @@ export class MapScreen {
   _promptEndMonth() {
     const state = StateManager.getState();
     const apRemain = state.AP;
-    const lang = StateManager.getLang();
 
-    const title = lang === 'en' ? 'End Month' : '结束本月';
-    const confirmText = lang === 'en' ? 'Proceed' : '进入下月';
-    const cancelText = lang === 'en' ? 'Cancel' : '再看看';
+    const title = t('map_confirm_end_month_title');
+    const confirmText = t('map_confirm_end_month_btn');
+    const cancelText = t('map_confirm_end_month_cancel');
 
-    let message = '';
-    if (lang === 'en') {
-      message = apRemain > 0 
-        ? `You have <span class="text-xjtlu-red font-black">${apRemain} AP</span> left. It will be cleared.<br><br>Proceed to next month?`
-        : `You have exhausted your AP.<br><br>Proceed to next month?`;
-    } else {
-      message = apRemain > 0 
-        ? `本月还有 <span class="text-xjtlu-red font-black">${apRemain} 点 AP</span> 未使用，结束本月将会清零。<br><br>确定要进入下个月吗？`
-        : `本月行动点已耗尽。<br><br>确定要结束本月行程，进入下个月吗？`;
-    }
+    const message = apRemain > 0 
+      ? t('map_ap_remaining_msg').replace('{ap}', apRemain)
+      : t('map_ap_exhausted_msg');
 
     showConfirm({
       title: title,
@@ -513,14 +501,13 @@ export class MapScreen {
     if (!bar) return;
 
     const current = state.currentMonth;
-    const lang = StateManager.getLang();
 
     // 【修改】：展会版 Demo 4 个月的现实节点映射
     const MILESTONES = {
-      1: { label: lang === 'en' ? 'Y3 Sem1' : '大三上', theme: 'exam' },
-      2: { label: lang === 'en' ? 'Y3 Sem2' : '大三下', theme: 'exam' },
-      3: { label: lang === 'en' ? 'Summer'  : '暑假',   theme: 'holiday' },
-      4: { label: lang === 'en' ? 'Apply'   : '申请季', theme: 'danger' },
+      1: { label: t('map_milestone_y3s1'), theme: 'exam' },
+      2: { label: t('map_milestone_y3s2'), theme: 'exam' },
+      3: { label: t('map_milestone_summer'),   theme: 'holiday' },
+      4: { label: t('map_milestone_apply'), theme: 'danger' },
     };
 
     const THEME_CLASSES = {
@@ -656,17 +643,18 @@ export class MapScreen {
     const isDebuff = buff.effects?.event_prob_modifier < 0 || buff.effects?.stat_modifier?.delta < 0;
     const colorClass = isDebuff ? 'tag-badge--red' : 'tag-badge--yellow';
     const effectDesc = this._describeBuffEffect(buff);
-    const durationText = buff.durationType === 'months' ? `剩余 ${buff.remainingMonths} 个月` : '永久效果';
+    const durationText = buff.durationType === 'months' 
+      ? t('map_buff_duration_remaining').replace('{months}', buff.remainingMonths) 
+      : t('map_buff_duration_permanent');
 
-    // 【修改点 2】：移除内部的 absolute div，换成 data 属性
     return `
       <span class="tag-badge ${colorClass} cursor-help shadow-sm"
-            data-tooltip-title="${buff.label}"
+            data-tooltip-title="${resolveI18nText(buff.label)}"
             data-tooltip-desc="${effectDesc}"
             data-tooltip-footer="${durationText}"
             data-tooltip-type="${isDebuff ? 'debuff' : 'buff'}">
         <i data-lucide="${buff.icon ?? 'star'}" class="lucide w-3 h-3"></i>
-        ${buff.label}
+        ${resolveI18nText(buff.label)}
       </span>
     `;
   }
@@ -678,32 +666,34 @@ export class MapScreen {
 
     if (effects.stat_modifier) {
       const { stat, delta, action } = effects.stat_modifier;
-      const statLabel = {
-        English_Ability:  '英语能力',
-        Academic_Ability: '学力',
-        Mental_Health:    '心理健康',
-        Physical_Health:  '身体健康',
-      }[stat] ?? stat;
+      const statLabel = t({
+        English_Ability:  'stat_english',
+        Academic_Ability: 'stat_academic',
+        Mental_Health:    'stat_mental',
+        Physical_Health:  'stat_physical',
+        Money:            'stat_money',
+      }[stat] || stat);
       const sign = delta > 0 ? '+' : '';
-      const actionDesc = action ? `执行相关行动时` : '每次行动';
-      parts.push(`${actionDesc} ${statLabel} ${sign}${delta}`);
+      const actionDesc = action ? t('map_action_relevant') : t('map_action_every');
+      parts.push(t('map_stat_modifier_desc')
+        .replace('{action}', actionDesc)
+        .replace('{stat}', statLabel)
+        .replace('{sign}', sign)
+        .replace('{delta}', delta));
     }
 
     if (effects.event_prob_modifier) {
       const pct = Math.round(effects.event_prob_modifier * 100);
       const sign = pct > 0 ? '+' : '';
-      parts.push(`随机事件概率 ${sign}${pct}%`);
+      parts.push(t('map_prob_modifier_desc')
+        .replace('{sign}', sign)
+        .replace('{pct}', pct));
     }
 
-    return parts.join('；');
+    return parts.join('; ');
   }
 
   _buildDefaultPanel() {
-    const lang = StateManager.getLang();
-    const descText = lang === 'en' 
-      ? 'Blue pins cost AP to trigger actions.<br>Gray pins are for info only.' 
-      : '蓝色标记可消耗 AP 执行活动<br>灰色标记仅供了解';
-
     return `
       <div class="flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center">
         <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center">
@@ -711,7 +701,7 @@ export class MapScreen {
         </div>
         <p class="text-base font-bold text-xjtlu-navy">${t('map_click_building')}</p>
         <p class="text-sm text-xjtlu-gray leading-relaxed">
-          ${descText}
+          ${resolveI18nText({ zh: '蓝色标记可消耗 AP 执行活动<br>灰色标记仅供了解', en: 'Blue pins cost AP to trigger actions.<br>Gray pins are for info only.' })}
         </p>
         <div class="mt-4 flex flex-col gap-2 w-full max-w-[180px]">
           <div class="flex items-center gap-2 text-sm text-xjtlu-gray">
@@ -733,11 +723,10 @@ export class MapScreen {
 
   _buildBuildingPanel(building) {
     const isAction = this._state?.unlockedBuildings?.includes(building.id);
-    const lang = StateManager.getLang();
 
-    const bName = lang === 'en' ? building.englishName : building.name;
-    const bDesc = lang === 'en' ? (building.description_en || building.description) : building.description;
-    const bLore = lang === 'en' ? (building.lore_en || building.lore) : building.lore;
+    const bName = resolveI18nText(building.title || building.name);
+    const bDesc = resolveI18nText(building.description);
+    const bLore = resolveI18nText(building.lore);
     const tagText = isAction ? t('map_action_tag') : t('map_info_tag');
 
     return `
@@ -754,7 +743,7 @@ export class MapScreen {
                   ${tagText}
                 </span>
               </div>
-              <p class="text-xs text-xjtlu-gray mt-0.5">${building.fullName}</p>
+              <p class="text-xs text-xjtlu-gray mt-0.5">${building.fullName || ''}</p>
             </div>
           </div>
         </div>
@@ -803,7 +792,6 @@ export class MapScreen {
     const isAction = this._state?.unlockedBuildings?.includes(building.id);
     const actions  = building.actions.map(id => ACTIONS[id]).filter(Boolean);
     const apRemain = this._state?.AP ?? 0;
-    const lang = StateManager.getLang();
 
     if (!isAction || actions.length === 0) {
       this._hideActionPopover();
@@ -812,7 +800,7 @@ export class MapScreen {
 
     const buttonsHTML = actions.map(action => {
       const canAfford = apRemain >= action.apCost;
-      const label = lang === 'en' ? (action.label_en || action.label) : action.label;
+      const label = resolveI18nText(action.label);
       return `
         <button class="action-btn w-44 text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors duration-150 ${canAfford ? 'bg-white hover:bg-xjtlu-blue hover:text-white text-xjtlu-navy border border-gray-200 hover:border-xjtlu-blue shadow-sm cursor-pointer' : 'bg-gray-100 text-gray-400 border border-transparent cursor-not-allowed'}"
           data-action-id="${action.id}" ${!canAfford ? 'disabled' : ''}>
@@ -992,7 +980,7 @@ export class MapScreen {
       pb:   'PB',    mb:   'MA~MB', eb:   'EB',
       ee:   'EE',    ir:   'IR',    ia:   'IA',
       hs:   'HS',    es:   'ES',    ibss: 'IBSS',
-      db:   'DB',    gym:  'GYM',   dorm: StateManager.getLang() === 'en' ? 'Dorm' : '宿舍',
+      db:   'DB',    gym:  'GYM',   dorm: t('map_dorm_label'),
     };
     return map[id] ?? id.toUpperCase();
   }
