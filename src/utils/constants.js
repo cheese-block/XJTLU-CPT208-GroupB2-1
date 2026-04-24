@@ -38,10 +38,10 @@ export const CONSTANTS = Object.freeze({
   MONEY_MIN:                 0,
 
   // ─────────────────────────────────────────────────────────
-  // 【目标属性 B类：英语、学力】(积累型，越高越好)(展会版上限下调至 50)
+  // 【目标属性 B类：英语、学力】(积累型，越高越好)(展会版上限下调至 30 和 60)
   // ─────────────────────────────────────────────────────────
-  ENGLISH_ABILITY_INIT:  15,
-  ENGLISH_ABILITY_MAX:   40,
+  ENGLISH_ABILITY_INIT:  10,
+  ENGLISH_ABILITY_MAX:   30,
   ENGLISH_ABILITY_MIN:    0,
 
   ACADEMIC_ABILITY_INIT: 0,
@@ -54,15 +54,15 @@ export const CONSTANTS = Object.freeze({
   RANDOM_EVENT_BASE_PROB: 0.20,  // 每次消耗 AP 后触发随机事件的基础概率（20%）
 
   // ─────────────────────────────────────────────────────────
-  // 【雅思出分阈值】(按 40 分上限等比例缩放)
+  // 【雅思出分阈值】(按 30 分上限等比例缩放)
   //   按 minAbility 从高到低排列，取第一个满足条件的
   // ─────────────────────────────────────────────────────────
   IELTS_THRESHOLDS: [
-    { minAbility: 34, tag: 'IELTS_7.5', band: '7.5' }, // 约 85%
-    { minAbility: 28, tag: 'IELTS_7.0', band: '7.0' }, // 约 70%
-    { minAbility: 20, tag: 'IELTS_6.5', band: '6.5' }, // 约 50%
-    { minAbility: 12, tag: 'IELTS_6.0', band: '6.0' }, // 约 30%
-    { minAbility:  0, tag: 'IELTS_5.5', band: '5.5' },
+    { minAbility: 25,   tag: 'IELTS_7.5', band: '7.5' }, // 约 85% (34 -> 25.5)
+    { minAbility: 21,   tag: 'IELTS_7.0', band: '7.0' }, // 约 70% (28 -> 21)
+    { minAbility: 15,   tag: 'IELTS_6.5', band: '6.5' }, // 约 50% (20 -> 15)
+    { minAbility: 9,    tag: 'IELTS_6.0', band: '6.0' }, // 约 30% (12 -> 9)
+    { minAbility: 0,    tag: 'IELTS_5.5', band: '5.5' },
   ],
 
   // ─────────────────────────────────────────────────────────
