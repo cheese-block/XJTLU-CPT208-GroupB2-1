@@ -5,6 +5,8 @@
  * 悬浮显示于插画区中央。
  */
 
+import { resolveI18nText, t } from '../../utils/i18n.js';
+
 export class ChoicePanel {
   constructor() {
     this._container = null;
@@ -68,12 +70,12 @@ _renderSingle(choices, playerTags, hasExactBuff) {
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center gap-3">
                   <span class="${isLocked ? 'text-gray-400' : 'text-xjtlu-blue'} font-black text-lg">${String.fromCharCode(65 + i)}.</span>
-                  <span class="text-sm font-bold leading-relaxed">${choice.text}</span>
+                  <span class="text-sm font-bold leading-relaxed">${resolveI18nText(choice.text, '')}</span>
                 </div>
                 ${isLocked ? `
                   <div class="flex items-center gap-1.5 text-xs font-bold text-xjtlu-red bg-red-50 px-2 py-1 rounded-md border border-red-100 shrink-0">
                     <i data-lucide="lock" class="lucide w-3 h-3"></i>
-                    需要 [${choice.required_tag}]
+                    ${t('vn_requires_tag')} [${choice.required_tag}]
                   </div>
                 ` : ''}
               </div>
@@ -163,7 +165,7 @@ _renderSingle(choices, playerTags, hasExactBuff) {
   _renderMultiple(choices, playerTags) {
     this._container.innerHTML = `
       <div class="vn-choices bg-white/95 p-6 rounded-2xl shadow-2xl border-2 border-xjtlu-navy max-w-lg w-full">
-        <p class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider mb-4 text-center">请选择你要执行的行动（可多选）</p>
+        <p class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider mb-4 text-center">${t('vn_multi_select_prompt')}</p>
         <div class="flex flex-col gap-3 mb-6">
           ${choices.map((choice, i) => {
             const isLocked = choice.required_tag && !playerTags.includes(choice.required_tag);
@@ -175,17 +177,17 @@ _renderSingle(choices, playerTags, hasExactBuff) {
               <label class="flex items-start justify-between gap-3 p-3 rounded-xl border-2 transition-colors ${labelClass}">
                 <div class="flex items-start gap-3">
                   <input type="checkbox" value="${i}" class="vn-multi-checkbox mt-1 w-4 h-4 text-xjtlu-blue rounded border-gray-300 focus:ring-xjtlu-blue" ${isLocked ? 'disabled' : ''}>
-                  <span class="text-sm ${isLocked ? 'text-gray-400' : 'text-gray-700'} leading-relaxed select-none">${choice.text}</span>
+                  <span class="text-sm ${isLocked ? 'text-gray-400' : 'text-gray-700'} leading-relaxed select-none">${resolveI18nText(choice.text, '')}</span>
                 </div>
                 ${isLocked ? `
-                  <i data-lucide="lock" class="lucide w-4 h-4 text-xjtlu-red shrink-0 mt-1" title="需要 [${choice.required_tag}]"></i>
+                  <i data-lucide="lock" class="lucide w-4 h-4 text-xjtlu-red shrink-0 mt-1" title="${t('vn_requires_tag')} [${choice.required_tag}]"></i>
                 ` : ''}
               </label>
             `;
           }).join('')}
         </div>
         <button id="vn-multi-submit" class="xjtlu-btn xjtlu-btn--primary w-full justify-center py-3 text-base">
-          确认选择
+          ${t('vn_multi_confirm')}
         </button>
       </div>
     `;

@@ -1,5 +1,6 @@
 import * as StateManager from '../../state/StateManager.js';
 import { previewEffects, clearPreview } from '../UIManager.js';
+import { resolveI18nText, t } from '../../utils/i18n.js';
 
 export class EventCardScreen {
   constructor() {
@@ -57,11 +58,12 @@ export class EventCardScreen {
     const textEl = this._container.querySelector('#ec-text');
     const tipEl = this._container.querySelector('#ec-tip');
     
-    titleEl.textContent = this._event.title || '突发事件';
-    textEl.innerHTML = scene.text.replace(/\n/g, '<br>');
+    titleEl.textContent = resolveI18nText(this._event.title, 'Event');
+    textEl.innerHTML = resolveI18nText(scene.text, '').replace(/\n/g, '<br>');
     
-    if (scene.tip) {
-      tipEl.innerHTML = `<i data-lucide="lightbulb" class="lucide w-4 h-4"></i> ${scene.tip}`;
+    const sceneTip = resolveI18nText(scene.tip, '');
+    if (sceneTip) {
+      tipEl.innerHTML = `<i data-lucide="lightbulb" class="lucide w-4 h-4"></i> ${sceneTip}`;
       tipEl.classList.remove('hidden');
     } else {
       tipEl.classList.add('hidden');
@@ -75,7 +77,7 @@ export class EventCardScreen {
       // 纯文本推进
       choicesContainer.innerHTML = `
         <button class="ec-btn w-full px-6 py-4 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-700 font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
-          继续 <i data-lucide="arrow-right" class="lucide w-4 h-4"></i>
+          ${t('btn_continue')} <i data-lucide="arrow-right" class="lucide w-4 h-4"></i>
         </button>
       `;
       choicesContainer.querySelector('button').addEventListener('click', () => {
@@ -106,10 +108,10 @@ export class EventCardScreen {
         <button class="ec-btn w-full text-left px-5 py-3.5 rounded-xl border-2 transition-all duration-200 flex flex-col gap-1.5 ${btnClass}" 
                 data-index="${i}" ${isLocked ? 'disabled' : ''}>
           <div class="flex justify-between items-center w-full">
-            <span class="font-bold text-sm">${choice.text}</span>
+            <span class="font-bold text-sm">${resolveI18nText(choice.text, '')}</span>
             ${isLocked ? `<i data-lucide="lock" class="lucide w-4 h-4 shrink-0"></i>` : ''}
           </div>
-          ${isLocked ? `<span class="text-[0.65rem] text-xjtlu-red">需要 [${choice.required_tag}]</span>` : ''}
+          ${isLocked ? `<span class="text-[0.65rem] text-xjtlu-red">${t('vn_requires_tag')} [${choice.required_tag}]</span>` : ''}
         </button>
       `;
     }).join('');
@@ -162,17 +164,17 @@ export class EventCardScreen {
         StateManager.saveGame();
         
         // 3. 处理 Flavor Text
-        let finalFlavorText = choice.flavor_text || '';
+        let finalFlavorText = resolveI18nText(choice.flavor_text, '');
         if (activeVariant?.text) {
           const separator = finalFlavorText ? '<br><br>' : '';
           let colorClass = 'text-xjtlu-blue';
           if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
           if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
-          finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
+          finalFlavorText += `${separator}<span class="${colorClass} font-bold">${resolveI18nText(activeVariant.text, '')}</span>`;
         }
 
         if (finalFlavorText) {
-          this._event.scenes.splice(this._sceneIndex + 1, 0, { text: finalFlavorText, tip: choice.tip });
+          this._event.scenes.splice(this._sceneIndex + 1, 0, { text: finalFlavorText, tip: resolveI18nText(choice.tip, '') });
         }
         this._playScene(this._sceneIndex + 1);
       });

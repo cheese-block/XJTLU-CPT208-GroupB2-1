@@ -8,6 +8,8 @@
  *   - 支持知识提示框（knowledge_tip）的特殊样式
  */
 
+import { t } from '../../utils/i18n.js';
+
 export class DialogBox {
   constructor() {
     this._container    = null;
@@ -200,7 +202,7 @@ export class DialogBox {
 
         <!-- 点击继续提示 -->
         <p id="vn-hint" class="vn-dialog-box__hint hidden">
-          点击继续 ▼
+          ${t('vn_click_continue')}
         </p>
 
       </div>

@@ -2,7 +2,7 @@
  * @fileoverview 事件数据库
  */
 
-export const EVENTS = {
+const RAW_EVENTS = {
 
   // ════════════════════════════════════════════════════════
   // 轮回引导剧情
@@ -11,64 +11,64 @@ export const EVENTS = {
   'tutorial_intro_1': {
     event_id: 'tutorial_intro_1',
     type:     'chain',
-    title:    '延毕之灵',
+    title:    { zh: '延毕之灵', en: 'Spirit of Delayed Graduation' },
     scenes: [
       {
-        text: '“你就是这届新来的卷王吗？”\n\n（一个眼袋发黑的半透明学长飘在你的床头。）',
+        text: { zh: '“你就是这届新来的卷王吗？”\n\n（一个眼袋发黑的半透明学长飘在你的床头。）', en: '"So, you are the new try-hard this year?"\n\n(A half-transparent senior with dark eye bags floats over your bed.)' },
         choices: [
-          { text: '也许是？' }
+          { text: { zh: '也许是？', en: 'Maybe?' } }
         ]
       },
       {
-        text: '“所以你就是那个每天六点霸占自习室，硬生生拉高专业均分，最后害我没学上的家伙？”',
+        text: { zh: '“所以你就是那个每天六点霸占自习室，硬生生拉高专业均分，最后害我没学上的家伙？”', en: '"So you are the one who occupied the study room at 6 AM every day, pushed up the major average, and ruined my chances?"' },
         choices: [
-          { text: '（无动于衷）' }
+          { text: { zh: '（无动于衷）', en: '(Unmoved)' } }
         ]
       },
       {
-        text: '“好吧……你现在接手这个烂摊子了，祝你好运。这学校里的人都卷疯了，你会见识到的。”',
+        text: { zh: '“好吧……你现在接手这个烂摊子了，祝你好运。这学校里的人都卷疯了，你会见识到的。”', en: '"Fine... this mess is yours now. Good luck. People here are insane with competition. You will see."' },
         choices: [
-          { text: '什么？' }
+          { text: { zh: '什么？', en: 'What?' } }
         ]
       },
       {
-        text: '“为了让你的头发在脑袋上多留一阵子，尽力保持顶上那几股数值的平衡吧。【心理】、【身体】、【资金】，不要归零，也别试图彻底塞满它们。持中守正，方能长久。\n\n好吧其实是作者意图增加游戏性的小巧思，请你接受。”',
+        text: { zh: '“为了让你的头发在脑袋上多留一阵子，尽力保持顶上那几股数值的平衡吧。【心理】、【身体】、【资金】，不要归零，也别试图彻底塞满它们。持中守正，方能长久。\n\n好吧其实是作者意图增加游戏性的小巧思，请你接受。”', en: '"If you want to keep your hair a bit longer, keep those top stats balanced: [Mental], [Physical], and [Money]. Do not let them hit zero, and do not try to max them out either.\n\nOkay, this is actually a gameplay design choice. Please accept it."' },
         choices: [
-          { text: '哦……' }
+          { text: { zh: '哦……', en: 'Oh...' } }
         ]
       },
       {
-        text: '“但在那之外，【学力】和【英语】是你冲刺名校的弹药。期末考试会清算你的学力，雅思考试会检验你的英语。\n\n不过，没必要为了刷分就死磕在科学楼里。这学校的各个建筑在数值影响上其实差不太多，多去别处转转，说不定能触发什么奇遇。”',
+        text: { zh: '“但在那之外，【学力】和【英语】是你冲刺名校的弹药。期末考试会清算你的学力，雅思考试会检验你的英语。\n\n不过，没必要为了刷分就死磕在科学楼里。这学校的各个建筑在数值影响上其实差不太多，多去别处转转，说不定能触发什么奇遇。”', en: '"Beyond that, [Academic] and [English] are your ammo for top schools. Finals settle your academic level, and IELTS tests your English.\n\nStill, do not tunnel in one building just to grind stats. Buildings are not that different overall. Explore more places, you may trigger surprises."' },
         choices: [
-          { text: '听着真麻烦。' }
+          { text: { zh: '听着真麻烦。', en: 'Sounds troublesome.' } }
         ]
       },
       {
-        text: '“申研就是这样。对了，如果你还有余力，记得在校园里多留意那些能增加你【软背景】的机会。现在光有分数可卷不过别人。”',
+        text: { zh: '“申研就是这样。对了，如果你还有余力，记得在校园里多留意那些能增加你【软背景】的机会。现在光有分数可卷不过别人。”', en: '"That is how applications work. Also, if you still have energy, look for chances to improve your [soft background] on campus. Scores alone are not enough anymore."' },
         choices: [
-          { text: '那我该怎么做抉择？' }
+          { text: { zh: '那我该怎么做抉择？', en: 'Then how should I choose?' } }
         ]
       },
       {
-        text: '“当你手握选项时，你会看到那些浮动的圆点。直觉会指引你……\n\n现在就做个决定吧：桌上这杯过期三天的冰美式，你要喝掉提神吗？”',
-        tip:  '鼠标悬浮选项即可预览数值变化圆点。圆点的位置代表该数值将有变化，圆点内容预示变动幅度。',
+        text: { zh: '“当你手握选项时，你会看到那些浮动的圆点。直觉会指引你……\n\n现在就做个决定吧：桌上这杯过期三天的冰美式，你要喝掉提神吗？”', en: '"When choices appear, you will see floating dots. Trust your intuition...\n\nNow decide: there is a three-day-expired iced Americano on the desk. Drink it for a boost?"' },
+        tip:  { zh: '鼠标悬浮选项即可预览数值变化圆点。圆点的位置代表该数值将有变化，圆点内容预示变动幅度。', en: 'Hover over choices to preview stat-change indicators. Dot position shows which stat changes; dot size indicates magnitude.' },
         choices: [
           {
-            text: '闭着眼睛灌下去',
+            text: { zh: '闭着眼睛灌下去', en: 'Chug it with eyes closed' },
             effects: { Physical_Health: -10, Academic_Ability: +5 },
-            flavor_text: '（心脏狂跳。这玩意儿简直是毒药，但你感觉现在能解开微积分大题了。）'
+            flavor_text: { zh: '（心脏狂跳。这玩意儿简直是毒药，但你感觉现在能解开微积分大题了。）', en: '(Your heart is racing. This feels like poison, but you suddenly feel able to solve hardcore calculus.)' }
           },
           {
-            text: '稳妥起见，倒进下水道',
+            text: { zh: '稳妥起见，倒进下水道', en: 'Play safe and pour it down the drain' },
             effects: { Mental_Health: -5 },
-            flavor_text: '（白白倒掉咖啡让你感到一丝浪费的愧疚，但至少保住了肠胃。）'
+            flavor_text: { zh: '（白白倒掉咖啡让你感到一丝浪费的愧疚，但至少保住了肠胃。）', en: '(Wasting coffee feels a bit guilty, but at least your stomach survives.)' }
           }
         ]
       },
       {
-        text: '（延毕之灵若有所思地看着你，然后慢慢飘散了。）\n\n你背上书包，推开了宿舍的门。',
+        text: { zh: '（延毕之灵若有所思地看着你，然后慢慢飘散了。）\n\n你背上书包，推开了宿舍的门。', en: '(The spirit of delayed graduation stares at you thoughtfully, then slowly fades away.)\n\nYou shoulder your bag and push open the dorm door.' },
         choices: [
-          { text: '进入申请季' }
+          { text: { zh: '进入申请季', en: 'Enter Application Season' } }
         ]
       }
     ],
@@ -77,46 +77,46 @@ export const EVENTS = {
   'tutorial_intro_2': {
     event_id: 'tutorial_intro_2',
     type:     'chain',
-    title:    '幽魂再临',
+    title:    { zh: '幽魂再临', en: 'Ghost Returns' },
     scenes: [
       {
-        text: '“你就是这届新来的卷王吗？”\n\n（半透明的学长再次飘在你的床头。）',
+        text: { zh: '“你就是这届新来的卷王吗？”\n\n（半透明的学长再次飘在你的床头。）', en: '"So, you are the new try-hard this year?"\n\n(The half-transparent senior floats by your bed again.)' },
         choices: [
-          { text: '又来了……' }
+          { text: { zh: '又来了……', en: 'Again...?' } }
         ]
       },
       {
-        text: '“哈哈，玩笑而已。我知道我们都已经经历过一遍了。这就是申请季的诅咒，明白吗？”',
+        text: { zh: '“哈哈，玩笑而已。我知道我们都已经经历过一遍了。这就是申请季的诅咒，明白吗？”', en: '"Haha, just kidding. I know we have done this before. That is the curse of application season, understand?"' },
         choices: [
-          { text: '（保持沉默）' }
+          { text: { zh: '（保持沉默）', en: '(Stay silent)' } }
         ]
       },
       {
-        text: '“我们会记住这所学校的每一届学生，记住他们每一次因为绩点的妥协，每一次因为雅思的崩溃，久不忘怀……”',
+        text: { zh: '“我们会记住这所学校的每一届学生，记住他们每一次因为绩点的妥协，每一次因为雅思的崩溃，久不忘怀……”', en: '"We remember every cohort in this school: every compromise for GPA, every breakdown over IELTS... forever."' },
         choices: [
-          { text: '何意味……' },
-          { text: '怎么做到的……' }
+          { text: { zh: '何意味……', en: 'What does that mean...' } },
+          { text: { zh: '怎么做到的……', en: 'How do you even do that...' } }
         ]
       },
       {
-        text: '“据说只有传说中的『保录中介』才能让我们愉快地花钱免除这些受诅咒的劳役，但是他们当真存在吗？”',
+        text: { zh: '“据说只有传说中的『保录中介』才能让我们愉快地花钱免除这些受诅咒的劳役，但是他们当真存在吗？”', en: '"They say only the mythical guaranteed-admission agencies can free us from this cursed labor with money. But do they really exist?"' },
         choices: [
           { 
-            text: '不，捷径并不存在。',
-            flavor_text: '“这是个有意思的实证主义说法。尽管我也希望能被花钱捞一把。'
+            text: { zh: '不，捷径并不存在。', en: 'No, shortcuts do not exist.' },
+            flavor_text: { zh: '“这是个有意思的实证主义说法。尽管我也希望能被花钱捞一把。', en: '"Interesting empiricism. Though I also wish money could save me."' }
           },
           { 
-            text: '他们或许真的存在。',
-            flavor_text: '“有趣的想法。或许捷径真的存在，或许我们会受到折磨不过是因为信息差。'
+            text: { zh: '他们或许真的存在。', en: 'Maybe they do exist.' },
+            flavor_text: { zh: '“有趣的想法。或许捷径真的存在，或许我们会受到折磨不过是因为信息差。', en: '"Interesting thought. Maybe shortcuts exist, and we suffer only because of information gaps."' }
           }
         ]
       },
       {
-        text: '“再去碰碰运气吧，试着别死那么早。”',
+        text: { zh: '“再去碰碰运气吧，试着别死那么早。”', en: '"Go try your luck again. Try not to die too early."' },
         choices: [
           { 
-            text: '（面对现实）',
-            flavor_text: '（幽灵慢悠悠地飘散而去……）'
+            text: { zh: '（面对现实）', en: '(Face reality)' },
+            flavor_text: { zh: '（幽灵慢悠悠地飘散而去……）', en: '(The ghost drifts away slowly...)' }
           }
         ]
       }
@@ -132,14 +132,14 @@ export const EVENTS = {
     event_id:      'unlock_ia_notice',
     type:          'scheduled',
     trigger_month: 1,
-    title:         '春招季的暗流',
+    title:         { zh: '春招季的暗流', en: 'Undercurrent of Spring Recruiting' },
     scenes: [
       {
-        text: '三月，春招的氛围开始在校园里蔓延。你注意到，最近校园周边多了很多发传单的西装男女。\n\n朋友圈里，已经有同学开始晒出和留学中介的签约合同了。',
+        text: { zh: '三月，春招的氛围开始在校园里蔓延。你注意到，最近校园周边多了很多发传单的西装男女。\n\n朋友圈里，已经有同学开始晒出和留学中介的签约合同了。', en: 'In March, the spring recruiting mood spreads across campus. You notice more suited people handing out flyers nearby.\n\nIn social feeds, some classmates are already posting contracts signed with study-abroad agencies.' },
       },
       {
-        text: '申研是一场信息战。也许你该去趟 <span class="text-xjtlu-blue font-bold">IA（国际学术交流中心）</span> 看看了，那里是各大机构和校方合作宣讲的集散地。',
-        tip:  '新建筑【IA】已解锁！在地图上点击蓝色高亮的 IA 建筑，可以开始接触并筛选留学中介。',
+        text: { zh: '申研是一场信息战。也许你该去趟 <span class="text-xjtlu-blue font-bold">IA（国际学术交流中心）</span> 看看了，那里是各大机构和校方合作宣讲的集散地。', en: 'Postgraduate application is an information war. Maybe you should visit <span class="text-xjtlu-blue font-bold">IA (International Academic Exchange Center)</span>, the hub for agency and school joint briefings.' },
+        tip:  { zh: '新建筑【IA】已解锁！在地图上点击蓝色高亮的 IA 建筑，可以开始接触并筛选留学中介。', en: 'New building [IA] unlocked! Click the highlighted IA building on the map to start screening agencies.' },
         unlock_building: ['ia'] // 【新增】：声明式解锁建筑，引擎读到此幕时会自动解锁
       }
     ],
@@ -1271,3 +1271,58 @@ export const EVENTS = {
   },
 
 };
+
+/**
+ * 将事件文案字段规范化为双语对象：
+ * - 已是 { zh, en } 的字段保持不变
+ * - 纯字符串自动转为 { zh: str, en: str }（英文缺失时安全回退）
+ */
+function normalizeLocalizedField(value) {
+  if (typeof value === 'string') {
+    return { zh: value, en: value };
+  }
+  if (value && typeof value === 'object' && (value.zh || value.en)) {
+    return {
+      zh: typeof value.zh === 'string' ? value.zh : (typeof value.en === 'string' ? value.en : ''),
+      en: typeof value.en === 'string' ? value.en : (typeof value.zh === 'string' ? value.zh : ''),
+    };
+  }
+  return value;
+}
+
+function normalizeEvent(event) {
+  const cloned = structuredClone(event);
+  cloned.title = normalizeLocalizedField(cloned.title);
+
+  if (Array.isArray(cloned.scenes)) {
+    cloned.scenes = cloned.scenes.map(scene => {
+      const nextScene = { ...scene };
+      nextScene.text = normalizeLocalizedField(nextScene.text);
+      nextScene.tip  = normalizeLocalizedField(nextScene.tip);
+
+      if (Array.isArray(nextScene.choices)) {
+        nextScene.choices = nextScene.choices.map(choice => {
+          const nextChoice = { ...choice };
+          nextChoice.text = normalizeLocalizedField(nextChoice.text);
+          nextChoice.tip = normalizeLocalizedField(nextChoice.tip);
+          nextChoice.flavor_text = normalizeLocalizedField(nextChoice.flavor_text);
+
+          if (Array.isArray(nextChoice.flavor_text_variants)) {
+            nextChoice.flavor_text_variants = nextChoice.flavor_text_variants.map(variant => ({
+              ...variant,
+              text: normalizeLocalizedField(variant.text),
+            }));
+          }
+          return nextChoice;
+        });
+      }
+      return nextScene;
+    });
+  }
+
+  return cloned;
+}
+
+export const EVENTS = Object.fromEntries(
+  Object.entries(RAW_EVENTS).map(([eventId, event]) => [eventId, normalizeEvent(event)])
+);

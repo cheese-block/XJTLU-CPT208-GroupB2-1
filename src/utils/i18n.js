@@ -100,6 +100,12 @@ export const DICT = {
   'collection_theme_normal': { zh: '普通结局', en: 'Normal End' },
   'collection_theme_regret': { zh: '遗憾结局', en: 'Regret End' },
   'collection_theme_bad': { zh: 'Bad End', en: 'Bad End' },
+
+  // ── 事件 UI 通用 ──
+  'vn_click_continue': { zh: '点击继续 ▼', en: 'Click to continue ▼' },
+  'vn_multi_select_prompt': { zh: '请选择你要执行的行动（可多选）', en: 'Choose actions to execute (multiple allowed)' },
+  'vn_multi_confirm': { zh: '确认选择', en: 'Confirm Selection' },
+  'vn_requires_tag': { zh: '需要', en: 'Requires' },
 };
 
 /**
@@ -111,4 +117,38 @@ export function t(key) {
   const lang = getLang() || 'zh';
   if (!DICT[key]) return key;
   return DICT[key][lang] || DICT[key]['zh'];
+}
+
+/**
+ * 统一解析可国际化文本。
+ * 支持：
+ *  - 纯字符串（普通文本，或 DICT key）
+ *  - 双语对象 { zh, en }
+ *  - 键对象 { key: 'dict_key' }
+ * @param {string|object|null|undefined} value
+ * @param {string} [fallback='']
+ * @returns {string}
+ */
+export function resolveI18nText(value, fallback = '') {
+  const lang = getLang() || 'zh';
+
+  if (value == null) return fallback;
+
+  if (typeof value === 'string') {
+    // 允许直接把 DICT key 当作文案引用
+    if (DICT[value]) return t(value);
+    return value;
+  }
+
+  if (typeof value === 'object') {
+    if (typeof value.key === 'string') return t(value.key);
+
+    const langValue = value[lang];
+    if (typeof langValue === 'string' && langValue.length > 0) return langValue;
+
+    if (typeof value.zh === 'string' && value.zh.length > 0) return value.zh;
+    if (typeof value.en === 'string' && value.en.length > 0) return value.en;
+  }
+
+  return fallback;
 }

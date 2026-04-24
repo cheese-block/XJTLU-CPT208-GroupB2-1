@@ -4,6 +4,7 @@
 
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
+import { resolveI18nText } from '../../utils/i18n.js';
 import { DialogBox }     from '../components/DialogBox.js';
 import { ChoicePanel }   from '../components/ChoicePanel.js';
 import { log }           from '../../utils/helpers.js';
@@ -119,9 +120,9 @@ export class VNScreen {
 
     if (scene.choices && scene.choices.length > 0) {
       this._dialogBox.show({
-        text:       scene.text,
+        text:       resolveI18nText(scene.text, ''),
         speaker:    scene.speaker ?? '',
-        tip:        scene.tip ?? '',
+        tip:        resolveI18nText(scene.tip, ''),
         showHint:   false,
         onComplete: () => {
           const playerTags = StateManager.getState().tags || [];
@@ -135,9 +136,9 @@ export class VNScreen {
 
       // 普通旁白：打印完等待点击
       this._dialogBox.show({
-        text:     scene.text,
+        text:     resolveI18nText(scene.text, ''),
         speaker:  scene.speaker ?? '',
-        tip:      scene.tip ?? '',
+        tip:      resolveI18nText(scene.tip, ''),
         showHint: true,
         effects:      scene.effects ?? null,
         effectLabels: scene.effects ? this._buildEffectLabels(scene.effects) : {},
@@ -214,7 +215,7 @@ export class VNScreen {
     const hasExactBuff = currentState.activeBuff?.some(b => b.buffId === 'insight_buff');
 
     // === 调试日志开始 ===
-    console.group(`%c🔍 选项判定调试: ${choice.text}`, "color: #004B9B; font-weight: bold;");
+    console.group(`%c🔍 选项判定调试: ${resolveI18nText(choice.text, '')}`, "color: #004B9B; font-weight: bold;");
     console.log("当前完整状态:", currentState);
     console.log("当前 Agency_Score:", currentState.Agency_Score);
     console.log("当前持有 Tags:", playerTags);
@@ -252,13 +253,13 @@ export class VNScreen {
     const finalEffects = { ...choice.effects, ...(activeVariant?.effects || {}) };
     const finalTags    = [...(choice.tags_added || []), ...(activeVariant?.tags_added || [])];
 
-    let finalFlavorText = choice.flavor_text || '';
+    let finalFlavorText = resolveI18nText(choice.flavor_text, '');
     if (activeVariant?.text) {
       let colorClass = 'text-xjtlu-blue';
       if (activeVariant.type === 'positive') colorClass = 'text-xjtlu-green';
       if (activeVariant.type === 'negative') colorClass = 'text-xjtlu-red';
       const separator  = finalFlavorText ? '<br><br>' : '';
-      finalFlavorText += `${separator}<span class="${colorClass} font-bold">${activeVariant.text}</span>`;
+      finalFlavorText += `${separator}<span class="${colorClass} font-bold">${resolveI18nText(activeVariant.text, '')}</span>`;
     }
 
     if (Object.keys(finalEffects).length > 0) {
@@ -278,7 +279,7 @@ export class VNScreen {
       this._dialogBox.show({
         text:         finalFlavorText,
         showHint:     true,
-        tip:          choice.tip ?? '',
+        tip:          resolveI18nText(choice.tip, ''),
         effects:      finalEffects,
         effectLabels: this._buildEffectLabels(finalEffects),
         hasExactBuff: hasExactBuff,
@@ -303,8 +304,8 @@ export class VNScreen {
 
     // 将选中的选项转化为队列
     this._multiChoiceQueue = selectedChoices.map(choice => ({
-      text:          choice.flavor_text || '...',
-      tip:           choice.tip || '',
+      text:          resolveI18nText(choice.flavor_text, '...'),
+      tip:           resolveI18nText(choice.tip, ''),
       effects:       choice.effects || {},
       tags:          choice.tags_added || [],
       next_event_id: choice.next_event_id
