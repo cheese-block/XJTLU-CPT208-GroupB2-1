@@ -101,11 +101,8 @@ function _buildExamSummary(gpa, tag, ability) {
 export function resolveIeltsExam(state) {
   const ability = state.English_Ability;
 
-  // ±10 随机扰动（模拟发挥失常/超常）
-  const jitter        = (Math.random() - 0.5) * 20;
-  const effectiveAbi  = clamp(ability + jitter, 0, 100);
-
-  const { tag, band } = calculateIeltsTag(effectiveAbi);
+  // 【修改】：直接使用真实英语能力进行判定，完全移除随机发挥扰动
+  const { tag, band } = calculateIeltsTag(ability);
 
   // 移除旧雅思标签
   ['IELTS_5.5','IELTS_6.0','IELTS_6.5','IELTS_7.0','IELTS_7.5']
@@ -115,9 +112,9 @@ export function resolveIeltsExam(state) {
   // 心理健康影响
   const band_num = parseFloat(band);
   let mentalDelta = 0;
-  if (band_num >= 7.0)       mentalDelta = +15;
+  if (band_num >= 7.0)       mentalDelta = +10;
   else if (band_num >= 6.5)  mentalDelta = +5;
-  else if (band_num <= 5.5)  mentalDelta = -20;
+  else if (band_num <= 5.5)  mentalDelta = -10;
   else                       mentalDelta = -8;
 
   StateManager.applyStatDelta(
@@ -126,7 +123,7 @@ export function resolveIeltsExam(state) {
   );
 
   const summary = _buildIeltsSummary(band, band_num);
-  log('info', 'ExamEngine', `雅思出分：${band}（${tag}）`);
+  log('info', 'ExamEngine', `雅思出分：真实能力 ${ability} -> ${band}（${tag}）`);
 
   return { tag, band, summary };
 }
