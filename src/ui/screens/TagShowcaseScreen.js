@@ -61,8 +61,8 @@ export class TagShowcaseScreen {
                 ${mappedTags.length > 0 
                   ? mappedTags.map(t => `
                       <span class="tag-badge ${t.colorCls} px-3 py-1.5 text-sm shadow-sm"
-                            data-tooltip-title="${t.label}"
-                            data-tooltip-desc="${t.desc}"
+                            data-tooltip-title="${this._escapeAttr(t.label)}"
+                            data-tooltip-desc="${this._escapeAttr(t.desc)}"
                             data-tooltip-type="info">
                         <i data-lucide="${t.icon}" class="lucide w-4 h-4"></i>
                         ${t.label}
@@ -126,5 +126,13 @@ export class TagShowcaseScreen {
       'Sick':           { label: t('tag_sick_label'),           icon: 'thermometer', colorCls: 'tag-badge--gray',  desc: t('tag_sick_desc') },
     };
     return dict[tag] || { label: tag, icon: 'tag', colorCls: 'tag-badge--gray', desc: t('tag_unknown_label') };
+  }
+
+  _escapeAttr(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 }
