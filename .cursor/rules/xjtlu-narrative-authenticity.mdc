@@ -11,7 +11,7 @@ globs:
 
 When adding or editing **player-facing narrative** in the globs above (e.g. `title`, `text`, `tip`, `flavor_text`, building descriptions that read as story), follow this workflow:
 
-1. **Read first**: Open and skim `docs/xjtlu-student-experience-for-writers.md`, especially **「可写进事件的『具体钩子』清单」** and **「反模式」**.
+1. **Read first**: Open and skim `docs/xjtlu-student-experience-for-writers.md`, especially **第 5 节钩子清单**、**第 6 节反模式**，以及 **第 8 节社群长帖叙事母题**（匿名归纳、勿抄个人隐私与课号）。
 2. **Anchor the scene**: Prefer at least one concrete anchor from that doc (SIP / Dushu Lake zone, English-medium classroom stress, CB / Learning Mall / test centre / lab life, cross-cultural peers, grad-school information density). Avoid scenes that could be pasted into any generic Chinese university with only the school name changed.
 3. **Scope**: This rule governs **tone and setting authenticity only**. Do not encode balance or stat design here; keep those in code and design docs.
 
