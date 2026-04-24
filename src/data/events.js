@@ -38,7 +38,7 @@ const RAW_EVENTS = {
         ]
       },
       {
-        text: { zh: '“但在那之外，【学力】和【英语】是你冲刺名校的弹药。期末考试会清算你的学力，雅思考试会检验你的英语。\n\n不过，没必要为了刷分就死磕在科学楼里。这学校的各个建筑在数值影响上其实差不太多，多去别处转转，说不定能触发什么奇遇。”', en: '"Beyond that, [Academic] and [English] are your ammo for top schools. Finals settle your academic level, and IELTS tests your English.\n\nStill, do not tunnel in one building just to grind stats. Buildings are not that different overall. Explore more places, you may trigger surprises."' },
+        text: { zh: '“【学力】和【英语】靠事件慢慢涨，期末和雅思会结算。\n\nDemo 里随机池主要在科学楼、宿舍、图书馆和科研中心；别的楼先当逛校园。选项越短越要信直觉——像喝酒伤身、睡觉回血这种常识。”', en: '"[Academic] and [English] climb through events; finals and IELTS settle them.\n\nIn this demo, deep pools are Science, Dorm, Library, and IR—other pins are mostly flavor. Short choices follow gut logic: drink hurts sleep heals."' },
         choices: [
           { text: { zh: '听着真麻烦。', en: 'Sounds troublesome.' } }
         ]
@@ -50,18 +50,18 @@ const RAW_EVENTS = {
         ]
       },
       {
-        text: { zh: '“当你手握选项时，你会看到那些浮动的圆点。直觉会指引你……\n\n现在就做个决定吧：桌上这杯过期三天的冰美式，你要喝掉提神吗？”', en: '"When choices appear, you will see floating dots. Trust your intuition...\n\nNow decide: there is a three-day-expired iced Americano on the desk. Drink it for a boost?"' },
-        tip:  { zh: '鼠标悬浮选项即可预览数值变化圆点。圆点的位置代表该数值将有变化，圆点内容预示变动幅度。', en: 'Hover over choices to preview stat-change indicators. Dot position shows which stat changes; dot size indicates magnitude.' },
+        text: { zh: '“选项旁会浮小圆点——悬停就能看见涨跌。别算太多，先练直觉。”', en: '"Dots by choices show deltas on hover. Do not overthink; train your gut."' },
+        tip:  { zh: '鼠标悬浮选项即可预览数值变化圆点。', en: 'Hover choices to preview stat dots.' },
         choices: [
           {
-            text: { zh: '闭着眼睛灌下去', en: 'Chug it with eyes closed' },
-            effects: { Physical_Health: -10, Academic_Ability: +5 },
-            flavor_text: { zh: '（心脏狂跳。这玩意儿简直是毒药，但你感觉现在能解开微积分大题了。）', en: '(Your heart is racing. This feels like poison, but you suddenly feel able to solve hardcore calculus.)' }
+            text: { zh: '关灯睡觉', en: 'Lights out, sleep' },
+            effects: { Mental_Health: +6, Physical_Health: +6 },
+            flavor_text: { zh: '（身体松下来，脑子也安静。）', en: '(Body unwinds; mind quiets.)' }
           },
           {
-            text: { zh: '稳妥起见，倒进下水道', en: 'Play safe and pour it down the drain' },
-            effects: { Mental_Health: -5 },
-            flavor_text: { zh: '（白白倒掉咖啡让你感到一丝浪费的愧疚，但至少保住了肠胃。）', en: '(Wasting coffee feels a bit guilty, but at least your stomach survives.)' }
+            text: { zh: '刷手机到天亮', en: 'Scroll phone till dawn' },
+            effects: { Mental_Health: -6, Physical_Health: -6 },
+            flavor_text: { zh: '（短视频上头，肩颈发硬。）', en: '(Short-video spiral; neck and shoulders lock up.)' }
           }
         ]
       },
@@ -223,7 +223,7 @@ const RAW_EVENTS = {
           },
           {
             text:       { zh: '通过西浦校友群，联系去年签过这家机构的学长私聊。', en: 'Contact seniors through XJTLU alumni groups who signed with these agencies last year.' },
-            effects:    { Agency_Score: +15, Mental_Health: -5 },
+            effects:    { Agency_Score: +15, Physical_Health: -4 },
             next_event_id: 'agency_consult_1',
             flavor_text: { zh: '几经周折，你终于加上了一位学长。学长告诉你："这家还行，但后期催文书一定要凶一点，不然他们会拖。"', en: 'After some effort, you finally connect with a senior. They tell you: "They\'re okay, but you have to be aggressive about deadlines, or they\'ll procrastinate on your essays."' },
             tip:        { zh: '口碑调研核心：寻找中介最靠谱的方式，是联系该中介的过往真实学生获取反馈。', en: 'Reputation Research: The most reliable way to find an agency is to get feedback from their actual past students.' },
@@ -259,7 +259,7 @@ const RAW_EVENTS = {
           },
           {
             text:       { zh: '通过西浦校友群，联系去年签过这家机构的学长私聊。', en: 'Contact seniors through XJTLU alumni groups who signed with these agencies last year.' },
-            effects:    { Agency_Score: +15, Mental_Health: -5 },
+            effects:    { Agency_Score: +15, Physical_Health: -4 },
             next_event_id: 'agency_consult_1',
             flavor_text: { zh: '几经周折，你终于加上了一位学长。学长告诉你："这家还行，但后期催文书一定要凶一点，不然他们会拖。"', en: 'After some effort, you finally connect with a senior. They tell you: "They\'re okay, but you have to be aggressive about deadlines, or they\'ll procrastinate on your essays."' },
             tip:        { zh: '口碑调研核心：寻找中介最靠谱的方式，是联系该中介的过往真实学生获取反馈。', en: 'Reputation Research: The most reliable way to find an agency is to get feedback from their actual past students.' },
@@ -421,21 +421,21 @@ const RAW_EVENTS = {
         choices: [
           {
             text:       { zh: '全力冲刺雅思，报名封闭强化班', en: 'Full IELTS sprint: Enroll in an intensive bootcamp' },
-            effects:    { English_Ability: +6, Mental_Health: -15, Money: -15 },
+            effects:    { English_Ability: +6, Money: -15, Physical_Health: -10 },
             tags_added: [],
             flavor_text: { zh: '你交了学费，每天八小时高强度刷题。暑假结束时，你的耳朵对英音产生了条件反射，但连续的熬夜让你的黑眼圈深了不少。', en: 'Tuition paid. Eight hours of high-intensity practice daily. By the end of summer, your ears react instinctively to British accents, but consecutive all-nighters have deepened your dark circles.' },
             tip:        { zh: '语言成绩是很多人的阿喀琉斯之踵。集中精力解决它是非常务实的选择。', en: 'Language scores are the Achilles\' heel for many. Focusing energy on resolving it is a very pragmatic choice.' },
           },
           {
             text:       { zh: '去大厂实习，积累真实项目经验', en: 'Big Tech internship: Gain real project experience' },
-            effects:    { Mental_Health: -15, Physical_Health: -10, Money: +20 },
+            effects:    { Money: +18, Physical_Health: -12, Mental_Health: +6 },
             tags_added: ['Internship_Exp'],
             flavor_text: { zh: '你成功拿到了一份为期八周的实习。每天挤地铁、开会、写周报。工资不多，但简历上多了一行沉甸甸的真实经历。', en: 'Successfully landed an eight-week internship. Commuting, meetings, and weekly reports. The pay is modest, but your resume now boasts a substantial line of real experience.' },
             tip:        { zh: '对于申请偏就业导向的硕士项目，一段对口的实习经历往往比高出 0.5 分的雅思更有说服力。', en: 'For career-oriented Master\'s programs, a relevant internship is often more persuasive than an extra 0.5 on your IELTS score.' },
           },
           {
             text:       { zh: '好好休息，为大四养精蓄锐', en: 'Proper rest: Recharge for the final year' },
-            effects:    { Mental_Health: +20, Physical_Health: +20 },
+            effects:    { Mental_Health: +10, Physical_Health: +12 },
             tags_added: [],
             flavor_text: { zh: '你拒绝了所有的内卷邀约，睡到自然醒，追完了几部剧。开学时你神清气爽——但隐约觉得，同学们的简历似乎比你厚了一大截。', en: 'You declined all \'try-hard\' invitations, slept in, and binged several shows. You feel refreshed for the new term—but can\'t help noticing your peers\' resumes look much thicker than yours.' },
             tip:        { zh: '休息固然重要，但在竞争白热化的申请季前夕选择彻底躺平，可能需要你在大四付出成倍的代价来偿还。', en: 'Rest is important, but choosing to completely \'lie flat\' right before a cutthroat application season might cost you double the effort to catch up later.' },
@@ -495,294 +495,308 @@ const RAW_EVENTS = {
 
 
   // ════════════════════════════════════════════════════════
-  // 地点事件：SA~SD 专业课楼 (解耦“波动类”数值和“积累类”数值)
+  // 地点事件：SA~SD 专业课楼（单卡一句；选项短、因果直觉；避免波动换积累）
   // ════════════════════════════════════════════════════════
 
   'loc_sb_001': {
-    event_id: 'loc_sb_001', type: 'location', title: { zh: '蓝屏的制裁', en: 'Blue Screen of Punishment' },
+    event_id: 'loc_sb_001', type: 'location', title: { zh: '蓝屏', en: 'Blue Screen' },
     scenes: [{
-      text: { zh: '你在 SD 楼的机房跑了一下午的数据。进度条到 99% 时，电脑风扇发出一声惨叫，屏幕变成了纯粹之蓝。不幸的是你没按过保存。', en: 'You\'ve been running data in the SD building lab all afternoon. At 99%, the fan lets out a scream, and the screen turns pure blue. Unfortunately, you never hit save.' },
+      text: { zh: '机房跑到 99% 蓝屏，你没保存。', en: 'The lab PC bluescreens at 99%. You never saved.' },
       choices: [
         {
-          text: { zh: '不接受现实，盯着蓝屏发呆', en: 'Deny reality and stare at the blue screen' },
-          effects: { Mental_Health: -15, Academic_Ability: -2 }
+          text: { zh: '呆坐瞪屏', en: 'Stare at the screen' },
+          effects: { Mental_Health: -8, Physical_Health: -3 },
+          flavor_text: { zh: '胸闷，脖子僵。', en: 'Tight chest, stiff neck.' }
         },
         {
-          text: { zh: '事已至此，先吃饭吧', en: 'It is what it is. Time for dinner.' },
-          effects: { Money: -10, Mental_Health: -5 }
+          text: { zh: '关机去食堂', en: 'Shut down and eat' },
+          effects: { Money: -6, Mental_Health: +5 },
+          flavor_text: { zh: '热饭下肚，人先活过来。', en: 'Hot food brings you back.' }
         }
       ]
     }]
   },
 
   'loc_sb_002': {
-    event_id: 'loc_sb_002', type: 'location', title: { zh: '完美的实验数据', en: 'Perfect Experimental Data' },
+    event_id: 'loc_sb_002', type: 'location', title: { zh: '完美数据', en: 'Perfect Data' },
     scenes: [{
-      text: { zh: '物理实验课上，你们组随便测了一次，数据点竟然完美贴合了理论曲线。连教授路过都点了点头。', en: 'In physics lab, your group takes a quick measurement, and the data points fit the theoretical curve perfectly. Even the professor nods in approval as he walks by.' },
+      text: { zh: '实验一次过线，教授点头。', en: 'Lab data lands on the curve; the prof nods.' },
       choices: [
         {
-          text: { zh: '就这样吧，提前一小时下课去打游戏', en: 'Leave it at that. Class ends an hour early for gaming.' },
-          effects: { Mental_Health: +15, Academic_Ability: +3 }
+          text: { zh: '收工开黑', en: 'Call it a win, go game' },
+          effects: { Mental_Health: +7, Academic_Ability: +4 },
+          flavor_text: { zh: '轻松+1，笔记也记了两行。', en: 'Light mood; you still jot notes.' }
         },
         {
-          text: { zh: '觉得这数据好得不真实，坚持换个仪器重测', en: 'Think it\'s too good to be true. Insist on retesting with a different instrument.' },
-          effects: { Academic_Ability: +8, Mental_Health: -10 },
-          flavor_text: { zh: '第二组数据烂得像一坨泥。你完全不能理解发生了什么。', en: 'The second set of data is garbage. You have no idea what just happened.' }
+          text: { zh: '换仪器重测', en: 'Retest on another rig' },
+          effects: { Physical_Health: -5, Academic_Ability: +6 },
+          flavor_text: { zh: '折腾，但搞懂了误差从哪来。', en: 'Painful, but you learn where error comes from.' }
         }
       ]
     }]
   },
 
   'loc_sb_003': {
-    event_id: 'loc_sb_003', type: 'location', title: { zh: '留学生的问路', en: 'International Student Asking for Directions' },
+    event_id: 'loc_sb_003', type: 'location', title: { zh: '问路', en: 'Directions' },
     scenes: [{
-      text: { zh: '一个看起来很着急的留学生在 SA 楼梯口拦住你：“Excuse me, do you know where the lab SA214 is?”', en: 'A frantic-looking international student stops you at the SA stairs: "Excuse me, do you know where the lab SA214 is?"' },
+      text: { zh: '留学生拦住你问 SA214。', en: 'A student asks where SA214 is.' },
       choices: [
         {
-          text: { zh: '热情待人，亲自带他上楼，顺带聊了聊', en: 'Be helpful: Lead him upstairs and have a chat on the way.' },
-          effects: { English_Ability: +3, Physical_Health: -5 }
+          text: { zh: '带上楼聊两句', en: 'Walk them up, chat' },
+          effects: { English_Ability: +3, Physical_Health: -4 },
+          flavor_text: { zh: '多爬两层，嘴也顺了。', en: 'Stairs and small talk.' }
         },
         {
-          text: { zh: '比划了一通："Go straight, then turn left."', en: 'Gesture vaguely: "Go straight, then turn left."' },
-          effects: { English_Ability: +1 }
+          text: { zh: '指个大概', en: 'Point roughly' },
+          effects: { English_Ability: +1, Mental_Health: +3 },
+          flavor_text: { zh: '省事，心里略虚。', en: 'Quick; slight guilt.' }
         }
       ]
     }]
   },
 
   'loc_sb_004': {
-    event_id: 'loc_sb_004', type: 'location', title: { zh: '讲座后排的披萨', en: 'Pizza at the Back of the Lecture' },
+    event_id: 'loc_sb_004', type: 'location', title: { zh: '讲座零食', en: 'Lecture Snacks' },
     scenes: [{
-      text: { zh: 'SD 楼有一场冗长的学术讲座。你完全听不懂台上的老师在讲什么，但教室后排摆着三大盒免费的山姆零食。', en: 'There\'s a tedious academic lecture in the SD building. You don\'t understand a word the speaker is saying, but there are three huge boxes of free Sam\'s Club snacks at the back.' },
+      text: { zh: '冗长讲座，后排免费零食山。', en: 'Long talk; free snacks at the back.' },
       choices: [
         {
-          text: { zh: '溜到后排偷吃零食，血糖过山车后放弃理解讲座内容，开始低头刷手机', en: 'Sneak to the back for snacks. After a sugar rush, give up on the lecture and scroll your phone.' },
-          effects: { Money: +10, Mental_Health: +10, Physical_Health: -10, Academic_Ability: -3 }
+          text: { zh: '后排开吃', en: 'Snack in the back' },
+          effects: { Money: +6, Mental_Health: +8, Physical_Health: -8 },
+          flavor_text: { zh: '甜腻犯困，腰也坐酸。', en: 'Sugar crash, stiff back.' }
         },
         {
-          text: { zh: '强打精神，尝试理解讲座内容', en: 'Force yourself to stay awake and try to understand the lecture.' },
-          effects: { Academic_Ability: +7, English_Ability: +2, Mental_Health: -10 },
-          flavor_text: { zh: '讲座老师开始重新组织自己的语言，也许是因为注意到了你呆滞的表情', en: 'The speaker starts rephrasing their points, perhaps noticing your glazed expression.' }
+          text: { zh: '硬听', en: 'Force yourself to listen' },
+          effects: { Academic_Ability: +6, Physical_Health: -5 },
+          flavor_text: { zh: '累，但抓到几句关键词。', en: 'Tired; a few keywords stick.' }
         }
       ]
     }]
   },
 
   'loc_sb_005': {
-    event_id: 'loc_sb_005', type: 'location', title: { zh: '降噪耳机的背叛', en: 'Betrayal of Noise-Canceling Headphones' },
+    event_id: 'loc_sb_005', type: 'location', title: { zh: '耳机没电', en: 'Headphones Dead' },
     scenes: [{
-      text: { zh: '自习室里，你旁边的哥们正在用青轴机械键盘疯狂输出。就在这时，你的降噪耳机在播报“Battery Low”后彻底关机。', en: 'In the study room, the guy next to you is pounding away on a mechanical keyboard with clicky blue switches. Just then, your noise-canceling headphones announce "Battery Low" and shut down.' },
+      text: { zh: '邻座青轴狂敲，耳机低电关机。', en: 'Clicky keys next to you; your ANC dies.' },
       choices: [
         {
-          text: { zh: '靠意志力硬抗青轴的物理超度', en: 'Endure the mechanical keyboard onslaught through sheer willpower.' },
-          effects: { Mental_Health: -15, Academic_Ability: +3 }
+          text: { zh: '进入心流硬写', en: 'Lock in and write' },
+          effects: { Mental_Health: +5, Academic_Ability: +5 },
+          flavor_text: { zh: '烦归烦，写顺了。', en: 'Noisy but you find flow.' }
         },
         {
-          text: { zh: '去星巴克点杯美式接着学', en: 'Head to Starbucks, order an Americano, and keep studying.' },
-          effects: { Money: -8, Mental_Health: +10, Academic_Ability: +6 }
+          text: { zh: '买咖啡换座', en: 'Coffee, change seat' },
+          effects: { Money: -8, Mental_Health: +8 },
+          flavor_text: { zh: '换个角落，清静点。', en: 'Quieter corner.' }
         }
       ]
     }]
   },
 
   'loc_sb_006': {
-    event_id: 'loc_sb_006', type: 'location', title: { zh: 'TA 的灵魂拷问', en: 'TA\'s Soul-Searching Question' },
+    event_id: 'loc_sb_006', type: 'location', title: { zh: 'TA 提问', en: 'TA Question' },
     scenes: [{
-      text: { zh: 'Tutorial 课上，外籍 TA 指着你作业里的一段奇葩代码问：“Why did you use this function here?”', en: 'In a tutorial, the international TA points to a bizarre snippet in your code: "Why did you use this function here?"' },
+      text: { zh: 'TA 指着你的代码问 Why here?', en: 'The TA points at your code: "Why here?"' },
       choices: [
         {
-          text: { zh: '诚实低头："I copied it from StackOverflow."', en: 'Honestly admit: "I copied it from StackOverflow."' },
-          effects: { Mental_Health: +5, Academic_Ability: -2 },
-          flavor_text: { zh: 'TA 叹了口气，放过了你。', en: 'The TA sighs and lets you off the hook.' }
+          text: { zh: '承认抄了 SO', en: 'Admit StackOverflow' },
+          effects: { Mental_Health: +8, English_Ability: +2 },
+          flavor_text: { zh: '松一口气，口语也顺了。', en: 'Relief; English flows.' }
         },
         {
-          text: { zh: '强行现编一段听起来很高级的技术原理解释', en: 'Improvise a high-level technical explanation on the spot.' },
-          effects: { English_Ability: +2, Mental_Health: -10, Academic_Ability: +4 }
+          text: { zh: '现场编理由', en: 'Improvise' },
+          effects: { Physical_Health: -4, English_Ability: +3 },
+          flavor_text: { zh: '紧张，但练了嘴皮子。', en: 'Stress, but practice.' }
         }
       ]
     }]
   },
 
   'loc_sb_007': {
-    event_id: 'loc_sb_007', type: 'location', title: { zh: '消失的雨伞', en: 'The Disappearing Umbrella' },
+    event_id: 'loc_sb_007', type: 'location', title: { zh: '丢伞', en: 'Lost Umbrella' },
     scenes: [{
-      text: { zh: '晚课结束，外面下起了暴雨。你放在 SA 一楼伞架上的透明雨伞不见了，而旁边放着一把不知道是谁的黑伞。', en: 'Evening class ends, and it\'s pouring outside. Your transparent umbrella is gone from the SA lobby rack, replaced by a mysterious black one.' },
+      text: { zh: '暴雨，你的伞没了，架上有把黑伞。', en: 'Storm; your umbrella is gone; a black one sits there.' },
       choices: [
         {
-          text: { zh: '顺走那把黑伞，撑回宿舍', en: 'Take the black umbrella and head back to the dorm.' },
-          effects: { Mental_Health: -10, Physical_Health: +10 },
-          flavor_text: { zh: '人不犯我我不犯人，要怪，就怪这乱世吧。', en: 'Eye for an eye. Blame the cruel world, not me.' }
+          text: { zh: '借用黑伞', en: 'Borrow the black one' },
+          effects: { Mental_Health: -6, Physical_Health: +8 },
+          flavor_text: { zh: '干着回屋，心里发虚。', en: 'Dry home, guilty mind.' }
         },
         {
-          text: { zh: '认命了，把书包顶在头上冲进暴雨里', en: 'Accept your fate. Put your bag over your head and dash into the storm.' },
-          effects: { Physical_Health: -20, Mental_Health: +10, Money: -5 },
-          flavor_text: { zh: '你在雨中狂奔，突然觉得这种电影主角般的悲惨经历还挺解压的。', en: 'Running through the rain, you suddenly find this cinematic misery quite cathartic.' }
+          text: { zh: '顶包冲雨', en: 'Bag over head, run' },
+          effects: { Physical_Health: -12, Mental_Health: +8, Money: -4 },
+          flavor_text: { zh: '狼狈，但觉得自己挺硬气。', en: 'Soaked; oddly proud.' }
         }
       ]
     }]
   },
 
   'loc_sb_008': {
-    event_id: 'loc_sb_008', type: 'location', title: { zh: '迟到的签到表', en: 'The Tardy Sign-in Sheet' },
+    event_id: 'loc_sb_008', type: 'location', title: { zh: '迟到', en: 'Late' },
     scenes: [{
-      text: { zh: '你睡过了头，迟到了整整五十分钟。当你从后门溜进教室时，发现教授正在前排传阅一张签到表。你有点紧张，不想有一丝在两百人面前被老师训斥的可能。', en: 'You overslept and arrived fifty minutes late. Slipping through the back door, you see the professor passing around a sign-in sheet at the front. Nerves kick in; you want zero chance of being scolded in front of two hundred people.' },
+      text: { zh: '迟到五十分钟，教授在传签到表。', en: 'Fifty minutes late; sign-in sheet up front.' },
       choices: [
         {
-          text: { zh: '弯着腰像特工一样潜行到前排去签字', en: 'Sneak to the front like a secret agent to sign the sheet.' },
-          effects: { Mental_Health: -15, Academic_Ability: +4 },
-          flavor_text: { zh: '很多学生看到了你奇异搞笑的行为。', en: 'Many students witness your bizarrely comical performance.' }
+          text: { zh: '溜去前排签', en: 'Sneak to sign' },
+          effects: { Mental_Health: -10, Physical_Health: -4 },
+          flavor_text: { zh: '社死，但签上了。', en: 'Awkward; signed.' }
         },
         {
-          text: { zh: '摆烂放弃签到，坐在最后一排开始补觉', en: 'Give up on signing. Sit in the last row and start napping.' },
-          effects: { Mental_Health: +10, Physical_Health: +10, Academic_Ability: -4 },
-          flavor_text: { zh: '“就当我没来上课吧。”', en: '"Just pretend I never showed up."' }
+          text: { zh: '后排补觉', en: 'Back row nap' },
+          effects: { Mental_Health: +6, Physical_Health: +8 },
+          flavor_text: { zh: '缺勤，但睡饱了。', en: 'Absent; rested.' }
         }
       ]
     }]
   },
 
   'loc_sb_009': {
-    event_id: 'loc_sb_009', type: 'location', title: { zh: '自动贩卖机的嘲讽', en: 'Mockery of the Vending Machine' },
+    event_id: 'loc_sb_009', type: 'location', title: { zh: '贩卖机卡罐', en: 'Stuck Can' },
     scenes: [{
-      text: { zh: '你在 SD 楼一楼的自动贩卖机买罐装百事可乐。扫码，付款，机械臂动了一下，然后卡住了。你的可乐悬停在半空中。', en: 'You buy a can of Pepsi from the vending machine on the first floor of SD. Scan, pay, the arm moves... and jams. Your soda is now suspended in mid-air.' },
+      text: { zh: '可乐付款后卡在半空。', en: 'Paid; the can hangs mid-air.' },
       choices: [
         {
-          text: { zh: '左右观察无人，对着机器狠狠踹了一脚', en: 'Check for witnesses, then give the machine a solid kick.' },
-          effects: { Physical_Health: -5, Mental_Health: +5 },
-          flavor_text: { zh: '可乐没掉下来，而你的脚趾隐隐作痛。但至少你的郁闷减轻了一些。', en: 'The soda stays put, and your toe throbs. But at least you feel a bit better.' }
+          text: { zh: '轻踹一脚', en: 'Kick lightly' },
+          effects: { Physical_Health: -4, Mental_Health: +6 },
+          flavor_text: { zh: '脚趾疼，气顺了点。', en: 'Toe hurts; mood eases.' }
         },
         {
-          text: { zh: '不信邪，再买一瓶，试图用第二瓶把第一瓶砸下来', en: 'Buy another one and try to knock the first can down.' },
-          effects: { Money: -10, Mental_Health: -10 },
-          flavor_text: { zh: '现在有两瓶可乐卡在半空中。', en: 'Now there are two cans suspended in mid-air.' }
+          text: { zh: '再买一瓶砸', en: 'Buy second to dislodge' },
+          effects: { Money: -8, Mental_Health: -8 },
+          flavor_text: { zh: '两罐一起卡。', en: 'Two stuck now.' }
         }
       ]
     }]
   },
 
   'loc_sb_010': {
-    event_id: 'loc_sb_010', type: 'location', title: { zh: '祖传复习资料', en: 'Ancestral Revision Materials' },
+    event_id: 'loc_sb_010', type: 'location', title: { zh: '复习包', en: 'Revision Pack' },
     scenes: [{
-      text: { zh: '一个大四的学长在群里兜售某门地狱级专业课的“祖传复习大礼包”，包含历年卷、重点批注和往届高分作业，标价 150 元。', en: 'A senior is selling an "Ancestral Revision Pack" for a notorious course in a group chat. It includes past papers, highlighted notes, and high-scoring assignments for 150 RMB.' },
+      text: { zh: '群里有人卖祖传复习包，¥150。', en: 'Someone sells a revision pack for 150 RMB.' },
       choices: [
         {
-          text: { zh: '咬牙转账', en: 'Grit your teeth and transfer the money.' },
-          effects: { Money: -13, Academic_Ability: +10 }
+          text: { zh: '转账买下', en: 'Buy it' },
+          effects: { Money: -12, Academic_Ability: +8 },
+          flavor_text: { zh: '省时间，钱包痛。', en: 'Fast; wallet hurts.' }
         },
         {
-          text: { zh: '决定靠自己啃 PPT', en: 'Decide to tackle the lecture slides on your own.' },
-          effects: { Mental_Health: -13, Academic_Ability: +5 },
-          flavor_text: { zh: '你花了一整晚自己整理重点，虽然学到了很多，但总觉得别人在走捷径，越想越气。', en: 'You spend all night organizing notes. You learned a lot, but the thought of others taking a shortcut keeps you annoyed.' }
+          text: { zh: '自己啃 PPT', en: 'DIY from slides' },
+          effects: { Academic_Ability: +6, Mental_Health: +4 },
+          flavor_text: { zh: '慢，但有掌控感。', en: 'Slow; feels earned.' }
         }
       ]
     }]
   },
 
   'loc_sb_011': {
-    event_id: 'loc_sb_011', type: 'location', title: { zh: '致命的查重率', en: 'Deadly Similarity Rate' },
+    event_id: 'loc_sb_011', type: 'location', title: { zh: '查重飙红', en: 'High Similarity' },
     scenes: [{
-      text: { zh: '距离作业提交（DDL）还有两小时。你把写好的 Essay 传到 Turnitin 上查重，屏幕上赫然跳出一个红色的数字：45% Similarity。', en: 'Two hours to the deadline. You upload your essay to Turnitin, and a glaring red number pops up: 45% Similarity.' },
+      text: { zh: 'Turnitin 显示 45%。', en: 'Turnitin says 45%.' },
       choices: [
         {
-          text: { zh: '用同义词替换大法把每一句话都改得面目全非', en: 'Rewrite every sentence beyond recognition using synonyms.' },
-          effects: { Mental_Health: -13, Academic_Ability: +5, English_Ability: +3 },
-          flavor_text: { zh: '查重率降到了 15%。但你交上去的已经不是一篇论文，而是一堆毫无逻辑的单词拼盘。', en: 'Similarity drops to 15%. But what you submitted is no longer an essay; it\'s a word salad of nonsensical synonyms.' }
+          text: { zh: '手改降重', en: 'Rewrite by hand' },
+          effects: { Physical_Health: -6, Academic_Ability: +5, English_Ability: +3 },
+          flavor_text: { zh: '累，句子真懂了。', en: 'Tired; you own the sentences.' }
         },
         {
-          text: { zh: '花钱开一个 AI 降重软件的高级会员', en: 'Pay for a premium AI paraphrasing tool subscription.' },
-          effects: { Money: -10, Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 }
+          text: { zh: '开降重会员', en: 'Pay for paraphrase tool' },
+          effects: { Money: -10, Mental_Health: +8 },
+          flavor_text: { zh: '省事，钱出去。', en: 'Easy; money out.' }
         }
       ]
     }]
   },
 
   'loc_sb_012': {
-    event_id: 'loc_sb_012', type: 'location', title: { zh: '教授的慈悲', en: 'Professor\'s Mercy' },
+    event_id: 'loc_sb_012', type: 'location', title: { zh: '作业取消', en: 'Assignment Canceled' },
     scenes: [{
-      text: { zh: '由于这学期大家都抱怨某门课太难，教授在课上宣布：“这周末的 Assignment 4 取消了，所有人这项平时分直接给满分。”', en: 'As everyone complained the course was too hard, the professor announced: "Assignment 4 is canceled. Everyone gets full marks for this component."' },
+      text: { zh: '教授宣布本周作业取消，该项满分。', en: 'Prof cancels this week\'s HW; full credit.' },
       choices: [
         {
-          text: { zh: '赞美教授！立刻回宿舍《原神》启动', en: 'Praise the Prof! Head back to the dorm and fire up Genshin.' },
-          effects: { Mental_Health: +15 }
+          text: { zh: '开玩放松', en: 'Relax and play' },
+          effects: { Mental_Health: +7, Physical_Health: +4 },
+          flavor_text: { zh: '人松了。', en: 'You unwind.' }
         },
         {
-          text: { zh: '既然没压力了，反而静下心来把它当练习做一遍', en: 'With the pressure off, sit down and do it as a practice run.' },
-          effects: { Academic_Ability: +9, Mental_Health: +10 },
-          flavor_text: { zh: '没有分数压迫的纯粹求知，让你体验到了久违的学术快感。', en: 'Learning for the sake of learning, without grade pressure, gives you a long-lost academic thrill.' }
+          text: { zh: '当练习写完', en: 'Still do it as drill' },
+          effects: { Academic_Ability: +8, Mental_Health: +8 },
+          flavor_text: { zh: '无分压力，纯练手。', en: 'No grade pressure; practice.' }
         }
       ]
     }]
   },
 
   'loc_sb_013': {
-    event_id: 'loc_sb_013', type: 'location', title: { zh: 'Grammarly 的诱惑', en: 'Temptation of Grammarly' },
+    event_id: 'loc_sb_013', type: 'location', title: { zh: 'Grammarly', en: 'Grammarly' },
     scenes: [{
-      text: { zh: '你在写报告，免费版的 Grammarly 提示你的文章里有 48 个“高级语法错误”，但要求你升级到 Premium 套餐后才能查看。', en: 'Writing a report, free Grammarly flags 48 "advanced grammatical errors" but requires a Premium upgrade to see them.' },
+      text: { zh: '免费 Grammarly 提示高级错误，要付费才显示。', en: 'Free Grammarly hides advanced fixes behind paywall.' },
       choices: [
         {
-          text: { zh: '冲一个礼拜高级会员，一键全部自动修改', en: 'Buy a one-week Premium sub and auto-fix everything.' },
-          effects: { Money: -10,  Mental_Health: +10, Academic_Ability: -2, English_Ability: -1 },
-          flavor_text: { zh: '文章看起来非常地道。不过你完全不知道它帮你改了什么，你的语感甚至退化了。', en: 'The essay looks polished. However, you have no idea what was changed; your linguistic intuition has actually regressed.' }
+          text: { zh: '充一周会员', en: 'One-week Premium' },
+          effects: { Money: -10, English_Ability: +4 },
+          flavor_text: { zh: '快，但少琢磨。', en: 'Fast; less thinking.' }
         },
         {
-          text: { zh: '坚决不充钱，自己对着词典一个个扒出来改掉', en: 'Refuse to pay. Use a dictionary to fix every single error yourself.' },
-          effects: { Mental_Health: -15, English_Ability: +3, Academic_Ability: +6 }
+          text: { zh: '手查词典改', en: 'Dictionary grind' },
+          effects: { Physical_Health: -5, English_Ability: +5 },
+          flavor_text: { zh: '慢，语感上来。', en: 'Slow; intuition grows.' }
         }
       ]
     }]
   },
 
   'loc_sb_014': {
-    event_id: 'loc_sb_014', type: 'location', title: { zh: '走错教室的旁听', en: 'Auditing the Wrong Class' },
+    event_id: 'loc_sb_014', type: 'location', title: { zh: '走错教室', en: 'Wrong Room' },
     scenes: [{
-      text: { zh: '你提前十分钟走进 SA 的教室，坐下听了一会儿才发现，台上讲的是隔壁专业的课。但教授讲的一个理论似乎能解决你最近的疑惑。', en: 'You walk into an SA classroom ten minutes early. After listening for a while, you realize it\'s for a different major. However, a theory the professor mentions seems to solve a puzzle you\'ve been having.' },
+      text: { zh: '坐错教室，发现是隔壁专业课。', en: 'Wrong class; another major\'s lecture.' },
       choices: [
         {
-          text: { zh: '假装自己就是这个专业的，试着听课看看是否能有所收获', en: 'Pretend you belong there. See if you can learn something new.' },
-          effects: { Academic_Ability: +7, English_Ability: +1 },
-          flavor_text: { zh: '也许你真的能成为复合型人才。', en: 'Perhaps you really are destined to be a multi-disciplinary talent.' }
+          text: { zh: '继续听', en: 'Stay and listen' },
+          effects: { Academic_Ability: +6, English_Ability: +2 },
+          flavor_text: { zh: '蹭到新思路。', en: 'New angle picked up.' }
         },
         {
-          text: { zh: '太尴尬了，趁教授转身写板书时溜走', en: 'Too awkward. Slip out while the professor is writing on the board.' },
-          effects: { Mental_Health: -5 }
+          text: { zh: '溜走', en: 'Slip out' },
+          effects: { Mental_Health: +4 },
+          flavor_text: { zh: '少点尴尬。', en: 'Less awkward.' }
         }
       ]
     }]
   },
 
   'loc_sb_015': {
-    event_id: 'loc_sb_015', type: 'location', title: { zh: '遗落的“武功秘籍”', en: 'The Forgotten "Secret Manual"' },
+    event_id: 'loc_sb_015', type: 'location', title: { zh: '桌洞笔记', en: 'Desk Notes' },
     scenes: [{
-      text: { zh: '你在空教室自习，发现桌洞里有一本被人遗忘的课本。随便翻开一页，是密密麻麻的用三种颜色笔做的学霸笔记。', en: 'Studying in an empty room, you find a forgotten textbook in a desk. Flipping it open, you see dense, multi-colored notes from a top student.' },
+      text: { zh: '桌洞里有本写满三色笔记的课本。', en: 'A textbook full of color notes in the desk.' },
       choices: [
         {
-          text: { zh: '据为己有，有便宜不占王八蛋', en: 'Keep it. Finders keepers.' },
-          effects: { Academic_Ability: +10, Mental_Health: +15 },
-          flavor_text: { zh: '你白嫖了学霸的智慧结晶，感觉很赚。', en: 'You\'ve absorbed a genius\'s insights for free. What a steal.' }
+          text: { zh: '先翻看记下', en: 'Read and copy key bits' },
+          effects: { Academic_Ability: +10 },
+          flavor_text: { zh: '白嫖重点。', en: 'Free highlights.' }
         },
         {
-          text: { zh: '追出教室，把书交给了正在找东西的学霸本人', en: 'Chase after the student and return the book.' },
-          effects: { Mental_Health: +5, English_Ability: +2 },
-          flavor_text: { zh: '学霸是个留学生，他很感谢你。你们用英语聊了一会。', en: 'The student is an international student. He is very grateful, and you chat for a while in English.' }
+          text: { zh: '交给失主', en: 'Return to owner' },
+          effects: { Mental_Health: +8, English_Ability: +3 },
+          flavor_text: { zh: '留学生道谢，聊了两句。', en: 'Thanks; short chat in English.' }
         }
       ]
     }]
   },
 
   'loc_sb_016': {
-    event_id: 'loc_sb_016', type: 'location', title: { zh: '跑步机上的文献', en: 'Literature on the Treadmill' },
+    event_id: 'loc_sb_016', type: 'location', title: { zh: '动与读', en: 'Move or Read' },
     scenes: [{
-      text: { zh: '你这周都没运动，身体已经感觉生锈了。但明天的 Seminar 还有两篇全英文文献没读。', en: 'You haven\'t exercised all week and feel like you\'re rusting. But there are still two English papers to read for tomorrow\'s seminar.' },
+      text: { zh: '一周没动，明早 Seminar 还有两篇英文要读。', en: 'No exercise; two English papers for tomorrow.' },
       choices: [
         {
-          text: { zh: '去健身房，一边在跑步机上快走一边看文献', en: 'Go to the gym. Read the papers while power-walking on the treadmill.' },
-          effects: { Physical_Health: +8, Academic_Ability: +3, Mental_Health: -10 },
-          flavor_text: { zh: '你既锻炼了身体又看了书，但这种一心二用让你觉得心累。', en: 'You got both done, but the multitasking leaves you feeling mentally drained.' }
+          text: { zh: '先精读一篇', en: 'Read one paper first' },
+          effects: { Academic_Ability: +5, English_Ability: +3, Physical_Health: -4 },
+          flavor_text: { zh: '久坐，眼酸。', en: 'Long sit; sore eyes.' }
         },
         {
-          text: { zh: '抛开一切罪恶感，去操场结结实实地跑了五公里', en: 'Cast aside the guilt. Go to the track and run a solid five kilometers.' },
-          effects: { Physical_Health: +15, Mental_Health: +15, Academic_Ability: -2 },
-          flavor_text: { zh: '大汗淋漓之后，你觉得那两篇文献根本不重要，健康才是第一位的。', en: 'After a good sweat, the papers seem trivial. Health comes first.' }
+          text: { zh: '去跑步', en: 'Go run' },
+          effects: { Physical_Health: +12, Mental_Health: +6 },
+          flavor_text: { zh: '文献明天再说。', en: 'Papers can wait.' }
         }
       ]
     }]
@@ -791,22 +805,22 @@ const RAW_EVENTS = {
   'loc_sb_017': {
     event_id:         'loc_sb_017',
     type:             'location',
-    title:            { zh: '昂贵的橄榄枝', en: 'An Expensive Olive Branch' },
+    title:            { zh: '课题组邀请', en: 'Lab Invite' },
     scenes: [
       {
-        text: { zh: '专业课下课后，以严厉著称的教授叫住了你：“你上次的大作业的思路不错。我课题组最近在做个项目，缺个打杂的，要不要来？没有钱，但最后发 Paper 可以带你的名字。”', en: 'After class, a notoriously strict professor stops you: "Your last assignment had a good approach. My research group is starting a project and needs an assistant. No pay, but your name will be on the final paper. Interested?"' },
-        tip:  { zh: '软背景提升：教授推荐信 (LoR) 是申研材料中的重要一环。与教授建立良好关系，不仅能获得强推，还能积累宝贵的科研经历，但会极大消耗精力。', en: 'Soft Background: Letters of Recommendation (LoR) are crucial for applications. Building a relationship with a professor can secure a strong LoR and valuable research experience, but it\'s a major time sink.' },
+        text: { zh: '教授问你要不要来课题组打杂，没钱，发文可挂名。', en: 'Prof offers unpaid lab grunt work; paper credit possible.' },
+        tip:  { zh: '软背景：LoR 与科研经历重要，但要量力而行。', en: 'LoR and research matter; pace yourself.' },
         choices: [
           {
-            text:       { zh: '这是千载难逢的机会，我卖身了！', en: 'This is a rare opportunity. I\'m in!' },
-            effects:    { Mental_Health: -20, Physical_Health: -15, Academic_Ability: +10 },
+            text:       { zh: '加入', en: 'Join' },
+            effects:    { Academic_Ability: +8, Physical_Health: -12 },
             tags_added: ['Research_Exp'],
-            flavor_text: { zh: '你加入了课题组，开始了每周跑实验室、通宵看外文文献的日子。你获得了宝贵的科研经历，代价是你的发际线退后了一厘米。', en: 'You join the group, spending your weeks in labs and pull all-nighters with foreign literature. You gain invaluable experience at the cost of a receding hairline.' },
+            flavor_text: { zh: '忙到飞起，学到真东西。', en: 'Busy; real skills.' },
           },
           {
-            text:       { zh: '感谢教授，但我目前想全力保 GPA。', en: 'Thank you, Professor, but I need to focus on my GPA right now.' },
-            effects:    { Mental_Health: +8 },
-            flavor_text: { zh: '教授冷淡地点了点头，转身离开了。你保住了睡眠和周末，但也可能错失了一封强有力的推荐信。', en: 'The professor nods coldly and walks away. You saved your sleep and weekends but might have missed out on a powerful LoR.' },
+            text:       { zh: '婉拒', en: 'Decline politely' },
+            effects:    { Mental_Health: +6, Physical_Health: +6 },
+            flavor_text: { zh: '睡眠保住了。', en: 'Sleep saved.' },
           },
         ],
       },
@@ -825,12 +839,12 @@ const RAW_EVENTS = {
     forbidden_tags:   ['IELTS_7.5'],  // 考到最高分后不再触发
     scenes: [
       {
-        text: { zh: '你在图书馆刷题刷得头昏脑涨，随手刷新了一下雅思报名官网。居然刷出了下个月初的一个退考考位！距离报名截止只剩十分钟了。报名费 2170 元。', en: 'Studying in the library has left you lightheaded. On a whim, you refresh the IELTS registration site. A canceled slot for early next month has just appeared! There are only ten minutes left until the deadline. The fee is 2,170 RMB.' },
+        text: { zh: '刷题头昏，随手刷新雅思官网，跳出下月初退考位，十分钟截止报名。', en: 'You refresh IELTS site; a slot opens; ten minutes to register.' },
         tip:  { zh: '时间规划：雅思成绩有效期为 2 年。最晚应在申请季当年的暑假结束前考出达标成绩。', en: 'Time Management: IELTS results are valid for 2 years. Aim to get your target score before the summer break of your application year.' },
         choices: [
           {
-            text:    { zh: '管不了那么多了，先锁考位！', en: 'Lock it in now!' },
-            effects: { Mental_Health: -5, Money: -10 },
+            text:    { zh: '先锁考位', en: 'Lock slot' },
+            effects: { Money: -8, Physical_Health: -3 },
             flavor_text: { zh: '你颤抖着扫码付了款。看着日历上标红的考试日期，你的心跳开始加速，接下来的几周注定是地狱模式。', en: 'With trembling hands, you scan the QR code and pay. Seeing the red-marked exam date on your calendar, your heart races. The coming weeks will be pure hell.' },
             next_event_id: 'ielts_exam_result',
           },
@@ -840,6 +854,50 @@ const RAW_EVENTS = {
         ],
       },
     ],
+  },
+
+  'loc_cb_quiet_row': {
+    event_id: 'loc_cb_quiet_row', type: 'location', title: { zh: '静音区', en: 'Quiet Row' },
+    scenes: [{
+      text: { zh: '四楼静音区，键盘声像下雨。', en: 'Quiet floor; keyboards patter like rain.' },
+      choices: [
+        { text: { zh: '埋头写', en: 'Head down, write' }, effects: { Academic_Ability: +5, Physical_Health: -4 } },
+        { text: { zh: '换靠窗位', en: 'Move window seat' }, effects: { Mental_Health: +8, English_Ability: +2 } },
+      ],
+    }],
+  },
+
+  'loc_cb_printer': {
+    event_id: 'loc_cb_printer', type: 'location', title: { zh: '打印机', en: 'Printer' },
+    scenes: [{
+      text: { zh: '打印队列前面还有十几份。', en: 'A dozen jobs ahead in the queue.' },
+      choices: [
+        { text: { zh: '排队等', en: 'Wait in line' }, effects: { Physical_Health: -4, English_Ability: +3 }, flavor_text: { zh: '站着背了几个词。', en: 'Standing; you skim vocab.' } },
+        { text: { zh: '回宿舍印', en: 'Print in dorm' }, effects: { Money: -5, Mental_Health: +6 } },
+      ],
+    }],
+  },
+
+  'loc_cb_group_slot': {
+    event_id: 'loc_cb_group_slot', type: 'location', title: { zh: '讨论间', en: 'Group Room' },
+    scenes: [{
+      text: { zh: '预约到了一小时讨论间。', en: 'You booked a one-hour group room.' },
+      choices: [
+        { text: { zh: '练口语对练', en: 'Speaking drill' }, effects: { English_Ability: +5, Mental_Health: +4, Physical_Health: -3 } },
+        { text: { zh: '独自过 PPT', en: 'Solo slides' }, effects: { Academic_Ability: +5, Mental_Health: +5 } },
+      ],
+    }],
+  },
+
+  'loc_cb_stack_books': {
+    event_id: 'loc_cb_stack_books', type: 'location', title: { zh: '还书台', en: 'Returns' },
+    scenes: [{
+      text: { zh: '还书台有人留下一摞专业笔记。', en: 'Someone left a stack of course notes on the returns desk.' },
+      choices: [
+        { text: { zh: '翻两页记下', en: 'Skim two pages' }, effects: { Academic_Ability: +6 } },
+        { text: { zh: '交给前台', en: 'Hand to desk' }, effects: { Mental_Health: +8, Money: +3 }, flavor_text: { zh: '前台登记了失物。', en: 'Staff logs lost-and-found.' } },
+      ],
+    }],
   },
 
   'ielts_exam_result': {
@@ -867,76 +925,76 @@ const RAW_EVENTS = {
   // ════════════════════════════════════════════════════════
 
   'loc_ir_data_clean': {
-    event_id: 'loc_ir_data_clean', type: 'location', title: { zh: '廉价劳动力', en: 'Cheap Labor' },
+    event_id: 'loc_ir_data_clean', type: 'location', title: { zh: '洗数据', en: 'Data Cleaning' },
     scenes: [{
-      text: { zh: '教授丢给你一个包含十万条脏数据的 Excel 表格，让你周末前清理干净。这活毫无技术含量，纯粹是体力劳动。', en: 'The professor dumps an Excel sheet with 100,000 messy rows on you, demanding it be cleaned by the weekend. It\'s mindless, brute-force labor.' },
+      text: { zh: '十万行脏 Excel，周末前要干净。', en: '100k messy rows; clean by weekend.' },
       choices: [
         {
-          text: { zh: '老老实实当黑工', en: 'Be a dutiful laborer' },
-          effects: { Mental_Health: -18, Physical_Health: -10 },
-          flavor_text: { zh: '你点鼠标点到手抽筋。虽然没学到什么新知识，但教授对你的服从性非常满意——这也许对要推荐信有帮助。', en: 'Your hand cramps from endless clicking. You learned nothing, but the professor is pleased with your obedience—which might help with a future reference.' },
+          text: { zh: '手点清洗', en: 'Click-clean by hand' },
+          effects: { Physical_Health: -7, Mental_Health: -5 },
+          flavor_text: { zh: '手酸，但不用动脑子。', en: 'Sore hands; mindless.' },
         },
         {
-          text: { zh: '花钱买个脚本自动处理', en: 'Pay for an automation script' },
-          effects: { Money: -12, Mental_Health: +8 },
-          flavor_text: { zh: '你在网上找人写了个自动化脚本，五分钟搞定。你用省下的时间看了一部电影，良心很平静。', en: 'You find someone online to write a script that finishes the job in five minutes. You spend the saved time watching a movie with a clear conscience.' },
+          text: { zh: '花钱买脚本', en: 'Buy a script' },
+          effects: { Money: -10, Mental_Health: +8, Physical_Health: +4 },
+          flavor_text: { zh: '省事，钱包轻一点。', en: 'Easy; lighter wallet.' },
         },
       ],
     }],
   },
 
   'loc_ir_professor_meeting': {
-    event_id: 'loc_ir_professor_meeting', type: 'location', title: { zh: '组会拷问', en: 'Group Meeting Inquest' },
+    event_id: 'loc_ir_professor_meeting', type: 'location', title: { zh: '组会提问', en: 'Meeting Question' },
     scenes: [{
-      text: { zh: '在周度组会上，教授突然点名让你汇报最近阅读的文献。你其实只看了个摘要。', en: 'During the weekly group meeting, the professor suddenly calls on you to present the literature you\'ve been reading. You\'ve only skimmed the abstracts.' },
+      text: { zh: '组会突然让你讲本周文献。', en: 'You are asked to present this week\'s papers.' },
       choices: [
         {
-          text: { zh: '硬着头皮瞎编', en: 'Try to wing it' },
-          effects: { Mental_Health: -22, Academic_Ability: -5 },
-          flavor_text: { zh: '教授一眼看穿了你的窘迫，当着全组的面把你批评了一顿。你恨不得找个地缝钻进去。', en: 'The professor sees right through your struggle and reprimands you in front of the entire group. You wish you could vanish into thin air.' },
+          text: { zh: '坦白只看了摘要', en: 'Admit skim only' },
+          effects: { Mental_Health: +6, Academic_Ability: +4 },
+          flavor_text: { zh: '挨两句批，但知道该补哪。', en: 'Scolded; you know what to read.' },
         },
         {
-          text: { zh: '坦诚道歉，保证下次补上', en: 'Apologize and promise to catch up' },
-          effects: { Mental_Health: -10, Academic_Ability: +5 },
-          flavor_text: { zh: '你诚恳地承认了错误。教授虽然不悦，但没有过多刁难。你暗下决心今晚回去把文献读完。', en: 'You honestly admit your mistake. The professor is displeased but doesn\'t press further. You vow to finish the reading tonight.' },
+          text: { zh: '硬扯两句', en: 'Bluff briefly' },
+          effects: { Mental_Health: -8, Physical_Health: -4 },
+          flavor_text: { zh: '紧张到胃抽。', en: 'Stress stomach.' },
         },
       ],
     }],
   },
 
   'loc_ir_paper_publish': {
-    event_id: 'loc_ir_paper_publish', type: 'location', title: { zh: '论文署名', en: 'Paper Authorship' },
+    event_id: 'loc_ir_paper_publish', type: 'location', title: { zh: '排版换署名', en: 'Format for Credit' },
     scenes: [{
-      text: { zh: '课题组准备投一篇顶级会议论文。教授暗示你，如果愿意包揽所有繁琐的排版和校对工作，可以给你挂个四作。', en: 'The group is preparing a paper for a top-tier conference. The professor hints that if you handle all the tedious formatting and proofreading, you can be the fourth author.' },
+      text: { zh: '教授问谁愿意通宵排版换四作。', en: 'Prof needs overnight formatting; fourth author offered.' },
       choices: [
         {
-          text: { zh: '接下苦差事！为了简历！', en: 'Accept the grind! For the CV!' },
-          effects: { Academic_Ability: +10, Physical_Health: -18, Mental_Health: -8 },
-          flavor_text: { zh: '你连续熬了三个通宵做完了排版和校对。论文投出去了，你的名字在最后。简历上多了一行，但身体亮起了红灯。', en: 'You pull three consecutive all-nighters for formatting and proofreading. The paper is submitted with your name at the end. Your CV gained a line, but your health is flagging.' },
+          text: { zh: '接活', en: 'Take it' },
+          effects: { Academic_Ability: +8, Physical_Health: -7 },
+          flavor_text: { zh: '通宵换一行署名。', en: 'All-nighter for author line.' },
         },
         {
-          text: { zh: '太累了，婉拒', en: 'Politely decline' },
-          effects: { Physical_Health: +12, Academic_Ability: -8 },
-          flavor_text: { zh: '你礼貌地婉拒了。教授有些失望，但没有强迫。你保住了睡眠，但错过了一个简历加分项。', en: 'You politely decline. The professor is disappointed but doesn\'t push. You save your sleep but miss out on a resume booster.' },
+          text: { zh: '婉拒', en: 'Decline' },
+          effects: { Mental_Health: +8, Physical_Health: +8 },
+          flavor_text: { zh: '睡觉优先。', en: 'Sleep first.' },
         },
       ],
     }],
   },
 
   'loc_ir_equipment_booking': {
-    event_id: 'loc_ir_equipment_booking', type: 'location', title: { zh: '抢占仪器', en: 'Snagging Equipment' },
+    event_id: 'loc_ir_equipment_booking', type: 'location', title: { zh: '仪器时段', en: 'Equipment Slot' },
     scenes: [{
-      text: { zh: '实验室的高精度设备这周只剩下一个深夜时段可以预约了，而你明天早上还有早八的课。', en: 'The lab\'s high-precision equipment only has one slot left this week: late at night. You have an 8:00 AM class tomorrow.' },
+      text: { zh: '只剩深夜仪器位，明早八点有课。', en: 'Only a midnight slot; 8 AM class tomorrow.' },
       choices: [
         {
-          text: { zh: '预约！大不了通宵', en: 'Book it! All-nighter it is.' },
-          effects: { Academic_Ability: +8, Physical_Health: -18 },
-          flavor_text: { zh: '你预约了凌晨的时段，通宵跑完了实验。数据很好，但你在早八课上直接睡死了。', en: 'You book the slot and spend the night in the lab. The data is excellent, but you crash completely during your 8:00 AM class.' },
+          text: { zh: '约深夜', en: 'Book midnight' },
+          effects: { Academic_Ability: +7, Physical_Health: -8 },
+          flavor_text: { zh: '数据有了，人蔫了。', en: 'Data in; body out.' },
         },
         {
-          text: { zh: '放弃，等下周再做', en: 'Skip it and wait until next week' },
-          effects: { Mental_Health: +8, Academic_Ability: -8 },
-          flavor_text: { zh: '你选择了睡眠。下周再约吧，实验进度会慢一些，但人还在。', en: 'You choose sleep. Waiting until next week means slower progress, but at least you stay sane.' },
+          text: { zh: '下周再说', en: 'Wait a week' },
+          effects: { Mental_Health: +8, Physical_Health: +6 },
+          flavor_text: { zh: '节奏慢一点。', en: 'Slower pace.' },
         },
       ],
     }],
@@ -953,223 +1011,228 @@ const RAW_EVENTS = {
   // ════════════════════════════════════════════════════════
 
   'loc_dorm_001': {
-    event_id: 'loc_dorm_001', type: 'location', title: { zh: '闲不住？上咸鱼！', en: 'Idle Hands? Go to Xianyu!' },
+    event_id: 'loc_dorm_001', type: 'location', title: { zh: '真题垫显示器', en: 'IELTS Books as Stand' },
     scenes: [{
-      text: { zh: '你看着桌上那摞几乎全新的雅思剑桥真题。自从买回来后，它们唯一的价值就是用来垫显示器。', en: 'You stare at the stack of nearly pristine Cambridge IELTS past papers. Since buying them, their only purpose has been acting as a monitor stand.' },
+      text: { zh: '剑桥真题还在垫显示器。', en: 'Cambridge books still under your monitor.' },
       choices: [
         {
-          text: { zh: '挂到闲鱼上，半价打包出给大一新生', en: 'Sell them on Xianyu to a freshman' },
-          effects: { Money: +10, English_Ability: -2, Mental_Health: +10 },
-          flavor_text: { zh: '看着微信到账提示，你感到一阵轻松。你不仅卖掉了书，还卖掉了对英语的最后一丝负罪感。', en: 'The WeChat payment notification brings instant relief. You haven\'t just sold the books; you\'ve sold your last shred of guilt about your English prep.' }
+          text: { zh: '闲鱼出掉', en: 'Sell on Xianyu' },
+          effects: { Money: +6, Mental_Health: +5 },
+          flavor_text: { zh: '到账轻松。', en: 'Cash in; lighter mood.' }
         },
         {
-          text: { zh: '撤下显示器，强迫自己做一套听力', en: 'Remove the monitor and force a listening test' },
-          effects: { Mental_Health: -15, English_Ability: +4 }
+          text: { zh: '做一套听力', en: 'One listening test' },
+          effects: { English_Ability: +4, Physical_Health: -4 },
+          flavor_text: { zh: '久坐脖子酸。', en: 'Stiff neck from sitting.' }
         }
       ]
     }]
   },
 
   'loc_dorm_002': {
-    event_id: 'loc_dorm_002', type: 'location', title: { zh: '违规电器的诱惑', en: 'Temptation of Illegal Appliances' },
+    event_id: 'loc_dorm_002', type: 'location', title: { zh: '泡面夜', en: 'Ramen Night' },
     scenes: [{
-      text: { zh: '月底了，你的微信零钱只剩两位数。室友从床底摸出一个违规电煮锅：“今晚别点外卖了，我煮泡面加淀粉肠，来点不？”', en: 'It\'s the end of the month, and your WeChat balance is in the double digits. Your roommate pulls an illegal electric pot from under the bed: "No delivery tonight. I\'m making ramen with starch sausages. Want some?"' },
+      text: { zh: '室友端出违规锅煮面，月底你零钱不多。', en: 'Roommate cooks illegal-pot ramen; you are low on cash.' },
       choices: [
         {
-          text: { zh: '加入这场盛宴，连汤都喝干净', en: 'Join the feast and drink the broth' },
-          effects: { Money: +10, Physical_Health: -10, Mental_Health: +15 },
-          flavor_text: { zh: '高钠碳水带来的快乐是无与伦比的，哪怕第二天早上你肿得像个发面馒头。', en: 'The joy of high-sodium carbs is unparalleled, even if you wake up looking like a puffy steamed bun the next morning.' }
+          text: { zh: '蹭一碗', en: 'Join the bowl' },
+          effects: { Money: +6, Mental_Health: +6, Physical_Health: -8 },
+          flavor_text: { zh: '咸香快乐，略肿。', en: 'Salty joy; bit bloated.' }
         },
         {
-          text: { zh: '坚守健康底线，花钱点一份轻食沙拉', en: 'Hold the health line and order a salad' },
-          effects: { Money: -8, Physical_Health: +3, Mental_Health: -8 },
-          flavor_text: { zh: '仔细想想花钱吃草何意味，看着室友们大快朵颐，你觉得自己既破财又憋屈。', en: 'Paying for "grass" while your roommates feast feels pointless. You\'ve lost money and your dignity.' }
+          text: { zh: '点沙拉', en: 'Order salad' },
+          effects: { Money: -8, Physical_Health: +6, Mental_Health: +4 },
+          flavor_text: { zh: '花钱吃草，心里平衡。', en: 'Paid greens; feels fair.' }
         }
       ]
     }]
   },
 
   'loc_dorm_003': {
-    event_id: 'loc_dorm_003', type: 'location', title: { zh: '深夜的 CS2', en: 'Late Night CS2' },
+    event_id: 'loc_dorm_003', type: 'location', title: { zh: '室友开黑', en: 'Roommate Gaming' },
     scenes: [{
-      text: { zh: '凌晨一点，室友戴着耳机在打 CS2，正在激情指挥：“A小！A小！他残了！特么的你会不会玩！”', en: 'It\'s 1:00 AM. Your roommate is wearing headphones and shouting instructions in CS2: "A Short! A Short! He\'s lit! Do you even know how to play?!"' },
+      text: { zh: '凌晨室友喊麦打 CS2。', en: 'Roommate shouts in CS2 at 1 AM.' },
       choices: [
         {
-          text: { zh: '戴上降噪耳机，在床上背单词', en: 'Wear noise-canceling headphones and study' },
-          effects: { English_Ability: +3, Physical_Health: -10, Mental_Health: -10 }
+          text: { zh: '耳塞背单词', en: 'Earplugs, vocab' },
+          effects: { English_Ability: +3, Mental_Health: -6 },
+          flavor_text: { zh: '烦但背了几个词。', en: 'Annoying; a few words stick.' }
         },
         {
-          text: { zh: '这能学得进？一起开黑算了', en: 'Can\'t study like this. Might as well play.' },
-          effects: { Mental_Health: +15, Physical_Health: -10, Academic_Ability: -2 },
-          flavor_text: { zh: '你用一波五杀拯救了室友的排位分，也摧毁了你明天早八的起床意志。', en: 'Your ace saves your roommate\'s rank but destroys your will to wake up for your 8:00 AM class.' }
+          text: { zh: '加入一局', en: 'Join one match' },
+          effects: { Mental_Health: +6, Physical_Health: -8 },
+          flavor_text: { zh: '爽完眼干。', en: 'Fun; dry eyes.' }
         }
       ]
     }]
   },
 
   'loc_dorm_004': {
-    event_id: 'loc_dorm_004', type: 'location', title: { zh: '沉浸式学习 VLOG', en: 'Immersive Study VLOG' },
+    event_id: 'loc_dorm_004', type: 'location', title: { zh: '学习 vlog', en: 'Study VLOG' },
     scenes: [{
-      text: { zh: '你本来打算复习，但推送让你点开了一个“清华学霸 4 小时沉浸式学习 VLOG”。视频里的桌搭很精致，笔记很漂亮。', en: 'You intended to revise, but a notification lures you into a "4-Hour Immersive Study VLOG with a Tsinghua Genius." The desk setup is exquisite; the notes are beautiful.' },
+      text: { zh: '推送了一个四小时学习 vlog。', en: 'A 4-hour study VLOG pops up.' },
       choices: [
         {
-          text: { zh: '看了半小时，感觉自己似乎也成为清华的一份子了', en: 'Watch for 30 mins and feel like a genius' },
-          effects: { Mental_Health: +10, Academic_Ability: -3 },
-          flavor_text: { zh: '看着别人学习，你的大脑分泌了虚假的成就感。你今天什么都没学，但至少睡得很香。', en: 'Watching others study triggers a false sense of achievement. You learned nothing today, but at least you\'ll sleep well.' }
+          text: { zh: '看半小时当学了', en: 'Watch 30 min "as study"' },
+          effects: { Mental_Health: +6, Physical_Health: -4 },
+          flavor_text: { zh: '云学习，人放松。', en: 'Parasocial chill.' }
         },
         {
-          text: { zh: '被焦虑感逼迫，选择去刷专业课习题', en: 'Forced by anxiety to actually study' },
-          effects: { Mental_Health: -15, Academic_Ability: +8 }
+          text: { zh: '关掉刷题', en: 'Close and drill' },
+          effects: { Academic_Ability: +6, Physical_Health: -5 },
+          flavor_text: { zh: '久坐腰酸。', en: 'Sore back from sitting.' }
         }
       ]
     }]
   },
 
   'loc_dorm_005': {
-    event_id: 'loc_dorm_005', type: 'location', title: { zh: 'G 胖的微笑', en: 'Lord Gaben\'s Smile' },
+    event_id: 'loc_dorm_005', type: 'location', title: { zh: 'Steam 打折', en: 'Steam Sale' },
     scenes: [{
-      text: { zh: 'Steam 秋季特卖。你愿望单里那个眼馋了半年的 3A 大作《荒野○镖客》直接打骨折，只要 89 块钱。', en: 'Steam Autumn Sale. That AAA masterpiece "Red Dead ○" on your wishlist is 80% off, just 89 RMB.' },
+      text: { zh: '愿望单大作史低。', en: 'Wishlist AAA hits all-time low.' },
       choices: [
         {
-          text: { zh: '没玩过这游戏不配说自己是笔电小子！', en: 'Not playing this is a crime for laptop owners!' },
-          effects: { Money: -7, Mental_Health: +15, Academic_Ability: -2 },
-          flavor_text: { zh: '《宇宙机○人》不如《黑○话》一根。', en: '"Astro ○" is nothing compared to "Black ○".' }
+          text: { zh: '买下', en: 'Buy' },
+          effects: { Money: -8, Mental_Health: +7 },
+          flavor_text: { zh: '快乐充值。', en: 'Joy purchase.' }
         },
         {
-          text: { zh: '不买，去 B 站看 UP 主的实况视频，聊以解馋', en: 'Don\'t buy. Watch a walkthrough on Bilibili instead.' },
-          effects: { Money: +5, Mental_Health: +10 },
-          flavor_text: { zh: '白嫖虽然快乐，但云玩家的体验终究差了点意思。', en: 'Watching for free is fine, but the "cloud gamer" experience is never quite the same.' }
+          text: { zh: '云通关', en: 'Watch playthrough' },
+          effects: { Money: +4, Mental_Health: +6 },
+          flavor_text: { zh: '省钱略馋。', en: 'Saved; mild FOMO.' }
         }
       ]
     }]
   },
 
   'loc_dorm_006': {
-    event_id: 'loc_dorm_006', type: 'location', title: { zh: '富哥的求助', en: 'Rich Classmate\'s Plea' },
+    event_id: 'loc_dorm_006', type: 'location', title: { zh: '代写请求', en: 'Coding Favor' },
     scenes: [{
-      text: { zh: 'EAP 课上认识的富哥同学在微信上敲你：“兄弟明天 Java 大作业救一下，我真写不明白，给你 600 辛苦费咋样？”', en: 'A rich classmate you met in EAP pings you on WeChat: "Bro, I\'m dying with this Java assignment. I just don\'t get it. I\'ll give you 600 RMB if you can save me. Deal?"' },
+      text: { zh: '同学出六百求你改 Java 作业。', en: 'Classmate offers 600 RMB to fix Java homework.' },
       choices: [
         {
-          text: { zh: '收钱办事，重构那坨意大利面代码', en: 'Take the money and refactor that spaghetti code' },
-          effects: { Money: +15, Academic_Ability: +10, Mental_Health: -15 },
-          flavor_text: { zh: '你赚了钱，顺便把知识点吃透了，不过你看他代码时气的差点脑溢血。', en: 'You made some cash and mastered the material, but reading his code nearly gave you a stroke.' }
+          text: { zh: '接活', en: 'Take the job' },
+          effects: { Money: +12, Academic_Ability: +6, Physical_Health: -8 },
+          flavor_text: { zh: '钱到手，熬了夜。', en: 'Paid; late night.' }
         },
         {
-          text: { zh: '嫌麻烦拒绝，有这时间不如玩原神', en: 'Refuse. Better spend the time on Genshin.' },
-          effects: { Mental_Health: +8, Money: -5 }
+          text: { zh: '拒了', en: 'Refuse' },
+          effects: { Mental_Health: +5, Physical_Health: +4 },
+          flavor_text: { zh: '早睡。', en: 'Early sleep.' }
         }
       ]
     }]
   },
 
   'loc_dorm_007': {
-    event_id: 'loc_dorm_007', type: 'location', title: { zh: '凌晨三点的虚无', en: '3:00 AM Nihilism' },
+    event_id: 'loc_dorm_007', type: 'location', title: { zh: '失眠', en: 'Insomnia' },
     scenes: [{
-      text: { zh: '凌晨三点，你在床上辗转反侧。虚无主义袭击了你，你觉得考研、留学、GPA 都毫无意义，人类不过是宇宙中的尘埃。', en: 'It\'s 3:00 AM, and you\'re tossing and turning. Nihilism strikes: you feel that grad school, applications, and GPA are all meaningless. Humans are but dust in the cosmos.' },
+      text: { zh: '三点还醒着，脑子停不下来。', en: '3 AM; mind racing.' },
       choices: [
         {
-          text: { zh: '戴上耳机，任由自己沉溺在悲伤里', en: 'Put on headphones and sink into the sorrow' },
-          effects: { Mental_Health: -15, Physical_Health: -10 },
-          flavor_text: { zh: '全网最伤感的bgm，听完不哭你来打我。尤其是最后一首建议点赞收藏起来以免找不到。夜深人静的时候个人听，前奏一响立马emo。没猜错的话，艾特列表中的第三位一定是你生命中最重要的存在。你表情包里的第二排第三个就是你现在的心情带上耳机，用心感受这浓浓的伤感氛围。评论区留下你的手机电量相当于一百的，那就做一天朋友。听完艾特一位你喜欢的博主，看他会不会来接你。有人找了十年，只听前奏就已沦陷。记得分享给你的姐妹，看看你姐妹会给你回什么。如果不回，建议两人断了，就问你敢不敢在评论区留下你想对喜欢的人说的话，万一他看到了留下一句祝福。听说打出l d，据说百分之九十的打出来都是老大。如果不是，请打在评论区，让我看看你就是那百分之十。废话不多说，就让我们听听有哪些伤感bgm，键盘打出七四八三二幺，如果相似的，那么就做一周兄弟听完不哭，下个月的奶茶我包了。不要单独一个人听，建议分享给闺蜜一起听。据说这几个星座听完之后，两周内回进到那个有缘的地方去进行修炼。下面让我们听听网友总结的最伤感的十首bgm吧。一首是经典，看看你听过几首关上灯，戴上耳机，让我们用心感受一下这几首音乐歌曲天花板。@你闺蜜过来看看你闺蜜会不会来接你。心情不好的时候，千万不要怕你听完后瞬间落泪，如果没有落泪，那算我输，让我们一起欣赏网友总结的emo歌曲天花板先准备好纸巾，以免落泪了。来不及，bgm上', en: 'The saddest BGM on the internet... One listen and you\'re instantly emo. Loneliness at its finest.' }
+          text: { zh: '听歌放空', en: 'Music, zone out' },
+          effects: { Mental_Health: -8, Physical_Health: -5 },
+          flavor_text: { zh: '更清醒了点。', en: 'Oddly more awake.' }
         },
         {
-          text: { zh: '睡不着也无事做，刷点题打发时间', en: 'Can\'t sleep, might as well grind some problems' },
-          effects: { Mental_Health: +15, Academic_Ability: +10, Physical_Health: -15 },
-          flavor_text: { zh: '因为彻底放弃了功利心，知识点竟然过目不忘。这种看破红尘带来了内心的极度平静。', en: 'Having abandoned all worldly ambition, you find yourself absorbing knowledge effortlessly. This detachment brings an unexpected, profound inner peace.' }
+          text: { zh: '刷两道题', en: 'Do two problems' },
+          effects: { Academic_Ability: +5, Mental_Health: +6, Physical_Health: -8 },
+          flavor_text: { zh: '困意终于来了。', en: 'Sleepiness returns.' }
         }
       ]
     }]
   },
 
   'loc_dorm_008': {
-    event_id: 'loc_dorm_008', type: 'location', title: { zh: '疯狂星期四', en: 'Crazy Thursday' },
+    event_id: 'loc_dorm_008', type: 'location', title: { zh: '星期四文案', en: 'Thursday Meme' },
     scenes: [{
-      text: { zh: '今天是星期四。你 QQ、微信的各个群聊都在刷不知道哪里偷的“疯狂星期四”文案。', en: 'It\'s Thursday. Every group chat on QQ and WeChat is being spammed with "Crazy Thursday" copy-pastas stolen from who-knows-where.' },
+      text: { zh: '群里狂刷疯狂星期四梗。', en: 'Group chat spams Crazy Thursday memes.' },
       choices: [
         {
-          text: { zh: '复制其中最难绷的一条，转发到各个群里，并配上你的收款码', en: 'Copy the cringiest one, spam it, and attach your QR code' },
-          effects: { Money: +10, Mental_Health: +10 },
-          flavor_text: { zh: '可能是佩服你自己开盒自己的胆识，居然真的有个富哥给你转了 50。你没去买肯德基，而是去食堂吃了一周的挂面。这就是互联网的魅力。', en: 'Perhaps impressed by your sheer audacity, someone actually sends you 50 RMB. You don\'t buy KFC; you eat noodles in the canteen for a week instead. The magic of the internet.' }
+          text: { zh: '跟一条玩梗', en: 'Post one too' },
+          effects: { Money: +6, Mental_Health: +8 },
+          flavor_text: { zh: '有人真发了红包。', en: 'Someone tips you.' }
         },
         {
-          text: { zh: '实在受不了这种互联网讨口子的行为，让 AI 引经据典现编一段三千字雄文痛斥他们', en: 'Can\'t stand the digital begging. Have an AI write a 3,000-word critique.' },
-          effects: { Mental_Health: +15, Academic_Ability: +5 },
-          flavor_text: { zh: '虽然你扮了扫兴鬼，但赢得了道德高地。在看到 AI 生成出“君子忧道不忧贫”的时候，你觉得自己灵魂升华了。', en: 'You were a killjoy, but you won the moral high ground. Seeing the AI quote "The noble man worries about the Way, not poverty," you feel your soul ascending.' }
+          text: { zh: '静音写两行', en: 'Mute and write two lines' },
+          effects: { Academic_Ability: +4, Mental_Health: +4 },
+          flavor_text: { zh: '小进度也是进度。', en: 'Tiny progress counts.' }
         }
       ]
     }]
   },
 
   'loc_dorm_009': {
-    event_id: 'loc_dorm_009', type: 'location', title: { zh: 'Steam 饰品理财', en: 'Steam Skin Investment' },
+    event_id: 'loc_dorm_009', type: 'location', title: { zh: '皮肤涨跌', en: 'Skin Price' },
     scenes: [{
-      text: { zh: '日常的一天，你偶然地发现，你两年前 5 块钱买的 CS 皮肤竟然涨到了 400 块，而且现在涨势似乎也还行。', en: 'Just an ordinary day, but you notice that a CS skin you bought for 5 RMB two years ago has spiked to 400 RMB. It seems to be still climbing.' },
+      text: { zh: '两年前五块买的皮肤涨到四百。', en: 'A skin bought for 5 RMB is now 400.' },
       choices: [
         {
-          text: { zh: '赶紧抛售。落袋为安，今晚加餐！', en: 'Sell immediately. Take the profit and feast tonight!' },
-          effects: { Money: +15, Mental_Health: +15 },
-          flavor_text: { zh: '看着余额增加，你觉得自己就是西浦巴菲特。虽然第二天它又涨了 100。', en: 'Watching your balance grow, you feel like the Warren Buffett of XJTLU. Of course, it goes up another 100 RMB the next day.' }
+          text: { zh: '卖掉落袋', en: 'Sell for profit' },
+          effects: { Money: +12, Mental_Health: +6 },
+          flavor_text: { zh: '余额好看。', en: 'Nice balance.' }
         },
         {
-          text: { zh: '我就是西浦赌神，给我擦皮鞋', en: 'I am the God of Gamblers. Shine my shoes.' },
-          effects: { Money: -10, Mental_Health: -15 },
-          flavor_text: { zh: '倒狗你赢了。', en: 'Scalper wins again.' }
+          text: { zh: '捂盘', en: 'Hold longer' },
+          effects: { Money: -6, Mental_Health: -8 },
+          flavor_text: { zh: '第二天跌了。', en: 'It dips next day.' }
         }
       ]
     }]
   },
 
   'loc_dorm_010': {
-    event_id: 'loc_dorm_010', type: 'location', title: { zh: '床头夜聊的虚妄', en: 'The Vanity of Pillow Talk' },
+    event_id: 'loc_dorm_010', type: 'location', title: { zh: '夜聊', en: 'Late Talk' },
     scenes: [{
-      text: { zh: '凌晨一点，宿舍熄灯。室友突然叹了口气：“兄弟，你说咱们这专业毕业以后能干嘛？”以此为契机，宿舍瞬间进入了经典睡得着但夜聊环节。', en: '1:00 AM. Lights out. Your roommate sighs: "Bro, what can we even do with this major after graduation?" And just like that, the dorm enters the classic late-night philosophy session.' },
+      text: { zh: '熄灯后室友问毕业能干啥。', en: 'Lights out; roommate asks about jobs.' },
       choices: [
         {
-          text: { zh: '翻个身，跟他大谈特谈国际局势、AI 发展和未来经济形势', en: 'Roll over and lecture him on geopolitics, AI, and the global economy' },
-          effects: { Mental_Health: +15, Physical_Health: -10, Academic_Ability: -3 },
-          flavor_text: { zh: '聊到凌晨四点，你们觉得已经掌握了世界运行的底层逻辑，万物皆是草芥——除了明天的早九。', en: 'By 4:00 AM, you feel you\'ve mastered the underlying logic of the universe. Everything is trivial—except for your 9:00 AM class.' }
+          text: { zh: '聊到四点', en: 'Talk till 4' },
+          effects: { Mental_Health: +6, Physical_Health: -12 },
+          flavor_text: { zh: '痛快，明早起不来。', en: 'Bonded; no morning.' }
         },
         {
-          text: { zh: '“能干嘛？进厂打螺丝呗。”戴上耳塞强行睡觉', en: '"Work in a factory, obviously." Put in earplugs and sleep.' },
-          effects: { Physical_Health: +10, Mental_Health: -10, English_Ability: +3 },
-          flavor_text: { zh: '你在梦里竟然梦到自己在国外的流水线工厂打黑工。', en: 'You actually dream about working on an overseas assembly line.' }
+          text: { zh: '戴耳塞睡', en: 'Earplugs, sleep' },
+          effects: { Physical_Health: +8, Mental_Health: +4 },
+          flavor_text: { zh: '身体感谢。', en: 'Body thanks you.' }
         }
       ]
     }]
   },
 
   'loc_dorm_011': {
-    event_id: 'loc_dorm_011', type: 'location', title: { zh: '洗衣间的生化危机', en: 'Biohazard in the Laundry Room' },
+    event_id: 'loc_dorm_011', type: 'location', title: { zh: '公共洗衣机', en: 'Shared Washer' },
     scenes: [{
-      text: { zh: '你端着装脏衣服的桶去洗衣间，发现有人用公共洗衣机洗内裤袜子……🤮', en: 'Carrying your laundry basket, you find someone using the public machine for underwear and socks... 🤮' },
+      text: { zh: '有人用公共机洗袜子。', en: 'Someone washed socks in the shared machine.' },
       choices: [
         {
-          text: { zh: '捏着鼻子拿出来，然后花钱开“高温桶自洁”后再洗', en: 'Take them out, pay for high-temp self-clean, then wash.' },
-          effects: { Money: -5, Mental_Health: -10, Physical_Health: +5 }
+          text: { zh: '自洁再洗', en: 'Self-clean then wash' },
+          effects: { Money: -5, Mental_Health: +6, Physical_Health: +4 },
+          flavor_text: { zh: '花小钱买安心。', en: 'Small fee; peace.' }
         },
         {
-          text: { zh: '都放洗衣液了有啥关系，直接洗', en: 'It\'s fine, there\'s detergent. Just wash.' },
-          effects: { Physical_Health: -13, Mental_Health: -10, Money: +5 },
-          flavor_text: { zh: '“为啥老发痒？”', en: '"Why does it keep itching?"' }
+          text: { zh: '硬着头皮洗', en: 'Wash anyway' },
+          effects: { Physical_Health: -10, Mental_Health: -6 },
+          flavor_text: { zh: '心里膈应。', en: 'Feels gross.' }
         }
       ]
     }]
   },
 
   'loc_dorm_012': {
-    event_id: 'loc_dorm_012', type: 'location', title: { zh: '过期的蛋白粉', en: 'Expired Protein Powder' },
+    event_id: 'loc_dorm_012', type: 'location', title: { zh: '临期蛋白粉', en: 'Near-Expiry Whey' },
     scenes: [{
-      text: { zh: '隔壁爱好健身的学长要毕业了，送了你半桶快过期的进口分离乳清蛋白粉。', en: 'A gym-rat senior next door is graduating and gives you half a tub of imported whey isolate that\'s about to expire.' },
+      text: { zh: '学长送半桶快过期的粉。', en: 'Senior gives half tub of expiring whey.' },
       choices: [
         {
-          text: { zh: '挂在二手群里，以低廉的价格卖给不知情的学弟', en: 'Sell it cheap to an unsuspecting freshman in the second-hand group' },
-          effects: { Money: +12, Mental_Health: -10 },
-          flavor_text: { zh: '钱到账了。但你总怕半夜学弟捂着肚子来敲门暗杀你，良心受到了隐隐的谴责。', en: 'Money received. But you live in fear of a freshman with a stomachache knocking on your door at night for revenge. Guilt gnaws at you.' }
+          text: { zh: '低价出群', en: 'Sell cheap in chat' },
+          effects: { Money: +10, Mental_Health: -6 },
+          flavor_text: { zh: '略心虚。', en: 'Slight guilt.' }
         },
         {
-          text: { zh: '秉承着珍惜食物的原则，尝试在早晨猛喝两大勺代替早饭', en: 'Respect the food. Chug two huge scoops for breakfast.' },
-          effects: { Physical_Health: -15, Money: +5 },
-          flavor_text: { zh: '和马桶一起度过了难忘的一天。', en: 'Spent an unforgettable day bonding with the toilet.' }
+          text: { zh: '自己慢慢喝', en: 'Drink slowly yourself' },
+          effects: { Physical_Health: +6, Mental_Health: +4 },
+          flavor_text: { zh: '当加餐。', en: 'Snack boost.' }
         }
       ]
     }]
@@ -1178,22 +1241,22 @@ const RAW_EVENTS = {
   'loc_dorm_013': {
     event_id:         'loc_dorm_013',
     type:             'location',
-    title:            { zh: '室友的觉醒', en: 'Roommate\'s Awakening' },
+    title:            { zh: '室友约早起', en: 'Roommate 7AM' },
     forbidden_tags:   ['IELTS_7.0', 'IELTS_7.5'],
     scenes: [
       {
-        text: { zh: '你正躺在床上刷视频，平时最爱打游戏的室友突然搬回一整套《剑桥雅思》，神色凝重地对你说：“兄弟我不想再徒耗人生了。以后每天早上七点，我们互相监督背单词咋样？谁不起谁是狗。”', en: 'While scrolling videos, your gamer roommate suddenly brings home a full set of Cambridge IELTS books. He looks serious: "Bro, I\'m done wasting my life. Starting tomorrow, we\'re doing vocab at 7 AM every day. First one to snooze is a coward. You in?"' },
+        text: { zh: '室友抱回雅思真题，约你七点互督。', en: 'Roommate wants 7 AM IELTS buddy system.' },
         choices: [
           {
-            text:       { zh: '👍', en: '👍' },
-            effects:    { English_Ability: +4, Mental_Health: -10, Physical_Health: -5 },
+            text:       { zh: '同意', en: 'Agree' },
+            effects:    { English_Ability: +4, Physical_Health: -6, Mental_Health: +4 },
             tags_added: ['Study_Buddy'],
-            flavor_text: { zh: '你们达成了神圣的契约。虽然每天早起极其痛苦，但在互相鄙视的驱动下，你确实比一个人单打独斗有效率多了。', en: 'A sacred pact is formed. While waking up early is agony, the fear of mutual contempt makes you far more efficient than studying alone.' },
+            flavor_text: { zh: '早起累，但有伴。', en: 'Tired; paired study.' },
           },
           {
-            text:       { zh: '👎', en: '👎' },
-            effects:    { Mental_Health: +5 },
-            flavor_text: { zh: '室友的热血只维持了三天，随后那套真题就成了他的泡面盖。你庆幸自己没有跟着瞎折腾，保住了安稳的睡眠。', en: 'His passion lasted three days. The books are now just ramen covers. You\'re glad you didn\'t bother; your sleep remains undisturbed.' },
+            text:       { zh: '婉拒', en: 'Decline' },
+            effects:    { Mental_Health: +6, Physical_Health: +4 },
+            flavor_text: { zh: '睡眠稳。', en: 'Sleep stable.' },
           },
         ],
       },

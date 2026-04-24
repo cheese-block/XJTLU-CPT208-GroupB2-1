@@ -40,15 +40,6 @@ export function resolveFinalExam(state) {
     { Academic_Ability: t('stat_academic') }
   );
 
-  // 心理健康的影响
-  const mentalDelta = gpa >= 3.3 ? +10 : gpa >= 2.8 ? 0 : -15;
-  if (mentalDelta !== 0) {
-    StateManager.applyStatDelta(
-      { Mental_Health: mentalDelta },
-      { Mental_Health: t('stat_mental') }
-    );
-  }
-
   const summary = _buildExamSummary(gpa, tag, ability);
   log('info', 'ExamEngine', `期末结算：${phase} → GPA ${gpa}（${tag}）`);
 
@@ -101,19 +92,7 @@ export function resolveIeltsExam(state) {
     .forEach(t => StateManager.removeTag(t));
   StateManager.addTag(tag);
 
-  // 心理健康影响
   const band_num = parseFloat(band);
-  let mentalDelta = 0;
-  if (band_num >= 7.0)       mentalDelta = +10;
-  else if (band_num >= 6.5)  mentalDelta = +5;
-  else if (band_num <= 5.5)  mentalDelta = -10;
-  else                       mentalDelta = -8;
-
-  StateManager.applyStatDelta(
-    { Mental_Health: mentalDelta },
-    { Mental_Health: t('stat_mental') }
-  );
-
   const summary = _buildIeltsSummary(band, band_num);
   log('info', 'ExamEngine', `雅思出分：真实能力 ${ability} -> ${band}（${tag}）`);
 
