@@ -40,11 +40,7 @@ export const ACTIONS = {
     apCost: 1, icon: 'languages',
     guaranteedEventId: 'default_cb', // 新增
     eventPool: [
-      'loc_cb_ielts_opportunity',
-      'loc_cb_quiet_row',
-      'loc_cb_printer',
-      'loc_cb_group_slot',
-      'loc_cb_stack_books',
+      'loc_cb_ielts_opportunity' // 【新增】：雅思考位放出
     ],
   },
 
