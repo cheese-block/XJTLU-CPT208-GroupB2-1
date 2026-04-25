@@ -35,15 +35,18 @@ describe('Monte Carlo simulation with invariants', () => {
     let crashes = 0;
     let badEndings = 0;
     let naturalEnds = 0;
+    const badEndingByTag = {};
+    const crashSnapshots = [];
 
     for (let run = 0; run < runs; run += 1) {
+      let lastActionId = null;
+      let steps = 0;
       try {
         localStorage.clear();
         StateManager.initStateManager();
         StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
         initGameLoop(createImmediateScreen(), createImmediateScreen());
 
-        let steps = 0;
         let prevMonth = 1;
 
         while (steps < 300) {
@@ -54,6 +57,8 @@ describe('Monte Carlo simulation with invariants', () => {
           const isDead = state.tags.some((t) => t.startsWith('__BAD_END_'));
           if (isDead) {
             badEndings += 1;
+            const deathTag = state.tags.find((t) => t.startsWith('__BAD_END_')) ?? '__UNKNOWN_BAD_END__';
+            badEndingByTag[deathTag] = (badEndingByTag[deathTag] ?? 0) + 1;
             break;
           }
 
@@ -66,9 +71,11 @@ describe('Monte Carlo simulation with invariants', () => {
 
           if (state.AP > 0) {
             const action = actions[Math.floor(Math.random() * actions.length)];
+            lastActionId = action.id;
             executeAction(action.id, action);
             await vi.runAllTimersAsync();
           } else {
+            lastActionId = '__MONTH_END__';
             resolveMonthEnd(() => {});
             await vi.runAllTimersAsync();
           }
@@ -82,9 +89,37 @@ describe('Monte Carlo simulation with invariants', () => {
         }
       } catch (error) {
         crashes += 1;
+        const snapshot = StateManager._getInternalState();
+        crashSnapshots.push({
+          run,
+          steps,
+          lastActionId,
+          month: snapshot?.currentMonth,
+          AP: snapshot?.AP,
+          Mental_Health: snapshot?.Mental_Health,
+          Physical_Health: snapshot?.Physical_Health,
+          Money: snapshot?.Money,
+          tags: snapshot?.tags,
+          message: error instanceof Error ? error.message : String(error),
+        });
       }
     }
 
+    const summary = {
+      runs,
+      crashes,
+      badEndings,
+      naturalEnds,
+      badEndingByTag,
+      crashSnapshots,
+    };
+    console.log('[MonteCarloSummary]', JSON.stringify(summary));
+
+    if (crashSnapshots.length > 0) {
+      throw new Error(`[MonteCarloCrash] ${JSON.stringify(crashSnapshots[0])}`);
+    }
+
+    expect(naturalEnds).toBeGreaterThan(0);
     expect(crashes).toBe(0);
     expect(badEndings + naturalEnds).toBe(runs);
   }, 30000);

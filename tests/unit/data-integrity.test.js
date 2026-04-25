@@ -29,6 +29,38 @@ function collectEventReferences() {
 }
 
 describe('Data integrity & reference checks', () => {
+  it('ACTIONS keys match action.id and required fields exist', () => {
+    for (const [actionKey, action] of Object.entries(ACTIONS)) {
+      expect(action.id).toBe(actionKey);
+      expect(typeof action.buildingId).toBe('string');
+      expect(action.buildingId.length).toBeGreaterThan(0);
+      expect(action.label && typeof action.label === 'object').toBe(true);
+      expect(typeof action.apCost).toBe('number');
+    }
+  });
+
+  it('BUILDINGS have unique IDs and required fields', () => {
+    const ids = BUILDINGS.map((b) => b.id);
+    const unique = new Set(ids);
+    expect(unique.size).toBe(ids.length);
+
+    for (const building of BUILDINGS) {
+      expect(typeof building.id).toBe('string');
+      expect(building.id.length).toBeGreaterThan(0);
+      expect(building.title && typeof building.title === 'object').toBe(true);
+      expect(Array.isArray(building.actions)).toBe(true);
+    }
+  });
+
+  it('EVENTS keys match event_id and required fields exist', () => {
+    for (const [eventKey, event] of Object.entries(EVENTS)) {
+      expect(event.event_id).toBe(eventKey);
+      expect(typeof event.type).toBe('string');
+      expect(event.type.length).toBeGreaterThan(0);
+      expect(event.title && typeof event.title === 'object').toBe(true);
+    }
+  });
+
   it('ACTIONS references valid buildings and events', () => {
     const buildingIds = new Set(BUILDINGS.map((b) => b.id));
     const eventIds = new Set(Object.keys(EVENTS));
