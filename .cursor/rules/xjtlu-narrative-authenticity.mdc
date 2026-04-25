@@ -1,0 +1,18 @@
+---
+description: 西浦剧情真实性 — 撰写或修改剧情向文案前须对照写作参考文档
+alwaysApply: false
+globs:
+  - src/data/events.js
+  - src/data/endings.js
+  - src/data/buildings.js
+---
+
+# XJTLU narrative authenticity
+
+When adding or editing **player-facing narrative** in the globs above (e.g. `title`, `text`, `tip`, `flavor_text`, building descriptions that read as story), follow this workflow:
+
+1. **Read first**: Open and skim `docs/xjtlu-student-experience-for-writers.md`, especially **第 5 节钩子清单**、**第 6 节反模式**，以及 **第 8 节社群长帖叙事母题**（匿名归纳、勿抄个人隐私与课号）。
+2. **Anchor the scene**: Prefer at least one concrete anchor from that doc (SIP / Dushu Lake zone, English-medium classroom stress, CB / Learning Mall / test centre / lab life, cross-cultural peers, grad-school information density). Avoid scenes that could be pasted into any generic Chinese university with only the school name changed.
+3. **Scope**: This rule governs **tone and setting authenticity only**. Do not encode balance or stat design here; keep those in code and design docs.
+
+If the doc is missing anchors for a new location, extend the doc in the same PR as the new copy, or add a short TODO in the doc’s hook list with a verifiable source.
