@@ -3,9 +3,11 @@
  */
 
 import { CONSTANTS } from '../utils/constants.js';
-import { subscribe, getState, toggleLanguage, getLang } from '../state/StateManager.js';
+import { subscribe, getState, toggleLanguage, getLang, setGamePhase } from '../state/StateManager.js';
 import { log } from '../utils/helpers.js';
+import { t } from '../utils/i18n.js';
 import { StatusBar } from './components/StatusBar.js';
+import { showConfirm } from './components/ConfirmModal.js';
 
 // ─────────────────────────────────────────────────────────────
 // Screen 注册表
@@ -31,7 +33,7 @@ let _currentLang = 'zh';
 export function initUIManager() {
   _currentLang = getLang();
   _mountStatusBarContainer();
-  _mountLangButton(); // 【新增】挂载语言按钮
+  _mountSettingsMenu();
 
   _statusBar = new StatusBar();
   const sbRoot = document.getElementById('status-bar-root');
@@ -49,7 +51,7 @@ export function initUIManager() {
     }
 
     _updateStatusBarVisibility(state);
-    _updateLangButtonVisibility(state); // 【新增】控制语言按钮显示
+    _updateSettingsVisibility(state);
     _statusBar?.render(state);
     _flushFloatingTexts(state);
 
@@ -219,33 +221,109 @@ export function clearPreview() {
 }
 
 /**
- * 挂载全局语言切换按钮
+ * 挂载全局设置按钮与下拉菜单
  */
-function _mountLangButton() {
+function _mountSettingsMenu() {
   const app = document.getElementById('app');
-  if (!app || document.getElementById('global-lang-btn')) return;
+  if (!app || document.getElementById('global-settings-wrap')) return;
 
-  const btn = document.createElement('button');
-  btn.id = 'global-lang-btn';
-  // 【修改】：初始位置移到右上角 (top-6 right-6)
-  btn.className = `
-    absolute top-6 right-6 z-[9900] 
-    w-10 h-10 rounded-full 
-    bg-white/90 backdrop-blur-md border border-gray-200 
-    shadow-md hover:bg-white hover:shadow-lg hover:scale-105 
-    transition-all hidden
+  const wrap = document.createElement('div');
+  wrap.id = 'global-settings-wrap';
+  wrap.className = `
+    absolute top-6 right-6 z-[9900]
+    hidden flex flex-col items-end gap-2
   `;
-  
-  btn.addEventListener('click', () => toggleLanguage());
-  app.appendChild(btn);
+
+  wrap.innerHTML = `
+    <button
+      id="global-settings-btn"
+      class="w-10 h-10 rounded-full flex items-center justify-center
+             bg-white/90 backdrop-blur-md border border-gray-200
+             shadow-md hover:bg-white hover:shadow-lg hover:scale-105
+             transition-all"
+      aria-haspopup="true"
+      aria-expanded="false"
+      title="Settings"
+    >
+      <i data-lucide="settings" class="lucide w-4 h-4 text-xjtlu-navy"></i>
+    </button>
+
+    <div
+      id="global-settings-menu"
+      class="hidden w-max rounded-xl border border-gray-200 bg-white/95 backdrop-blur-md shadow-xl p-2"
+    >
+      <button
+        id="settings-action-lang"
+        class="flex items-center gap-2 w-full text-left text-sm px-3 py-2 rounded-lg text-xjtlu-navy hover:bg-gray-100 transition-colors"
+      >
+      </button>
+      <button
+        id="settings-action-title"
+        class="flex items-center gap-2 w-full text-left text-sm px-3 py-2 rounded-lg text-xjtlu-navy hover:bg-gray-100 transition-colors"
+      >
+      </button>
+    </div>
+  `;
+
+  app.appendChild(wrap);
+
+  const btn = wrap.querySelector('#global-settings-btn');
+  const menu = wrap.querySelector('#global-settings-menu');
+  const langBtn = wrap.querySelector('#settings-action-lang');
+  const titleBtn = wrap.querySelector('#settings-action-title');
+
+  const closeMenu = () => {
+    menu?.classList.add('hidden');
+    btn?.setAttribute('aria-expanded', 'false');
+  };
+
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = menu?.classList.contains('hidden');
+    if (willOpen) {
+      menu?.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    } else {
+      closeMenu();
+    }
+  });
+
+  langBtn?.addEventListener('click', () => {
+    toggleLanguage();
+    closeMenu();
+  });
+
+  titleBtn?.addEventListener('click', () => {
+    closeMenu();
+    showConfirm({
+      title: t('return_title_confirm_title'),
+      message: t('return_title_confirm_desc'),
+      confirmText: t('settings_return_title'),
+      cancelText: t('cancel'),
+      confirmVariant: 'warning',
+      onConfirm: () => setGamePhase(CONSTANTS.GAME_PHASE.TITLE),
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!(e.target instanceof Element)) return;
+    if (!wrap.contains(e.target)) closeMenu();
+  });
+
+  if (typeof lucide !== 'undefined') lucide.createIcons({ root: wrap });
 }
 
 /**
- * 控制语言按钮的可见性与文本
+ * 控制设置按钮可见性、位置与菜单文本
  */
-function _updateLangButtonVisibility(state) {
-  const btn = document.getElementById('global-lang-btn');
-  if (!btn) return;
+function _updateSettingsVisibility(state) {
+  const wrap = document.getElementById('global-settings-wrap');
+  if (!wrap) return;
+
+  const menu = wrap.querySelector('#global-settings-menu');
+  const settingsBtn = wrap.querySelector('#global-settings-btn');
+  const langBtn = wrap.querySelector('#settings-action-lang');
+  const titleBtn = wrap.querySelector('#settings-action-title');
 
   const show = [
     CONSTANTS.GAME_PHASE.TITLE,
@@ -255,27 +333,39 @@ function _updateLangButtonVisibility(state) {
   ].includes(state.gamePhase);
   
   if (show) {
-    btn.classList.remove('hidden');
-    const isZh = getLang() === 'zh';
-    
-    // 【新增】：动态避让顶部的状态栏
+    wrap.classList.remove('hidden');
+
+    // 动态避让顶部状态栏，避免遮挡地图元素
     if (state.gamePhase === CONSTANTS.GAME_PHASE.MAP) {
-      btn.classList.remove('top-6');
-      btn.classList.add('top-20'); // 状态栏高度加上留白
+      wrap.classList.remove('top-6');
+      wrap.classList.add('top-20');
     } else {
-      btn.classList.remove('top-20');
-      btn.classList.add('top-6');
+      wrap.classList.remove('top-20');
+      wrap.classList.add('top-6');
     }
-    
-    // 斜线分割布局
-    btn.innerHTML = `
-      <div class="relative w-full h-full pointer-events-none">
-        <span class="absolute top-1.5 left-1.5 text-[0.55rem] font-black ${isZh ? 'text-xjtlu-blue' : 'text-gray-400'} leading-none">中</span>
-        <div class="absolute top-1/2 left-1/2 w-7 h-px bg-gray-300 -translate-x-1/2 -translate-y-1/2 -rotate-45"></div>
-        <span class="absolute bottom-1.5 right-1.5 text-[0.5rem] font-black ${!isZh ? 'text-xjtlu-blue' : 'text-gray-400'} leading-none">EN</span>
-      </div>
-    `;
+
+    if (langBtn) {
+      langBtn.innerHTML = `
+        <i data-lucide="languages" class="lucide w-4 h-4"></i>
+        ${t('settings_lang')}
+      `;
+    }
+
+    if (titleBtn) {
+      titleBtn.innerHTML = `
+        <i data-lucide="home" class="lucide w-4 h-4"></i>
+        ${t('settings_return_title')}
+      `;
+      titleBtn.classList.toggle('hidden', state.gamePhase === CONSTANTS.GAME_PHASE.TITLE);
+    }
+
+    // 切屏时始终收起菜单，避免浮层残留
+    menu?.classList.add('hidden');
+    settingsBtn?.setAttribute('aria-expanded', 'false');
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: wrap });
   } else {
-    btn.classList.add('hidden');
+    wrap.classList.add('hidden');
+    menu?.classList.add('hidden');
+    settingsBtn?.setAttribute('aria-expanded', 'false');
   }
 }

@@ -79,8 +79,8 @@ export class StatusBar {
           ${label}
           <!-- 默认加上 opacity-0 -->
           <span id="sb-${id}-preview-dot" 
-               class="w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black flex items-center justify-center transition-opacity duration-200 ml-1 shadow-sm opacity-0"
-               style="font-size: 0.55rem; line-height: 1;">
+               class="w-3.5 h-3.5 rounded-full bg-gray-400 text-white font-black inline-flex items-center justify-center transition-opacity duration-200 ml-1 shadow-sm opacity-0"
+               style="font-size: 0.55rem; line-height: 0.875rem;">
           </span>
         </span>
         <div class="relative w-full flex items-center">

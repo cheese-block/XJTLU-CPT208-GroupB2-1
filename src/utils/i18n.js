@@ -17,6 +17,13 @@ export const DICT = {
 
   // ── 通用 ──
   'cancel': { zh: '取消', en: 'Cancel' },
+  'settings_lang': { zh: '切换语言 / EN', en: 'Language / 中文' },
+  'settings_return_title': { zh: '返回主菜单', en: 'Return to Title' },
+  'return_title_confirm_title': { zh: '返回主菜单', en: 'Return to Title' },
+  'return_title_confirm_desc': {
+    zh: '确定要返回主菜单吗？你的进度已自动保存。',
+    en: 'Return to the title screen? Your progress is auto-saved.',
+  },
   'modal_default_title': { zh: '确认操作', en: 'Confirm Action' },
   'modal_default_confirm': { zh: '确认', en: 'Confirm' },
   'modal_default_cancel': { zh: '取消', en: 'Cancel' },
