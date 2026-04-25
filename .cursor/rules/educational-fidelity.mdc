@@ -1,0 +1,22 @@
+---
+description: 教育保真度 — 涉及申研常识的事件需与知识库口径一致
+alwaysApply: false
+globs:
+  - src/data/events.js
+  - src/data/endings.js
+---
+
+# Educational Fidelity
+
+When writing or updating player-facing event copy that includes postgraduate application knowledge:
+
+1. If the copy makes factual claims (e.g. agency contracts, language-score validity, common timeline windows),
+   avoid direct conflicts with `docs/knowledge-base.md`.
+2. This is a soft guidance rule, not a hard mapping rule:
+   - It is **not required** that every new event maps to one specific knowledge-base bullet.
+   - Campus-life flavor events that do not include factual application guidance are outside this rule's focus.
+3. Avoid both extremes:
+   - pure preaching (copying knowledge bullets directly into dialogue),
+   - pure entertainment that introduces misleading application advice.
+4. When certainty is low, prefer non-absolute wording (e.g. “多数项目通常要求” rather than “所有项目都要求”),
+   and use `tip` / `flavor_text` to carry nuanced guidance.

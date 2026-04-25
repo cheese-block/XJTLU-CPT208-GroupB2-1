@@ -41,3 +41,10 @@ Welcome to our project portfolio for CPT208 Human-Centric Computing.
 ## Project Personas
 
 <!-- Use Al to help you generate 2 personas for your project followingthe 10-80-10 rule. Show the personas on your GitHub portfolio page. -->
+
+## Related Docs
+
+- `docs/project-vision.md` - 产品定位、设计意图与未来路线。
+- `docs/knowledge-base.md` - 事件设计可参考的申研知识库样本。
+- `docs/gameplay-flow-4-months.md` - 玩家视角 4 个月节奏流程图。
+- `docs/xjtlu-student-experience-for-writers.md` - 西浦校园语境与叙事真实性参考。
