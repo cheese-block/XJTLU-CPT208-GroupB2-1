@@ -135,9 +135,10 @@ export const CONSTANTS = Object.freeze({
   // 【特殊（强制）事件时间表】【因展会版 Demo 而修改】
   // ─────────────────────────────────────────────────────────
   SCHEDULED_EVENTS: Object.freeze([
-    { month: 1,  eventId: 'unlock_ia_notice'            }, // 第 1 个月结束时触发（大三下开局）
+    { month: 1,  eventId: 'unlock_cb_notice'            }, // 第 1 个月结束时触发（第 2 月解锁 CB）
+    { month: 2,  eventId: 'unlock_ia_notice'            }, // 第 2 个月结束时触发（第 3 月解锁 IA）
     { month: 2,  eventId: 'summer_internship_decision'  }, // 第 2 个月结束时触发（暑假开局）
-    { month: 2,  eventId: 'ielts_guarantee'             }, // 第 2 个月结束时触发（暑假开局）
+    { month: 3,  eventId: 'ielts_guarantee'             }, // 第 3 个月结束时触发（第 4 月最后考位）
     { month: 3,  eventId: 'agency_investigation_late'   }, 
     { month: 4,  eventId: 'sem1_final_exam'             }, // 第 4 个月结束时触发（大结局清算）
     // 注意：final_application 从此处移除，改为代码逻辑手动触发

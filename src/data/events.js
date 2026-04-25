@@ -127,15 +127,33 @@ const RAW_EVENTS = {
   // 特殊大事件（Scheduled Events）
   // ════════════════════════════════════════════════════════
 
+  // CB 建筑解锁提示
+  'unlock_cb_notice': {
+    event_id:      'unlock_cb_notice',
+    type:          'scheduled',
+    trigger_month: 1,
+    title:         { zh: '自习战场升级', en: 'Study Battleground Upgraded' },
+    scenes: [
+      {
+        text: { zh: '十月临近，第一波小测和作业开始堆在一起。你很快发现，在宿舍或公共区域很难持续保持高强度专注。', en: 'As October approaches, the first wave of quizzes and assignments starts piling up. You quickly realize it is hard to sustain deep focus in dorms or public areas.' },
+      },
+      {
+        text: { zh: '也许你该去趟 <span class="text-xjtlu-blue font-bold">CB（图书馆）</span> 了。这里在当前 Demo 中主要承担雅思备考与考位触发相关内容，适合为语言成绩做最后准备。', en: 'Maybe it is time to visit <span class="text-xjtlu-blue font-bold">CB (Library)</span>. In the current demo, this location mainly serves IELTS preparation and slot-trigger events, making it the key place to prepare your language score.' },
+        tip:  { zh: '新建筑【CB】已解锁！当前版本中，CB 主要用于雅思相关行动与机会触发。', en: 'New building [CB] unlocked! In the current version, CB is mainly for IELTS-related actions and opportunity triggers.' },
+        unlock_building: ['cb']
+      }
+    ],
+  },
+
   // IA 建筑解锁提示
   'unlock_ia_notice': {
     event_id:      'unlock_ia_notice',
     type:          'scheduled',
-    trigger_month: 1,
+    trigger_month: 2,
     title:         { zh: '春招季的暗流', en: 'Undercurrent of Spring Recruiting' },
     scenes: [
       {
-        text: { zh: '三月，春招的氛围开始在校园里蔓延。你注意到，最近校园周边多了很多发传单的西装男女。\n\n朋友圈里，已经有同学开始晒出和留学中介的签约合同了。', en: 'In March, the spring recruiting mood spreads across campus. You notice more suited people handing out flyers nearby.\n\nIn social feeds, some classmates are already posting contracts signed with study-abroad agencies.' },
+        text: { zh: '十一月，申请季的压力开始在校园里蔓延。你注意到，最近校园周边多了很多发传单的西装男女。\n\n朋友圈里，已经有同学开始晒出和留学中介的签约合同了。', en: 'In November, application-season pressure spreads across campus. You notice more suited people handing out flyers nearby.\n\nIn social feeds, some classmates are already posting contracts signed with study-abroad agencies.' },
       },
       {
         text: { zh: '申研是一场信息战。也许你该去趟 <span class="text-xjtlu-blue font-bold">IA（国际学术交流中心）</span> 看看了，那里是各大机构和校方合作宣讲的集散地。', en: 'Postgraduate application is an information war. Maybe you should visit <span class="text-xjtlu-blue font-bold">IA (International Academic Exchange Center)</span>, the hub for agency and school joint briefings.' },
@@ -448,13 +466,13 @@ const RAW_EVENTS = {
   'ielts_guarantee': {
     event_id:      'ielts_guarantee',
     type:          'scheduled',
-    trigger_month: 2,
+    trigger_month: 3,
     required_tags: [],
     forbidden_tags: ['IELTS_5.5', 'IELTS_6.0', 'IELTS_6.5', 'IELTS_7.0', 'IELTS_7.5'],
     title:         { zh: '最后的考位', en: 'The Last Slot' },
     scenes: [
       {
-        text: { zh: '八月了，你还没有考出雅思成绩。你刷了整整两天官网，终于抢到了一个别人退掉的考位。这是暑假结束前最后的机会了。', en: 'It\'s August, and you still don\'t have an IELTS score. After refreshing the official site for two days, you finally snag a canceled slot. This is your last chance before summer ends.' },
+        text: { zh: '十二月了，这学期即将结束，你还没有考出雅思成绩。你刷了整整两天官网，终于抢到了一个别人退掉的考位。这几乎是你在申请季正式投递前最后一次稳妥的考试机会。', en: 'It is December, the term is about to end, and you still do not have an IELTS score. After refreshing the official site for two days, you finally snag a canceled slot. This is almost your last reliable exam chance before formal application submissions begin.' },
         tip:  { zh: '语言成绩是申请的硬门槛。如果这次还考不出来，申请季将非常被动。', en: 'Language scores are a hard threshold. Failing to get a result now will leave you in a very vulnerable position during application season.' },
         choices: [
           {

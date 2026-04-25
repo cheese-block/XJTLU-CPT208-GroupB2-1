@@ -21,5 +21,7 @@ When code changes touch the files matched above:
    - commands executed
    - pass/fail summary
    - blocking failures and the minimal next fix
+6. If game progression flow changes (e.g. building unlock order, scheduled event timing, month pacing),
+   update `docs/gameplay-flow-4-months.md` in the same change.
 
 Do not claim tests passed unless commands were actually executed.

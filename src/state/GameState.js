@@ -140,8 +140,8 @@ export function createInitialState() {
     // ── 标签系统 ─────────────────────────────────────────────
     tags: [],
 
-    // 修改初始解锁列表：增加 fb, pb, eb, gym
-    unlockedBuildings: ['sb', 'cb', 'dorm', 'fb', 'pb', 'eb', 'gym'],
+    // 修改初始解锁列表：增加 fb, pb, eb, gym（cb 改为后续解锁）
+    unlockedBuildings: ['sb', 'dorm', 'fb', 'pb', 'eb', 'gym'],
 
     // ── Buff 系统 ────────────────────────────────────────────
     activeBuff: [],
