@@ -6,7 +6,7 @@ export const ACTIONS = {
 
   'study_fb': {
     id: 'study_fb', buildingId: 'fb', 
-    label: { zh: '上通识课', en: 'General Course' }, 
+    label: { zh: '在 FB 学习', en: 'Study in FB' }, 
     apCost: 1, icon: 'book',
     guaranteedEventId: 'default_fb',
     eventPool: [], // 演示期暂空
@@ -14,7 +14,7 @@ export const ACTIONS = {
 
   'work_eb': {
     id: 'work_eb', buildingId: 'eb', 
-    label: { zh: '做实验项目', en: 'Lab Project' }, 
+    label: { zh: '在工科楼学习实践', en: 'Study & Practice in EB' }, 
     apCost: 1, icon: 'cpu',
     guaranteedEventId: 'default_eb',
     eventPool: [],
@@ -22,7 +22,7 @@ export const ACTIONS = {
 
   'study_class': {
     id: 'study_class', buildingId: 'sb', 
-    label: { zh: '上专业课', en: 'Major Course' }, 
+    label: { zh: '在理工楼学习', en: 'Study in SB' }, 
     apCost: 1, icon: 'flask-conical',
     guaranteedEventId: 'default_sb', // 新增
     eventPool: [
@@ -36,7 +36,7 @@ export const ACTIONS = {
 
   'study_ielts': {
     id: 'study_ielts', buildingId: 'cb', 
-    label: { zh: '备考雅思', en: 'IELTS Prep' }, 
+    label: { zh: '在图书馆学习', en: 'Study in Library' }, 
     apCost: 1, icon: 'languages',
     guaranteedEventId: 'default_cb', // 新增
     eventPool: [
@@ -46,7 +46,7 @@ export const ACTIONS = {
 
   'social_pb': {
     id: 'social_pb', buildingId: 'pb', 
-    label: { zh: '在 PB 闲逛', en: 'Hang out in PB' }, 
+    label: { zh: '在公共楼驻留', en: 'Spend Time in PB' }, 
     apCost: 1, icon: 'users',
     guaranteedEventId: 'default_pb', // 新增
     eventPool: [],
@@ -54,7 +54,7 @@ export const ACTIONS = {
 
   'research_ir': {
     id: 'research_ir', buildingId: 'ir', 
-    label: { zh: '参与科研项目', en: 'Research Project' }, 
+    label: { zh: '在科研中心进修', en: 'Advance in IR' }, 
     apCost: 1, icon: 'microscope',
     tagsProgress: 'Research_Exp',
     guaranteedEventId: 'default_ir', // 新增
@@ -68,7 +68,7 @@ export const ACTIONS = {
 
   'exercise': {
     id: 'exercise', buildingId: 'gym', 
-    label: { zh: '去健身房锻炼', en: 'Workout in Gym' }, 
+    label: { zh: '在体育馆活动', en: 'Activity in Gym' }, 
     apCost: 1, icon: 'dumbbell',
     guaranteedEventId: 'default_gym', // 新增
     eventPool: [],
@@ -76,7 +76,7 @@ export const ACTIONS = {
 
   'rest': {
     id: 'rest', buildingId: 'dorm', 
-    label: { zh: '回宿舍休息', en: 'Rest in Dorm' }, 
+    label: { zh: '在宿舍驻留', en: 'Stay in Dorm' }, 
     apCost: 1, icon: 'moon',
     guaranteedEventId: 'default_dorm', // 新增
     eventPool: [

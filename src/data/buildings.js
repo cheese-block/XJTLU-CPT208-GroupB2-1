@@ -5,8 +5,8 @@ export const BUILDINGS = [
     fullName:    'Foundation Building',
     icon:        'school',
     description: {
-      zh: '大一新生的主要教学楼，承载了绝大多数通识基础课程。对大三大四的 SAT 学生来说，这里的课已经基本修完，偶尔路过会感慨时光飞逝。',
-      en: 'The main building for freshmen, hosting most foundational courses. For Y3/Y4 SAT students, walking past here brings back memories of how fast time flies.'
+      zh: '大一新生常来上课的教学楼，也有不少安静角落适合自习和赶作业。对大三大四的 SAT 学生来说，这里既熟悉又实用，偶尔回来待一会儿会有种时间被拉长的感觉。',
+      en: 'A teaching building often used by freshmen, with many quiet corners for self-study and assignments. For Y3/Y4 SAT students, it feels both familiar and practical, and returning here can make time feel stretched.'
     },
     lore:        {
       zh: '传说 FB 三楼的某间教室风水极好，坐那里复习的同学成绩都不低——但也可能只是因为那里离厕所最近，节省了时间。',
@@ -23,12 +23,12 @@ export const BUILDINGS = [
     fullName:    'Central Building',
     icon:        'library',
     description: {
-      zh: '西浦的核心图书馆。这里是备考雅思、刷真题的圣地，英文原版教材和学术数据库是你的主要武器。代价是：座位永远不够，旁边总有人在干扰你。',
-      en: 'The core library. A holy ground for IELTS prep and past-paper grinding. The cost? There are never enough seats, and someone is always distracting you.'
+      zh: '西浦的核心图书馆。无论是备考语言、推进专业课，还是在 Learning Mall Core 上追赶 DDL，这里都能让你快速进入专注状态。代价是：热门时段座位依旧紧张。',
+      en: 'The core library at XJTLU. Whether you are preparing for language exams, advancing major courses, or chasing Learning Mall Core deadlines, this is where focus comes easiest. The cost: seats are still tight at peak hours.'
     },
     lore:        {
-      zh: '有人说图书馆五楼自习室是"卷王聚集地"，去那里的人不是在刷雅思就是在写 SOP，剩下的在假装刷雅思。',
-      en: 'The 5th-floor study room is known as the "Try-hard Hub". People there are either grinding IELTS, writing SOPs, or pretending to grind IELTS.'
+      zh: '有人说图书馆五楼自习室是"沉默高压区"：有人在写文书，有人在改代码，也有人只是盯着屏幕发呆，但谁都不太想先走。',
+      en: 'People call the 5th-floor study room a "silent pressure zone": some edit statements, some debug code, and some just stare at screens, but hardly anyone wants to leave first.'
     },
     photo:       null,
     hotspot:     { x: 17.6, y: 31.3 },
@@ -41,8 +41,8 @@ export const BUILDINGS = [
     fullName:    'Science Building A/B/C/D',
     icon:        'flask-conical',
     description: {
-      zh: 'SAT 学院的核心教学区，大多数专业课在此进行。这里的课程密度高、考核压力大，是积累 GPA 的主战场，也是焦虑蔓延最快的地方。',
-      en: 'The core teaching area for SAT students. High course density and heavy assessment pressure make it the main battlefield for GPA, and the fastest place for anxiety to spread.'
+      zh: 'SAT 学院常用的教学区之一，课程和讨论都很密集。宽敞走廊、空教室和公共座位让这里既能上课，也常被拿来临时自习或小组讨论。',
+      en: 'One of the most frequently used teaching areas for SAT. Classes and discussions are dense here, while wide corridors, empty classrooms, and shared seats make it suitable for both lessons and impromptu study sessions.'
     },
     lore:        {
       zh: '期末周的 SA 楼走廊里，你能在五分钟内见到三种人：对着墙背公式的、抱着咖啡发呆的、和教授争分数的。',
@@ -95,8 +95,8 @@ export const BUILDINGS = [
     fullName:    'Engineering Building',
     icon:        'cpu',
     description: {
-      zh: '包含计算机实验室、项目工作室和各类工程设备。虽然大量课程项目在这里完成，但 SAT 学生的专业课主场还是 SA~SD。',
-      en: 'Houses computer labs and project studios. Though many projects are done here, the main battlefield for SAT is still SA~SD.'
+      zh: '包含计算机实验室、项目工作室和各类工程设备。除了课程项目，不少同学也会来这里找一个稳定工位，把手头任务一步步做完。',
+      en: 'Home to computer labs, project studios, and engineering equipment. Beyond course projects, many students come here for a stable workstation to steadily finish what they are working on.'
     },
     lore:        {
       zh: 'EB 地下室的服务器机房发出的嗡嗡声是很多 SAT 学生的白噪音，据说在那里调 bug 效率特别高，因为你根本不知道外面几点了。',
@@ -131,8 +131,8 @@ export const BUILDINGS = [
     fullName:    'International Research Centre',
     icon:        'microscope',
     description: {
-      zh: '承接国际科研项目的核心机构。参与教授课题组是积累科研软背景的最直接方式，但这里的工作强度不亚于实习，回报也同样不确定。',
-      en: 'The core institution for international research. Joining a professor\'s lab is the most direct way to boost your soft background, but the workload is like a full-time internship.'
+      zh: '承接国际科研项目的核心机构。这里常有组会、文献讨论和阶段汇报，适合把学习节奏切换到更高强度的学术冲刺模式。',
+      en: 'The core institution for international research projects. Group meetings, literature discussions, and progress reports are common here, making it a good place to switch into a high-intensity academic sprint mode.'
     },
     lore:        {
       zh: '能进 IR 做 RA 的学生不多，但每个人的简历上都会把这段经历写满整整一页。至于实际做了什么，只有导师和那台跑了三天的服务器知道。',
@@ -239,8 +239,8 @@ export const BUILDINGS = [
     fullName:    'Gymnasium',
     icon:        'dumbbell',
     description: {
-      zh: '校园内的体育运动中心。唯一一个能让你在申研期间系统性恢复身体状态的地方，运动带来的多巴胺也是对抗焦虑的有效手段。',
-      en: 'The sports center on campus. The only place where you can systematically recover your physical health. Dopamine from exercise is an effective weapon against anxiety.'
+      zh: '校园内的体育运动中心。无论是认真训练还是轻度活动，这里都能帮你打断久坐节奏，让身心重新进入更稳定的状态。',
+      en: 'The sports center on campus. Whether you train seriously or just move lightly, this place helps break long sedentary stretches and brings both body and mind back to a steadier state.'
     },
     lore:        {
       zh: '有数据显示，GPA 最高的那批人里，有相当一部分是健身房常客。但也可能只是因为他们有时间管理能力。',
@@ -257,8 +257,8 @@ export const BUILDINGS = [
     fullName:    'Student Dormitories',
     icon:        'house',
     description: {
-      zh: '你每天开始和结束的地方。这里是恢复心理状态最直接的场所，但过度依赖宿舍意味着你在把时间让给室友、手机和睡眠。',
-      en: 'Where your day begins and ends. The most direct place to recover mental health, but over-relying on it means yielding your time to roommates, phones, and sleep.'
+      zh: '你每天开始和结束的地方。这里既能让你静下心来整理计划，也能在需要时彻底放松；关键在于你怎么安排晚上的那几个小时。',
+      en: 'Where your day begins and ends. It can be a calm place to organize plans or a full reset when needed; the key is how you use those evening hours.'
     },
     lore:        {
       zh: '有人在宿舍刷完了整套剑桥雅思，有人在宿舍打完了整个游戏库。命运的分叉点，往往就在熄灯后的那几个小时。',

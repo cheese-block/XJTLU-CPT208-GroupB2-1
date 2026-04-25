@@ -1206,15 +1206,15 @@ const RAW_EVENTS = {
 
   'default_fb': {
     event_id: 'default_fb', type: 'location', title: { zh: '基础楼日常', en: 'Foundation Building Routine' },
-    scenes: [{ text: { zh: 'FB 的大厅里贴满了各种社团活动海报。你在这里上了一节通识课，阶梯教室里空调的嗡嗡声让你有点犯困。', en: 'Posters for various clubs fill the FB hall. You just finished a General Education class; the low hum of the air conditioner almost lulled you to sleep.' } }]
+    scenes: [{ text: { zh: 'FB 的大厅里贴满了各种社团活动海报。你找了个空位推进今天的学习计划，阶梯教室里空调的嗡嗡声让时间过得很快。', en: 'Posters for various clubs fill the FB hall. You find an empty seat and move forward with today\'s study plan, while the low hum of the AC makes time pass quickly.' } }]
   },
   'default_sb': {
     event_id: 'default_sb', type: 'location', title: { zh: '理工楼日常', en: 'Science Building Routine' },
-    scenes: [{ text: { zh: '教授今天按部就班地讲完了 PPT。你记了满屏的笔记，下课时教室里充满了收拾书包的声音。', en: 'The professor went through the slides as planned. Your screen is full of notes, and the room is now filled with the sound of students packing up.' } }]
+    scenes: [{ text: { zh: '你在理工楼的教室里度过了充实的一段时间，记了满屏笔记，也把待办清单向前推进了一截。走廊里响起了此起彼伏的收拾书包声。', en: 'You spend a productive stretch in a classroom at the science building, filling your screen with notes and pushing your task list forward. The corridor soon fills with the sounds of students packing up.' } }]
   },
   'default_cb': {
     event_id: 'default_cb', type: 'location', title: { zh: '图书馆日常', en: 'Library Routine' },
-    scenes: [{ text: { zh: '图书馆里一如既往地安静，只有偶尔翻书的声音和远处打印机的轰鸣。你专注地完成了一段学习任务。', en: 'The library is quiet as always, save for the occasional rustle of pages and the distant roar of a printer. You\'ve made solid progress on your tasks.' } }]
+    scenes: [{ text: { zh: '图书馆里一如既往地安静，只有偶尔翻书的声音和远处打印机的轰鸣。你专注处理手头任务，学习节奏逐渐稳定下来。', en: 'The library is quiet as always, save for the occasional rustle of pages and the distant roar of a printer. You focus on what is at hand, and your study rhythm settles down.' } }]
   },
   'default_pb': {
     event_id: 'default_pb', type: 'location', title: { zh: '公共楼日常', en: 'Public Building Routine' },
@@ -1222,19 +1222,19 @@ const RAW_EVENTS = {
   },
   'default_eb': { // 原 IR 文案移交至此
     event_id: 'default_eb', type: 'location', title: { zh: '工科楼日常', en: 'Engineering Building Routine' },
-    scenes: [{ text: { zh: '机房电脑的风扇嗡嗡作响，你盯着跑了一半的脚本，确认没有报错后记录下了今天的数据。', en: 'The computer fans hum in the lab. Staring at your script, you confirm there are no errors and record the day\'s data.' } }]
+    scenes: [{ text: { zh: '机房电脑的风扇嗡嗡作响。你把今天的任务拆成几步逐个完成，确认关键部分无误后，顺手记下了进展。', en: 'Computer fans hum in the lab. You break today\'s workload into steps, finish them one by one, and log your progress after confirming key parts are in order.' } }]
   },
   'default_ir': { // 编写新的科研中心文案
     event_id: 'default_ir', type: 'location', title: { zh: '科研中心日常', en: 'Research Center Routine' },
-    scenes: [{ text: { zh: 'IR 的会议室里正在进行一场小型的学术研讨。你整理着最近的文献综述，空气中弥漫着高端咖啡和高端论文的味道。', en: 'A small academic seminar is underway in an IR meeting room. As you organize your literature review, the air smells of premium coffee and high-level research.' } }]
+    scenes: [{ text: { zh: 'IR 的会议室里正在进行一场小型研讨。你整理最近的文献和记录，和同伴对齐下一步安排，节奏紧凑但清晰。', en: 'A small seminar is underway in an IR meeting room. You organize recent papers and notes, align next steps with peers, and keep a pace that is intense but clear.' } }]
   },
   'default_gym': {
     event_id: 'default_gym', type: 'location', title: { zh: '健身房日常', en: 'Gym Routine' },
-    scenes: [{ text: { zh: '完成最后一组器械后，你擦了擦汗。镜子里的你看起来和昨天没什么不同，但肌肉的酸胀感提醒你今天没有虚度。', en: 'Sweating after your last set, you look in the mirror. You don\'t look different, but the muscle ache tells you today wasn\'t wasted.' } }]
+    scenes: [{ text: { zh: '活动结束后你擦了擦汗。镜子里的变化不算明显，但整个人的状态轻快了许多，紧绷感也被放松下来。', en: 'After your session, you wipe off sweat. The mirror shows no dramatic change, but your overall state feels lighter and less tense.' } }]
   },
   'default_dorm': {
     event_id: 'default_dorm', type: 'location', title: { zh: '宿舍日常', en: 'Dormitory Routine' },
-    scenes: [{ text: { zh: '你回到了宿舍，今日无事发生。室友们都在忙自己的事，你换上睡衣，享受这难得的片刻宁静。', en: 'Back in the dorm. Nothing special happened today. Your roommates are busy, so you change into pajamas and enjoy a moment of peace.' } }]
+    scenes: [{ text: { zh: '你回到宿舍，室友们都在忙自己的事。你简单收拾桌面，把今日计划收尾后，给自己留了一段安静的缓冲时间。', en: 'Back in the dorm, your roommates are busy with their own routines. You tidy your desk, wrap up today\'s plan, and leave yourself a quiet buffer before calling it a day.' } }]
   },
   'default_ia': {
     event_id: 'default_ia', type: 'location', title: { zh: 'IA 日常', en: 'IA Routine' },
