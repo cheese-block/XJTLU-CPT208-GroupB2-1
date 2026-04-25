@@ -1,0 +1,25 @@
+---
+description: Run local tests after code changes and report results
+alwaysApply: false
+globs:
+  - src/engine/**/*.js
+  - src/state/**/*.js
+  - src/data/**/*.js
+  - src/ui/**/*.js
+  - main.js
+---
+
+# Local test execution rule
+
+When code changes touch the files matched above:
+
+1. Run relevant local test commands before final response.
+2. Prefer scoped runs first (`npm run test:unit` / `npm run test:integration`) and run full `npm test` when changes are broad.
+3. If data definitions change (`src/data/**`), include `npm run test:data`.
+4. If core flow/state changes (`src/engine/**`, `src/state/**`), include `npm run test:monte-carlo`.
+5. Report to the user:
+   - commands executed
+   - pass/fail summary
+   - blocking failures and the minimal next fix
+
+Do not claim tests passed unless commands were actually executed.
