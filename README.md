@@ -11,11 +11,16 @@ This version is the **Exhibition Edition (Showcase Demo)**, specifically optimiz
 - **Source Code Repository:** included below as a GitHub repository link.
 - **README.md Setup Instructions:** included in the `Setup Instructions` section.
 - **README.md Technologies Used:** included in the `Technologies Used` section.
-- **Vibe Coding Logs:** included in the `/ai-0logs` folder. The primary prompts are stored in `/ai-0logs/primary-prompts.md`.
+- **Vibe Coding Logs:** included in the `/ai-logs` folder. The primary prompts are stored in `/ai-logs/primary-prompts.md`.
+
+## Live Demo
+
+- **Primary URL (Global):** https://cheese-block.github.io/XJTLU-CPT208-GroupB2-1/
+- **Alternative URL (China Mainland Friendly):** http://www.xjtlu-sim.top
 
 ## Source Code Repository
 
-GitHub repository: https://github.com/cheese-block/XJTLU-CPT208-GroupB2-1/tree/main
+GitHub repository: https://github.com/cheese-block/XJTLU-CPT208-GroupB2-1/
 
 ## Individual Contributions
 
@@ -39,17 +44,20 @@ The project personas are prepared for the GitHub portfolio page following the 10
 npm install
 ```
 
-3. Run the project with a local static server:
+3. Run the project with a local development server:
 
 ```bash
-npx vite --host 0.0.0.0
+npm run test:watch # if you want to run tests while developing
+# Or simply open index.html in a browser using a local server extension (e.g., Live Server)
+# Since the project uses ES Modules, it MUST be served via a local server.
 ```
 
-4. Open the URL printed by the terminal, usually:
-
-```text
-http://localhost:5173/
+If you are using Vite for local development:
+```bash
+npx vite
 ```
+
+4. Open the URL printed by the terminal, usually `http://localhost:5173/`.
 
 5. Run all tests:
 
@@ -68,15 +76,12 @@ npm run test:monte-carlo
 
 ## Technologies Used
 
-- HTML5
-- CSS3
-- JavaScript ES Modules
-- Tailwind CSS via CDN
-- Lucide Icons
-- Vite-compatible frontend structure
-- Vitest
-- jsdom
-- Browser local storage
+- **Frontend:** HTML5, CSS3 (Tailwind CSS via CDN), JavaScript (ES Modules)
+- **Icons:** Lucide Icons
+- **Build Tool/Server:** Vite (compatible structure)
+- **Testing:** Vitest, jsdom
+- **State Management:** Custom Vanilla JS State Manager
+- **Persistence:** Browser Local Storage
 
 This project does not use React or Three.js; the examples in the requirement are treated as examples of possible technologies.
 
@@ -101,6 +106,9 @@ This project does not use React or Three.js; the examples in the requirement are
 
 ## Vibe Coding Logs
 
-AI-assisted coding was used during development. The primary prompts used to generate and refine core components are stored in:
+AI-assisted coding was used extensively during development (following a Vibe Coding methodology). The primary prompts and interactive problem-solving logs are categorized chronologically and stored in the `/ai-logs` directory:
 
-- `ai-0logs/primary-prompts.md`
+- `/ai-logs/01_phase1_architecture.md` - Core PRD, State Machine, and Mechanics
+- `/ai-logs/02_phase2_ui_ux.md` - Interaction Design, Cognitive Load fixes, and UI Layout
+- `/ai-logs/03_phase3_events_logic.md` - Event scripting, Bug fixing, and AI communication standards
+
