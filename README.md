@@ -2,7 +2,9 @@
 
 This repository contains the CPT208 Human-Centric Computing group portfolio project developed by Group B2-1.
 
-The project is an interactive browser-based simulation game called **XJTLU Postgrad Simulator**. It presents a compressed postgraduate application journey where players manage action points, improve personal attributes, encounter campus events, and work toward different application outcomes.
+The project is an interactive browser-based simulation game called **XJTLU Postgrad Simulator**. 
+
+This version is the **Exhibition Edition (Showcase Demo)**, specifically optimized for a concentrated 10-minute gameplay experience while maintaining the full narrative arc and core mechanics of the postgraduate application journey. Players manage action points, improve personal attributes, encounter campus events, and work toward different application outcomes.
 
 ## Submission Requirements Checklist
 
@@ -13,7 +15,7 @@ The project is an interactive browser-based simulation game called **XJTLU Postg
 
 ## Source Code Repository
 
-GitHub repository: https://github.com/cheese-block/XJTLU-CPT208-GroupB2-1/tree/backup-demo-version
+GitHub repository: https://github.com/cheese-block/XJTLU-CPT208-GroupB2-1/tree/main
 
 ## Individual Contributions
 
