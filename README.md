@@ -25,7 +25,7 @@ GitHub repository: https://github.com/cheese-block/XJTLU-CPT208-GroupB2-1/
 ## Individual Contributions
 
 | Team Member | Student ID | Role | Contributions | Contribution % |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | :---: |
 | Yiguan Zhang | 2362131 | UI Design | Main menu design, campus map UI, status bar components | 25% |
 | Wenhan Wang | 2362355 | Code | Game engine core, event system, buff mechanics, state management | 25% |
 | Zewei Li | 2363721 | Content | Story content, event scenarios, ending definitions, i18n | 25% |
