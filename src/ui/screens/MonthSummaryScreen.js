@@ -63,43 +63,43 @@ export class MonthSummaryScreen {
     const cardStatus = isDemoEnd ? t('summary_locked') : `${getMonthName(prevMonth)} ${t('summary_end')}`;
     
     this._container.innerHTML = `
-      <div class="w-full h-full flex items-center justify-center bg-white px-6 relative">
-        <div class="summary-card w-full max-w-md flex flex-col gap-6 animate-fade-in z-10">
+      <div class="w-full h-full flex items-center justify-center bg-white px-4 md:px-6 relative">
+        <div class="summary-card w-full max-w-md max-h-[90vh] flex flex-col gap-4 md:gap-6 animate-fade-in z-10 overflow-y-auto custom-scroll py-2">
 
           <div class="flex flex-col gap-1">
-            <p class="text-xs font-bold text-xjtlu-blue tracking-widest uppercase">${cardTitle}</p>
-            <h1 class="text-2xl font-black text-xjtlu-navy">${cardStatus}</h1>
+            <p class="text-[0.65rem] md:text-xs font-bold text-xjtlu-blue tracking-widest uppercase">${cardTitle}</p>
+            <h1 class="text-xl md:text-2xl font-black text-xjtlu-navy">${cardStatus}</h1>
           </div>
 
           <div class="h-px bg-gray-100"></div>
 
           ${examResult ? `
-            <div class="flex flex-col gap-3">
-              <p class="text-xs font-bold text-xjtlu-gray tracking-wider uppercase">${t('summary_exam_result')}</p>
-              <div class="flex items-center justify-between bg-xjtlu-blue/5 rounded-xl px-4 py-3 border border-xjtlu-blue/20">
-                <span class="text-sm text-gray-600">${t('summary_gpa')}</span>
-                <span class="text-2xl font-black ${isGoodGpa ? 'text-xjtlu-green' : isMidGpa ? 'text-xjtlu-blue' : 'text-xjtlu-red'}">
+            <div class="flex flex-col gap-2 md:gap-3">
+              <p class="text-[0.65rem] md:text-xs font-bold text-xjtlu-gray tracking-wider uppercase">${t('summary_exam_result')}</p>
+              <div class="flex items-center justify-between bg-xjtlu-blue/5 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-3 border border-xjtlu-blue/20">
+                <span class="text-xs md:text-sm text-gray-600">${t('summary_gpa')}</span>
+                <span class="text-xl md:text-2xl font-black ${isGoodGpa ? 'text-xjtlu-green' : isMidGpa ? 'text-xjtlu-blue' : 'text-xjtlu-red'}">
                   ${examResult.gpa}
                 </span>
               </div>
-              <p class="text-xs text-gray-500 leading-relaxed">${examResult.summary}</p>
+              <p class="text-[0.65rem] md:text-xs text-gray-500 leading-relaxed">${examResult.summary}</p>
             </div>
             <div class="h-px bg-gray-100"></div>
           ` : ''}
 
           <!-- 下一阶段提示区 -->
-          <div class="flex items-center gap-3 text-sm text-xjtlu-gray">
-            <i data-lucide="${isDemoEnd ? 'send' : 'arrow-right-circle'}" class="lucide w-5 h-5 text-xjtlu-blue shrink-0"></i>
+          <div class="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-xjtlu-gray">
+            <i data-lucide="${isDemoEnd ? 'send' : 'arrow-right-circle'}" class="lucide w-4 h-4 md:w-5 md:h-5 text-xjtlu-blue shrink-0"></i>
             <div class="flex flex-col">
-              <span class="font-bold text-xjtlu-navy">
+              <span class="font-bold text-xjtlu-navy text-sm md:text-base">
                 ${isDemoEnd ? t('summary_next_final') : `${t('summary_next')} ${getMonthName(newMonth)}`}
               </span>
-              <span class="text-[0.7rem]">${isDemoEnd ? t('summary_next_desc_final') : ''}</span>
+              <span class="text-[0.65rem] md:text-[0.7rem]">${isDemoEnd ? t('summary_next_desc_final') : ''}</span>
             </div>
           </div>
 
-          <button id="btn-next-month" class="xjtlu-btn xjtlu-btn--primary w-full justify-center text-base py-3">
-            <i data-lucide="${isDemoEnd ? 'mail' : 'play-circle'}" class="lucide w-5 h-5"></i>
+          <button id="btn-next-month" class="xjtlu-btn xjtlu-btn--primary w-full justify-center text-sm md:text-base py-2.5 md:py-3 mt-2 md:mt-0">
+            <i data-lucide="${isDemoEnd ? 'mail' : 'play-circle'}" class="lucide w-4 h-4 md:w-5 md:h-5"></i>
             ${isDemoEnd ? t('summary_btn_submit') : `${t('summary_btn_start')} ${getMonthName(newMonth)}`}
           </button>
 

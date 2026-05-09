@@ -10,6 +10,8 @@ import { MapScreen }          from './src/ui/screens/MapScreen.js';
 import { VNScreen }           from './src/ui/screens/VNScreen.js';
 import { MonthSummaryScreen } from './src/ui/screens/MonthSummaryScreen.js';
 import { initTooltipManager } from './src/ui/components/TooltipManager.js';
+import { initMobileSimulator } from './src/utils/MobileSimulator.js';
+import { initOrientationLock } from './src/utils/OrientationLock.js';
 import { TagShowcaseScreen }  from './src/ui/screens/TagShowcaseScreen.js';
 import { EndingScreen }       from './src/ui/screens/EndingScreen.js';
 import { EventCardScreen }    from './src/ui/screens/EventCardScreen.js';
@@ -25,6 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 【新增调用】：初始化全局 Tooltip
   initTooltipManager();
+  // 【新增调用】：初始化手机端模拟器
+  initMobileSimulator();
+  // 【新增调用】：初始化横屏锁定检测
+  initOrientationLock();
 
   // 【修改 2】：在 initGameLoop 调用时传入两个 Screen
   _vnScreen = new VNScreen();

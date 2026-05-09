@@ -138,26 +138,32 @@ export class SchoolSelectScreen {
   _buildHTML() {
     return `
       <div class="w-full h-full flex flex-col bg-white overflow-hidden">
-        <div class="shrink-0 px-8 pt-10 pb-6 border-b-2 border-gray-100">
-          <p class="text-xs font-bold text-xjtlu-blue tracking-[0.25em] uppercase mb-1">
+        <div class="shrink-0 px-6 md:px-8 pt-4 md:pt-10 pb-3 md:pb-6 border-b-2 border-gray-100 flex flex-col md:block">
+          <p class="text-[0.6rem] md:text-xs font-bold text-xjtlu-blue tracking-[0.25em] uppercase mb-0.5 md:mb-1">
             ${t('school_select_step')}
           </p>
-          <h1 class="text-3xl font-black text-xjtlu-navy leading-tight">
-            ${t('school_select_title')}
-          </h1>
-          <p class="text-sm text-xjtlu-gray mt-2 leading-relaxed">
+          <div class="flex items-center justify-between">
+            <h1 class="text-xl md:text-3xl font-black text-xjtlu-navy leading-tight">
+              ${t('school_select_title')}
+            </h1>
+            <!-- 手机端横屏时，提示文字移到右侧以节省高度 -->
+            <p class="hidden md:hidden sm:block text-[0.65rem] text-xjtlu-gray leading-relaxed max-w-[200px] text-right">
+              ${t('school_select_desc')}
+            </p>
+          </div>
+          <p class="text-[0.65rem] md:text-sm text-xjtlu-gray mt-1 md:mt-2 leading-relaxed sm:hidden md:block">
             ${t('school_select_desc')}
           </p>
         </div>
 
-        <div class="flex-1 overflow-y-auto custom-scroll px-8 py-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div class="flex-1 overflow-y-auto custom-scroll px-4 md:px-8 py-3 md:py-6">
+          <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto">
             ${SCHOOLS.map(s => this._buildCard(s)).join('')}
           </div>
         </div>
 
-        <div class="shrink-0 px-8 py-4 border-t border-gray-100 flex items-center justify-center gap-2 text-xs text-xjtlu-gray">
-          <i data-lucide="info" class="lucide w-3.5 h-3.5"></i>
+        <div class="shrink-0 px-6 md:px-8 py-2 md:py-4 border-t border-gray-100 flex items-center justify-center gap-2 text-[0.6rem] md:text-xs text-xjtlu-gray">
+          <i data-lucide="info" class="lucide w-3 h-3 md:w-3.5 md:h-3.5"></i>
           ${t('school_select_demo_hint')}
         </div>
       </div>
@@ -180,38 +186,39 @@ export class SchoolSelectScreen {
     const sTraits = Array.isArray(school.applyTraits) ? school.applyTraits : (school.applyTraits[lang] || school.applyTraits['zh']);
 
     const cardBase = `
-      relative flex flex-col gap-3 p-5 rounded-2xl border-2 transition-all duration-200
+      relative flex flex-col gap-2 md:gap-3 p-3 md:p-5 rounded-xl md:rounded-2xl border-2 transition-all duration-200
       ${isAvailable ? 'border-xjtlu-blue bg-white cursor-pointer hover:bg-xjtlu-blue hover:text-white hover:shadow-lg hover:-translate-y-0.5 school-card' : 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60'}
     `;
 
-    const tagsHTML = sTags.map(tag => `<span class="tag-badge ${isAvailable ? 'tag-badge--blue' : 'tag-badge--gray'} school-card__tag">${tag}</span>`).join('');
-    const traitsHTML = sTraits.map(trait => `<li class="flex items-center gap-1.5 text-xs school-card__trait"><i data-lucide="check-circle-2" class="lucide w-3 h-3 shrink-0 ${isAvailable ? 'text-xjtlu-blue school-card__trait-icon' : 'text-gray-400'}"></i>${trait}</li>`).join('');
+    const tagsHTML = sTags.map(tag => `<span class="tag-badge ${isAvailable ? 'tag-badge--blue' : 'tag-badge--gray'} school-card__tag text-[0.55rem] md:text-[0.6rem] px-1.5 py-0.5 md:px-2 md:py-1">${tag}</span>`).join('');
+    const traitsHTML = sTraits.map(trait => `<li class="flex items-center gap-1 md:gap-1.5 text-[0.6rem] md:text-xs school-card__trait"><i data-lucide="check-circle-2" class="lucide w-2.5 h-2.5 md:w-3 md:h-3 shrink-0 ${isAvailable ? 'text-xjtlu-blue school-card__trait-icon' : 'text-gray-400'}"></i>${trait}</li>`).join('');
 
     return `
       <div class="${cardBase}" data-school-id="${school.id}" role="${isAvailable ? 'button' : 'presentation'}" tabindex="${isAvailable ? '0' : '-1'}">
-        <div class="absolute top-3 right-3">
-          <span class="tag-badge ${isAvailable ? 'tag-badge--blue' : 'tag-badge--gray'} text-[0.6rem]">
+        <div class="absolute top-2 right-2 md:top-3 md:right-3">
+          <span class="tag-badge ${isAvailable ? 'tag-badge--blue' : 'tag-badge--gray'} text-[0.55rem] md:text-[0.6rem] px-1.5 py-0.5 md:px-2 md:py-1">
             ${isAvailable ? t('school_select_available') : t('school_select_coming_soon')}
           </span>
         </div>
 
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isAvailable ? 'bg-xjtlu-blue/10 school-card__icon-wrap' : 'bg-gray-200'}">
-            <i data-lucide="${school.icon}" class="lucide w-5 h-5 ${isAvailable ? 'text-xjtlu-blue school-card__icon' : 'text-gray-400'}"></i>
+        <div class="flex items-center gap-2 md:gap-3">
+          <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0 ${isAvailable ? 'bg-xjtlu-blue/10 school-card__icon-wrap' : 'bg-gray-200'}">
+            <i data-lucide="${school.icon}" class="lucide w-4 h-4 md:w-5 md:h-5 ${isAvailable ? 'text-xjtlu-blue school-card__icon' : 'text-gray-400'}"></i>
           </div>
-          <!-- 【修复】：增加 pr-16 防止长文本遮挡右上角徽章 -->
-          <div class="min-w-0 pr-16">
-            <p class="font-black text-sm leading-tight school-card__name">${sName}</p>
-            <p class="text-[0.65rem] mt-0.5 school-card__abbr ${isAvailable ? 'text-xjtlu-gray' : 'text-gray-400'}">
+          <!-- 【修复】：增加 pr-14 md:pr-16 防止长文本遮挡右上角徽章 -->
+          <div class="min-w-0 pr-14 md:pr-16">
+            <p class="font-black text-[0.75rem] md:text-sm leading-tight school-card__name">${sName}</p>
+            <p class="text-[0.6rem] md:text-[0.65rem] mt-0.5 school-card__abbr ${isAvailable ? 'text-xjtlu-gray' : 'text-gray-400'}">
               ${school.abbr}
             </p>
           </div>
         </div>
 
         <div class="h-px bg-gray-100 school-card__divider"></div>
-        <p class="text-xs leading-relaxed school-card__desc ${isAvailable ? 'text-gray-600' : 'text-gray-400'}">${sDesc}</p>
-        <div class="flex flex-wrap gap-1.5">${tagsHTML}</div>
-        <ul class="flex flex-col gap-1.5 mt-auto">${traitsHTML}</ul>
+        <!-- 手机端横屏隐藏描述以节省空间，或者做行数限制 -->
+        <p class="hidden md:block text-[0.65rem] md:text-xs leading-relaxed school-card__desc ${isAvailable ? 'text-gray-600' : 'text-gray-400'} line-clamp-2">${sDesc}</p>
+        <div class="flex flex-wrap gap-1 md:gap-1.5">${tagsHTML}</div>
+        <ul class="flex flex-col gap-1 md:gap-1.5 mt-auto">${traitsHTML}</ul>
       </div>
     `;
   }

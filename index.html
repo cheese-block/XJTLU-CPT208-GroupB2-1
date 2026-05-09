@@ -162,6 +162,21 @@
     <!-- Screen: 结局图鉴 -->
     <div id="screen-collection"    class="screen absolute inset-0 hidden"></div>
 
+    <!-- ── 强制横屏提示层（移动端竖屏时触发） ── -->
+    <div
+      id="orientation-overlay"
+      class="fixed inset-0 z-[100000] hidden bg-xjtlu-navy flex flex-col items-center justify-center text-white p-10 text-center"
+    >
+      <div class="animate-bounce mb-6">
+        <i data-lucide="rotate-cw" class="w-16 h-16"></i>
+      </div>
+      <h2 class="text-xl font-black mb-2">请横屏游玩</h2>
+      <p class="text-sm opacity-80 leading-relaxed">
+        为了获得最佳游戏体验，请将您的设备旋转至横屏状态。<br>
+        <span class="text-[0.7rem]">(Please rotate your device to landscape mode)</span>
+      </p>
+    </div>
+
   </div><!-- /#app -->
 
   <!-- ⑥ 项目主脚本（type=module） -->

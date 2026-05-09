@@ -203,29 +203,29 @@ export class EventCardScreen {
       <div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
       
       <!-- 【修改】：移除 pt-24 和 items-start，改为 items-center 实现完全居中 -->
-      <div class="relative z-10 w-full h-full flex items-center justify-center px-6">
+      <div class="relative z-10 w-full h-full flex items-center justify-center px-4 md:px-6">
         
         <!-- 卡片主体: 左右分栏 -->
-        <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border-2 border-xjtlu-navy animate-fade-in">
+        <div class="w-full max-w-3xl max-h-[90vh] bg-white rounded-xl md:rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border-2 border-xjtlu-navy animate-fade-in">
           
           <!-- 左侧：剧情描述 (60%) -->
-          <div class="md:w-3/5 bg-gray-50 p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-200">
+          <div class="md:w-3/5 max-h-[50vh] md:max-h-full bg-gray-50 p-4 md:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-200 overflow-y-auto custom-scroll">
             <div>
-              <div class="flex items-center gap-2 mb-4">
-                <i data-lucide="compass" class="lucide w-5 h-5 text-xjtlu-blue"></i>
-                <h2 id="ec-title" class="text-base font-black text-xjtlu-navy tracking-widest">${t('ec_card_title')}</h2>
+              <div class="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-4">
+                <i data-lucide="compass" class="lucide w-4 h-4 md:w-5 md:h-5 text-xjtlu-blue"></i>
+                <h2 id="ec-title" class="text-sm md:text-base font-black text-xjtlu-navy tracking-widest uppercase">${t('ec_card_title')}</h2>
               </div>
-              <p id="ec-text" class="text-[0.95rem] text-gray-700 leading-relaxed font-medium"></p>
+              <p id="ec-text" class="text-[0.8rem] md:text-[0.95rem] text-gray-700 leading-relaxed font-medium"></p>
             </div>
             
-            <div id="ec-tip" class="hidden mt-6 bg-yellow-50 border-l-4 border-xjtlu-yellow p-3 text-xs text-yellow-800 rounded-r-lg flex items-start gap-2">
+            <div id="ec-tip" class="hidden mt-4 md:mt-6 bg-yellow-50 border-l-4 border-xjtlu-yellow p-2 md:p-3 text-[0.65rem] md:text-xs text-yellow-800 rounded-r-lg flex items-start gap-1 md:gap-2">
             </div>
           </div>
 
           <!-- 右侧：选项区 (40%) -->
-          <div class="md:w-2/5 p-6 bg-white flex flex-col justify-center">
-            <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">${t('ec_choice_prompt')}</p>
-            <div id="ec-choices" class="flex flex-col gap-3">
+          <div class="md:w-2/5 max-h-[40vh] md:max-h-full p-4 md:p-6 bg-white flex flex-col justify-center shrink-0 overflow-y-auto custom-scroll">
+            <p class="text-[0.55rem] md:text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-2 md:mb-4 text-center">${t('ec_choice_prompt')}</p>
+            <div id="ec-choices" class="flex flex-col gap-2 md:gap-3">
               <!-- 动态注入按钮 -->
             </div>
           </div>

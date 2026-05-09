@@ -129,10 +129,10 @@ export class MapScreen {
     }).join('');
 
     return `
-      <div class="w-full h-full flex overflow-hidden bg-gray-50">
+      <div class="w-full h-full flex flex-row overflow-hidden bg-gray-50">
 
-        <!-- 左侧：地图区（65%），改为 flex-col 布局 -->
-        <div class="relative flex-[65] flex flex-col overflow-hidden bg-gray-100">
+        <!-- 左侧：地图区，在移动端横屏占据约 70% 空间 -->
+        <div class="relative flex-[70] md:flex-[65] flex flex-col overflow-hidden bg-gray-100">
           
           <!-- 地图主体占据剩余空间 -->
           <div id="map-wrap" class="relative flex-1 w-full overflow-hidden">
@@ -157,12 +157,12 @@ export class MapScreen {
             </div>
 
             <!-- 结束本月按钮 -->
-            <div class="absolute bottom-6 right-6 z-40">
+            <div class="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-40">
               <button
                 id="btn-end-month"
-                class="xjtlu-btn xjtlu-btn--primary text-sm shadow-lg"
+                class="xjtlu-btn xjtlu-btn--primary text-xs md:text-sm py-1.5 px-3 md:py-2 md:px-5 shadow-lg"
               >
-                <i data-lucide="skip-forward" class="lucide w-4 h-4"></i>
+                <i data-lucide="skip-forward" class="lucide w-3.5 h-3.5 md:w-4 md:h-4"></i>
                 ${t('map_end_month')}
               </button>
             </div>
@@ -192,14 +192,14 @@ export class MapScreen {
 
         </div>
 
-        <!-- 右侧：信息面板（35%）-->
+        <!-- 右侧：信息面板，在移动端横屏占据约 30% 空间 -->
         <div id="right-sidebar"
-             class="flex-[35] flex flex-col
+             class="flex-[30] md:flex-[35] flex flex-col
                     border-l-2 border-gray-200
                     bg-white overflow-hidden">
           
           <div id="info-panel" class="flex-1 flex flex-col overflow-hidden border-b-2 border-gray-100"></div>
-          <div id="player-status-panel" class="h-[42%] shrink-0 flex flex-col bg-gray-50 overflow-hidden"></div>
+          <div id="player-status-panel" class="h-[40%] md:h-[42%] shrink-0 flex flex-col bg-gray-50 overflow-hidden"></div>
 
         </div>
 
@@ -731,31 +731,31 @@ export class MapScreen {
 
     return `
       <div class="flex-1 flex flex-col overflow-hidden">
-        <div class="shrink-0 px-5 pt-5 pb-4 border-b border-gray-100">
-          <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center ${isAction ? 'bg-xjtlu-blue/10' : 'bg-gray-100'}">
-              <i data-lucide="${building.icon}" class="lucide w-5 h-5 ${isAction ? 'text-xjtlu-blue' : 'text-xjtlu-gray'}"></i>
+        <div class="shrink-0 px-3 py-2 md:px-5 md:pt-5 md:pb-4 border-b border-gray-100">
+          <div class="flex items-start gap-2 md:gap-3">
+            <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl shrink-0 flex items-center justify-center ${isAction ? 'bg-xjtlu-blue/10' : 'bg-gray-100'}">
+              <i data-lucide="${building.icon}" class="lucide w-4 h-4 md:w-5 md:h-5 ${isAction ? 'text-xjtlu-blue' : 'text-xjtlu-gray'}"></i>
             </div>
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-base font-black text-xjtlu-navy leading-tight">${bName}</h2>
-                <span class="tag-badge ${isAction ? 'tag-badge--blue' : 'tag-badge--gray'} text-[0.6rem]">
+              <div class="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                <h2 class="text-[0.8rem] md:text-base font-black text-xjtlu-navy leading-tight">${bName}</h2>
+                <span class="tag-badge ${isAction ? 'tag-badge--blue' : 'tag-badge--gray'} text-[0.55rem] md:text-[0.6rem] px-1.5 py-0.5">
                   ${tagText}
                 </span>
               </div>
-              <p class="text-xs text-xjtlu-gray mt-0.5">${building.fullName || ''}</p>
+              <p class="text-[0.6rem] md:text-xs text-xjtlu-gray mt-0.5">${building.fullName || ''}</p>
             </div>
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto custom-scroll px-5 py-4 flex flex-col gap-4">
-          <p class="text-sm text-gray-600 leading-relaxed">${bDesc}</p>
-          <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
-            <div class="flex items-center gap-1.5 mb-1.5">
-              <i data-lucide="message-square-quote" class="lucide w-3 h-3 text-xjtlu-gray"></i>
-              <span class="text-[0.65rem] font-bold text-xjtlu-gray tracking-wider uppercase">${t('map_student_says')}</span>
+        <div class="flex-1 overflow-y-auto custom-scroll px-3 py-2 md:px-5 md:py-4 flex flex-col gap-2 md:gap-4">
+          <p class="text-[0.7rem] md:text-sm text-gray-600 leading-relaxed">${bDesc}</p>
+          <div class="bg-gray-50 rounded-lg md:rounded-xl p-2 md:p-3 border border-gray-100">
+            <div class="flex items-center gap-1 md:gap-1.5 mb-1 md:mb-1.5">
+              <i data-lucide="message-square-quote" class="lucide w-2.5 h-2.5 md:w-3 md:h-3 text-xjtlu-gray"></i>
+              <span class="text-[0.55rem] md:text-[0.65rem] font-bold text-xjtlu-gray tracking-wider uppercase">${t('map_student_says')}</span>
             </div>
-            <p class="text-sm text-gray-500 leading-relaxed italic">${bLore}</p>
+            <p class="text-[0.65rem] md:text-sm text-gray-500 leading-relaxed italic">${bLore}</p>
           </div>
         </div>
       </div>

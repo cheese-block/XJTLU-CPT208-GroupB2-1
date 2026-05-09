@@ -118,16 +118,16 @@ export class TitleScreen {
           relative z-10
           flex flex-col md:flex-row
           items-center justify-center
-          gap-12 md:gap-20
-          px-8
-          w-full max-w-4xl
+          gap-8 md:gap-20
+          px-8 py-12 md:py-0
+          w-full max-w-4xl overflow-y-auto
         ">
 
           <!-- ── 左栏：吉祥物 + 学院标签 ── -->
-          <div class="flex flex-col items-center gap-4 animate-fade-in">
+          <div class="flex flex-col items-center gap-4 animate-fade-in shrink-0">
 
             <!-- 吉祥物 SVG -->
-            <div id="title-mascot" class="w-44 h-44 drop-shadow-lg">
+            <div id="title-mascot" class="w-32 h-32 md:w-44 md:h-44 drop-shadow-lg">
               ${this._getMascotSVG()}
             </div>
 
@@ -145,37 +145,39 @@ export class TitleScreen {
           </div>
 
           <!-- ── 右栏：标题 + 按钮组 ── -->
-          <div class="flex flex-col items-start gap-6 animate-fade-in w-full max-w-xs">
-            <div class="flex flex-col gap-1">
-              <p class="text-xs font-bold text-xjtlu-blue tracking-[0.25em] uppercase">XJTLU Postgrad Simulator</p>
-              <h1 class="text-4xl font-black text-xjtlu-navy leading-tight">
+          <div class="flex flex-col items-center md:items-start gap-6 animate-fade-in w-full max-w-xs shrink-0">
+            <div class="flex flex-col gap-1 items-center md:items-start text-center md:text-left">
+              <p class="text-[0.6rem] md:text-xs font-bold text-xjtlu-blue tracking-[0.25em] uppercase">XJTLU Postgrad Simulator</p>
+              <h1 class="text-3xl md:text-4xl font-black text-xjtlu-navy leading-tight">
                 ${t('title_main')}
               </h1>
-              <p class="text-sm text-xjtlu-gray mt-1 leading-relaxed">
+              <p class="text-xs md:text-sm text-xjtlu-gray mt-1 leading-relaxed">
                 ${t('title_sub')}
               </p>
             </div>
 
             <div class="w-full h-px bg-gray-100"></div>
 
-            <div class="flex flex-col gap-3 w-full">
+            <div class="flex flex-col gap-2 md:gap-3 w-full">
               ${hasSave ? this._buildContinueBlock(savePreview) : ''}
-              <button id="btn-new-game" class="xjtlu-btn w-full justify-center ${hasSave ? 'xjtlu-btn--secondary' : 'xjtlu-btn--primary text-base py-3'}">
+              <button id="btn-new-game" class="xjtlu-btn w-full justify-center ${hasSave ? 'xjtlu-btn--secondary py-2' : 'xjtlu-btn--primary text-sm md:text-base py-2.5 md:py-3'}">
                 <i data-lucide="${hasSave ? 'rotate-ccw' : 'play'}" class="lucide w-4 h-4"></i>
                 ${hasSave ? t('btn_restart') : t('btn_new_game')}
               </button>
-              <button id="btn-how-to-play" class="xjtlu-btn xjtlu-btn--ghost w-full justify-center">
-                <i data-lucide="book-open" class="lucide w-4 h-4"></i>
-                ${t('btn_how_to_play')}
-              </button>
-              <button id="btn-collection" class="xjtlu-btn xjtlu-btn--secondary w-full justify-center">
-                <i data-lucide="book-marked" class="lucide w-4 h-4"></i>
-                ${t('btn_collection')}
-              </button>
+              <div class="flex gap-2">
+                <button id="btn-how-to-play" class="xjtlu-btn xjtlu-btn--ghost flex-1 justify-center py-2">
+                  <i data-lucide="book-open" class="lucide w-4 h-4"></i>
+                  ${t('btn_how_to_play')}
+                </button>
+                <button id="btn-collection" class="xjtlu-btn xjtlu-btn--secondary flex-1 justify-center py-2">
+                  <i data-lucide="book-marked" class="lucide w-4 h-4"></i>
+                  ${t('btn_collection')}
+                </button>
+              </div>
             </div>
 
             <!-- 版本号 -->
-            <p class="text-[0.65rem] text-gray-300 tracking-widest self-end">
+            <p class="text-[0.6rem] md:text-[0.65rem] text-gray-300 tracking-widest self-end">
               v${CONSTANTS.SAVE_VERSION} · MVP Demo
             </p>
 
