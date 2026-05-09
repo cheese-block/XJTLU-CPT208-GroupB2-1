@@ -21,7 +21,7 @@ import { BUILDINGS }      from '../../data/buildings.js';
 import { ACTIONS }        from '../../data/actions.js';
 import { executeAction, resolveMonthEnd, processEventQueue } from '../../engine/GameLoop.js';
 import { MapDebugTool }   from '../MapHotspot.js';
-import { log }            from '../../utils/helpers.js';
+import { log, isMobile }  from '../../utils/helpers.js';
 import { showConfirm }    from '../components/ConfirmModal.js';
 import { t, resolveI18nText } from '../../utils/i18n.js';
 
@@ -41,13 +41,18 @@ export class MapScreen {
   mount(container, state) {
     this._container = container;
     this._state     = state;
+    this._viewMode  = 'map'; // 'map' | 'dashboard'
 
     // 初始化运行时坐标副本
     BUILDINGS.forEach(b => {
       this._hotspotPositions[b.id] = { ...b.hotspot };
     });
 
-    container.innerHTML = this._buildHTML();
+    if (isMobile()) {
+      container.innerHTML = this._buildMobileHTML();
+    } else {
+      container.innerHTML = this._buildHTML();
+    }
 
     const mapImage = container.querySelector('#campus-map-img');
     const onReady  = () => {
@@ -75,6 +80,11 @@ export class MapScreen {
     }
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // 【新增】：如果是移动端，绑定底部导航
+    if (isMobile()) {
+      this._bindMobileNav();
+    }
 
     // 【新增】：首次进入游戏时触发新手引导
     this._tryTriggerTutorial();
@@ -983,5 +993,117 @@ export class MapScreen {
       db:   'DB',    gym:  'GYM',   dorm: t('map_dorm_label'),
     };
     return map[id] ?? id.toUpperCase();
+  }
+
+  /**
+   * 构建移动端 HTML (含底部导航和双模式切换)。
+   * @returns {string}
+   */
+  _buildMobileHTML() {
+    const pinsHTML = BUILDINGS.map(b => {
+      const isAction = this._state?.unlockedBuildings?.includes(b.id);
+      const shortLabel = this._getShortLabel(b.id);
+      return `
+        <button class="map-pin ${isAction ? 'map-pin--action' : 'map-pin--info'}"
+                data-building-id="${b.id}" style="display:none;">
+          <i data-lucide="${b.icon}" class="lucide map-pin__icon"></i>
+          <span class="map-pin__label">${shortLabel}</span>
+        </button>
+      `;
+    }).join('');
+
+    return `
+      <div class="w-full h-full flex flex-col bg-gray-50 overflow-hidden relative">
+        
+        <!-- 顶部状态栏由 StatusBar 处理，但我们需要为它留出空间或在此处渲染简版 -->
+        <div id="mobile-top-bar" class="shrink-0 h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-50">
+           <div class="flex items-center gap-2">
+             <div class="w-8 h-8 rounded-lg bg-xjtlu-navy flex items-center justify-center">
+               <i data-lucide="map" class="lucide w-5 h-5 text-white"></i>
+             </div>
+             <h2 class="font-black text-xjtlu-navy text-sm">${t('map_title') || 'Campus Map'}</h2>
+           </div>
+           <!-- 移动端月份/AP 简易展示 -->
+           <div id="mobile-stats" class="flex items-center gap-3"></div>
+        </div>
+
+        <!-- 主内容区：通过 transform 切换 -->
+        <div class="flex-1 relative overflow-hidden">
+          
+          <!-- 模式 1：地图模式 -->
+          <div id="mobile-map-view" class="absolute inset-0 transition-transform duration-300 translate-x-0">
+             <div id="map-wrap" class="w-full h-full relative overflow-hidden bg-gray-200">
+               <img id="campus-map-img" src="assets/images/campus_map.png" class="w-full h-full object-contain" draggable="false" />
+               <div id="hotspot-layer" class="absolute pointer-events-none" style="left:0;top:0;width:0;height:0;z-index:40;">
+                 ${pinsHTML}
+                 <div id="action-popover" class="absolute z-50 hidden transition-all duration-150 opacity-0 pointer-events-none"></div>
+               </div>
+             </div>
+          </div>
+
+          <!-- 模式 2：仪表盘/详情模式 -->
+          <div id="mobile-dashboard-view" class="absolute inset-0 transition-transform duration-300 translate-x-full bg-white flex flex-col">
+             <div id="info-panel" class="flex-1 flex flex-col overflow-hidden"></div>
+             <div id="player-status-panel" class="h-1/2 shrink-0 border-t border-gray-100 bg-gray-50 overflow-hidden"></div>
+          </div>
+
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="shrink-0 h-16 bg-white border-t border-gray-100 flex items-center z-50">
+          <button id="nav-map" class="flex-1 flex flex-col items-center gap-1 text-xjtlu-blue">
+            <i data-lucide="map-pin" class="lucide w-5 h-5"></i>
+            <span class="text-[0.6rem] font-bold">${t('nav_map') || 'Map'}</span>
+          </button>
+          <button id="nav-dashboard" class="flex-1 flex flex-col items-center gap-1 text-gray-400">
+            <i data-lucide="layout-dashboard" class="lucide w-5 h-5"></i>
+            <span class="text-[0.6rem] font-bold">${t('nav_dashboard') || 'Dashboard'}</span>
+          </button>
+          <div class="w-px h-8 bg-gray-100"></div>
+          <button id="btn-end-month" class="flex-1 flex flex-col items-center gap-1 text-xjtlu-red">
+            <i data-lucide="calendar-forward" class="lucide w-5 h-5"></i>
+            <span class="text-[0.6rem] font-bold">${t('map_end_month')}</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  _bindMobileNav() {
+    const navMap = this._container.querySelector('#nav-map');
+    const navDash = this._container.querySelector('#nav-dashboard');
+    const mapView = this._container.querySelector('#mobile-map-view');
+    const dashView = this._container.querySelector('#mobile-dashboard-view');
+
+    const setMode = (mode) => {
+      this._viewMode = mode;
+      if (mode === 'map') {
+        mapView.style.transform = 'translateX(0)';
+        dashView.style.transform = 'translateX(100%)';
+        navMap.classList.replace('text-gray-400', 'text-xjtlu-blue');
+        navDash.classList.replace('text-xjtlu-blue', 'text-gray-400');
+      } else {
+        mapView.style.transform = 'translateX(-100%)';
+        dashView.style.transform = 'translateX(0)';
+        navDash.classList.replace('text-gray-400', 'text-xjtlu-blue');
+        navMap.classList.replace('text-xjtlu-blue', 'text-gray-400');
+      }
+    };
+
+    navMap.addEventListener('click', () => setMode('map'));
+    navDash.addEventListener('click', () => setMode('dashboard'));
+
+    // 重写 _selectBuilding，如果是移动端，选中后自动切换到详情模式
+    const originalSelect = this._selectBuilding.bind(this);
+    this._selectBuilding = (id) => {
+      originalSelect(id);
+      if (isMobile()) {
+        // 如果是活动建筑，弹出气泡（在地图上），如果是信息建筑，直接切换到详情
+        const isAction = this._state?.unlockedBuildings?.includes(id);
+        if (!isAction) {
+           setTimeout(() => setMode('dashboard'), 200);
+        }
+      }
+    };
   }
 }

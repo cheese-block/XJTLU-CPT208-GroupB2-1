@@ -6,7 +6,7 @@
  */
 
 import { CONSTANTS }      from '../../utils/constants.js';
-import { log }            from '../../utils/helpers.js';
+import { log, isMobile }    from '../../utils/helpers.js';
 import { t }              from '../../utils/i18n.js';
 import * as StateManager  from '../../state/StateManager.js';
 
@@ -49,6 +49,11 @@ export class MonthSummaryScreen {
   show({ prevMonth, newMonth, examResult, state, onConfirm }) {
     this._onConfirm = onConfirm;
     if (!this._container) return;
+
+    if (isMobile()) {
+      this._showMobile({ prevMonth, newMonth, examResult, state });
+      return;
+    }
 
     const isDemoEnd = prevMonth === CONSTANTS.MAX_MONTHS; // 是否是第4个月
 
@@ -122,4 +127,62 @@ export class MonthSummaryScreen {
       </div>
     `;
   }
+
+  /**
+   * 移动端全屏结算界面。
+   */
+  _showMobile({ prevMonth, newMonth, examResult }) {
+    const isDemoEnd = prevMonth === CONSTANTS.MAX_MONTHS;
+    const getMonthName = (m) => t(`month_${m}`);
+    const cardTitle = isDemoEnd ? t('summary_title_final') : t('summary_title');
+    const cardStatus = isDemoEnd ? t('summary_locked') : `${getMonthName(prevMonth)} ${t('summary_end')}`;
+    const isGoodGpa = examResult?.tag === 'GPA_Top' || examResult?.tag === 'GPA_High';
+
+    this._container.innerHTML = `
+      <div class="absolute inset-0 bg-white z-50 flex flex-col animate-fade-in px-6 py-10">
+        
+        <div class="flex flex-col gap-2 mb-8 text-center">
+          <p class="text-[0.7rem] font-bold text-xjtlu-blue tracking-widest uppercase">${cardTitle}</p>
+          <h1 class="text-2xl font-black text-xjtlu-navy">${cardStatus}</h1>
+        </div>
+
+        <div class="flex-1 flex flex-col gap-6 overflow-y-auto custom-scroll">
+          ${examResult ? `
+            <div class="bg-xjtlu-blue/5 rounded-2xl p-5 border border-xjtlu-blue/10 flex flex-col gap-3">
+              <span class="text-xs font-bold text-xjtlu-gray uppercase tracking-wider">${t('summary_exam_result')}</span>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">${t('summary_gpa')}</span>
+                <span class="text-3xl font-black ${isGoodGpa ? 'text-xjtlu-green' : 'text-xjtlu-navy'}">${examResult.gpa}</span>
+              </div>
+              <p class="text-[0.8rem] text-gray-500 leading-relaxed">${examResult.summary}</p>
+            </div>
+          ` : ''}
+
+          <div class="flex items-start gap-4 p-5 bg-gray-50 rounded-2xl">
+            <div class="w-10 h-10 rounded-xl bg-xjtlu-blue flex items-center justify-center shrink-0">
+               <i data-lucide="${isDemoEnd ? 'send' : 'calendar-days'}" class="lucide w-6 h-6 text-white"></i>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold text-xjtlu-navy text-sm">
+                ${isDemoEnd ? t('summary_next_final') : `${t('summary_next')} ${getMonthName(newMonth)}`}
+              </span>
+              <p class="text-[0.65rem] text-gray-400 leading-relaxed">
+                ${isDemoEnd ? t('summary_next_desc_final') : t('map_ap_exhausted_msg')}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-next-month" class="xjtlu-btn xjtlu-btn--primary w-full justify-center text-base py-4 shadow-xl mt-6">
+          <i data-lucide="${isDemoEnd ? 'mail' : 'play-circle'}" class="lucide w-5 h-5"></i>
+          ${isDemoEnd ? t('summary_btn_submit') : `${t('summary_btn_start')} ${getMonthName(newMonth)}`}
+        </button>
+
+      </div>
+    `;
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    this._container.querySelector('#btn-next-month')?.addEventListener('click', () => this._onConfirm?.());
+  }
 }
+

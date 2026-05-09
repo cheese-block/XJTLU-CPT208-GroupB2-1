@@ -124,3 +124,22 @@ export function log(level, module, ...args) {
     case 'error': console.error(prefix, ...args); break;
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// 环境检测工具
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * 判断当前是否处于移动端环境。
+ * 综合考虑指针类型和屏幕宽度。
+ * @returns {boolean}
+ */
+export function isMobile() {
+  // 1. 指针检测 (最准确的移动端特征)
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
+  
+  // 2. 屏幕宽度检测 (处理模拟器或极小窗口)
+  const isSmallScreen = window.innerWidth <= 1024;
+
+  return isTouch || isSmallScreen;
+}

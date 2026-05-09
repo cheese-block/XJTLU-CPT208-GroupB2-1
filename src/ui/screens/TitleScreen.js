@@ -16,7 +16,7 @@
 import * as StateManager from '../../state/StateManager.js';
 import { showConfirm }   from '../components/ConfirmModal.js';
 import { CONSTANTS }     from '../../utils/constants.js';
-import { log }           from '../../utils/helpers.js';
+import { log, isMobile } from '../../utils/helpers.js';
 import { t }             from '../../utils/i18n.js';
 
 export class TitleScreen {
@@ -44,7 +44,12 @@ export class TitleScreen {
     this._container = container;
 
     const savePreview = StateManager.getSavePreview();
-    container.innerHTML = this._buildHTML(savePreview);
+    
+    if (isMobile()) {
+      container.innerHTML = this._buildMobileHTML(savePreview);
+    } else {
+      container.innerHTML = this._buildHTML(savePreview);
+    }
 
     // 初始化 Lucide 图标
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -230,6 +235,86 @@ export class TitleScreen {
         style="width:100%; height:100%; object-fit:contain;"
         draggable="false"
       />
+    `;
+  }
+
+  /**
+   * 构建移动端专属 HTML (纯垂直布局)。
+   * @param {object|null} savePreview
+   * @returns {string}
+   */
+  _buildMobileHTML(savePreview) {
+    const hasSave = savePreview !== null;
+
+    return `
+      <div class="w-full h-full flex flex-col items-center justify-center bg-white relative overflow-hidden px-6 py-8">
+        
+        <!-- 背景装饰 -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-xjtlu-navy opacity-[0.03] pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-xjtlu-blue opacity-[0.03] pointer-events-none"></div>
+
+        <!-- 顶部：吉祥物 -->
+        <div class="flex flex-col items-center gap-2 mb-6 animate-fade-in">
+          <div id="title-mascot" class="w-28 h-28 drop-shadow-md">
+            ${this._getMascotSVG()}
+          </div>
+          <span class="tag-badge tag-badge--blue text-[0.6rem] px-2 py-0.5">
+            <i data-lucide="cpu" class="lucide w-3 h-3"></i>
+            ${t('school_label')}
+          </span>
+        </div>
+
+        <!-- 中部：标题 -->
+        <div class="flex flex-col items-center text-center gap-1 mb-8 animate-fade-in">
+          <p class="text-[0.55rem] font-bold text-xjtlu-blue tracking-[0.2em] uppercase">XJTLU Postgrad Simulator</p>
+          <h1 class="text-2xl font-black text-xjtlu-navy leading-tight">
+            ${t('title_main')}
+          </h1>
+          <p class="text-[0.65rem] text-xjtlu-gray mt-1 max-w-[200px]">
+            ${t('title_sub')}
+          </p>
+        </div>
+
+        <!-- 底部：按钮组 -->
+        <div class="w-full flex flex-col gap-3 max-w-[260px] animate-fade-in">
+          ${hasSave ? `
+            <button id="btn-continue" class="xjtlu-btn xjtlu-btn--primary w-full justify-center py-3.5 text-base shadow-lg">
+              <i data-lucide="play-circle" class="lucide w-5 h-5"></i>
+              ${t('btn_continue')}
+            </button>
+            <div class="w-full rounded-xl border border-gray-100 bg-gray-50 px-4 py-2 flex items-center gap-3">
+              <i data-lucide="save" class="lucide w-3.5 h-3.5 text-xjtlu-gray shrink-0"></i>
+              <div class="flex flex-col gap-0.5 min-w-0">
+                <span class="text-[0.65rem] font-bold text-xjtlu-navy truncate">
+                  ${savePreview.phaseLabel} · ${savePreview.monthLabel}
+                </span>
+              </div>
+            </div>
+          ` : ''}
+
+          <button id="btn-new-game" class="xjtlu-btn w-full justify-center py-3.5 ${hasSave ? 'xjtlu-btn--secondary' : 'xjtlu-btn--primary shadow-lg'}">
+            <i data-lucide="${hasSave ? 'rotate-ccw' : 'play'}" class="lucide w-4 h-4"></i>
+            ${hasSave ? t('btn_restart') : t('btn_new_game')}
+          </button>
+
+          <div class="flex gap-2 w-full">
+            <button id="btn-how-to-play" class="xjtlu-btn xjtlu-btn--ghost flex-1 justify-center py-3">
+              <i data-lucide="book-open" class="lucide w-4 h-4"></i>
+              ${t('btn_how_to_play')}
+            </button>
+            <button id="btn-collection" class="xjtlu-btn xjtlu-btn--secondary flex-1 justify-center py-3">
+              <i data-lucide="book-marked" class="lucide w-4 h-4"></i>
+              ${t('btn_collection')}
+            </button>
+          </div>
+        </div>
+
+        <!-- 版本号 -->
+        <p class="absolute bottom-4 right-6 text-[0.55rem] text-gray-300 tracking-widest">
+          v${CONSTANTS.SAVE_VERSION} · MVP
+        </p>
+
+      </div>
     `;
   }
 

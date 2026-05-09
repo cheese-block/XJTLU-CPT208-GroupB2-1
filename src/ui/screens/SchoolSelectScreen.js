@@ -9,7 +9,7 @@
 
 import * as StateManager from '../../state/StateManager.js';
 import { CONSTANTS }     from '../../utils/constants.js';
-import { log }           from '../../utils/helpers.js';
+import { log, isMobile } from '../../utils/helpers.js';
 import { t, resolveI18nText } from '../../utils/i18n.js';
 
 // ─────────────────────────────────────────────────────────────
@@ -119,7 +119,13 @@ export class SchoolSelectScreen {
 
   mount(container, _state) {
     this._container = container;
-    container.innerHTML = this._buildHTML();
+    
+    if (isMobile()) {
+      container.innerHTML = this._buildMobileHTML();
+    } else {
+      container.innerHTML = this._buildHTML();
+    }
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
     this._bindEvents();
     log('info', 'SchoolSelectScreen', '✅ 已挂载');
@@ -272,5 +278,76 @@ export class SchoolSelectScreen {
     if (!school || !school.available) return;
     StateManager.saveGame();
     StateManager.setGamePhase(CONSTANTS.GAME_PHASE.MAP);
+  }
+
+  /**
+   * 构建移动端专用 HTML (简洁列表/卡片布局)。
+   * @returns {string}
+   */
+  _buildMobileHTML() {
+    return `
+      <div class="w-full h-full flex flex-col bg-gray-50 overflow-hidden">
+        
+        <!-- 顶部：简洁标题 -->
+        <div class="shrink-0 px-5 pt-5 pb-3 bg-white border-b border-gray-100">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-1.5 h-4 bg-xjtlu-blue rounded-full"></span>
+            <p class="text-[0.6rem] font-bold text-xjtlu-blue tracking-[0.2em] uppercase">
+              ${t('school_select_step')}
+            </p>
+          </div>
+          <h1 class="text-xl font-black text-xjtlu-navy leading-tight">
+            ${t('school_select_title')}
+          </h1>
+        </div>
+
+        <!-- 中部：列表区域 -->
+        <div class="flex-1 overflow-y-auto custom-scroll px-4 py-4">
+          <div class="flex flex-col gap-3">
+            ${SCHOOLS.map(s => this._buildMobileCard(s)).join('')}
+          </div>
+        </div>
+
+        <!-- 底部：提示 -->
+        <div class="shrink-0 px-5 py-3 bg-white border-t border-gray-100 flex items-center justify-center gap-2 text-[0.6rem] text-xjtlu-gray italic">
+          <i data-lucide="info" class="lucide w-3 h-3"></i>
+          ${t('school_select_demo_hint')}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * 构建移动端卡片。
+   * @param {object} school
+   */
+  _buildMobileCard(school) {
+    const isAvailable = school.available;
+    const sName = resolveI18nText(school.title);
+    
+    return `
+      <div class="relative flex items-center gap-4 p-4 rounded-xl border-2 transition-all 
+                  ${isAvailable ? 'border-white bg-white shadow-sm school-card' : 'border-gray-100 bg-gray-50 opacity-60'}" 
+           data-school-id="${school.id}">
+        
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isAvailable ? 'bg-xjtlu-blue/10 text-xjtlu-blue' : 'bg-gray-200 text-gray-400'}">
+          <i data-lucide="${school.icon}" class="lucide w-6 h-6"></i>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <h3 class="font-black text-sm text-xjtlu-navy truncate">${sName}</h3>
+            ${isAvailable ? '' : `<span class="text-[0.5rem] px-1.5 py-0.5 rounded bg-gray-200 text-gray-500 uppercase font-bold">${t('school_select_coming_soon')}</span>`}
+          </div>
+          <p class="text-[0.6rem] text-xjtlu-gray mt-0.5">${school.abbr}</p>
+        </div>
+
+        ${isAvailable ? `
+          <div class="shrink-0 w-8 h-8 rounded-full bg-xjtlu-blue/5 flex items-center justify-center text-xjtlu-blue">
+            <i data-lucide="chevron-right" class="lucide w-5 h-5"></i>
+          </div>
+        ` : ''}
+      </div>
+    `;
   }
 }

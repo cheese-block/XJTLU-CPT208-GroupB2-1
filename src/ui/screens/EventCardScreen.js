@@ -1,6 +1,7 @@
 import * as StateManager from '../../state/StateManager.js';
 import { previewEffects, clearPreview } from '../UIManager.js';
 import { resolveI18nText, t } from '../../utils/i18n.js';
+import { isMobile } from '../../utils/helpers.js';
 
 export class EventCardScreen {
   constructor() {
@@ -12,7 +13,13 @@ export class EventCardScreen {
 
   mount(container, state) {
     this._container = container;
-    container.innerHTML = this._buildHTML();
+    
+    if (isMobile()) {
+      container.innerHTML = this._buildMobileHTML();
+    } else {
+      container.innerHTML = this._buildHTML();
+    }
+    
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
@@ -231,6 +238,40 @@ export class EventCardScreen {
           </div>
 
         </div>
+      </div>
+    `;
+  }
+
+  /**
+   * 构建移动端全屏布局 HTML。
+   * @returns {string}
+   */
+  _buildMobileHTML() {
+    return `
+      <div class="absolute inset-0 bg-white z-50 flex flex-col animate-fade-in">
+        
+        <!-- 顶部：事件标题 -->
+        <div class="shrink-0 px-5 pt-6 pb-4 border-b border-gray-100 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-xjtlu-blue/10 flex items-center justify-center text-xjtlu-blue">
+            <i data-lucide="compass" class="lucide w-5 h-5"></i>
+          </div>
+          <h2 id="ec-title" class="text-base font-black text-xjtlu-navy truncate"></h2>
+        </div>
+
+        <!-- 中部：滚动剧情内容 -->
+        <div class="flex-1 overflow-y-auto custom-scroll px-5 py-6">
+          <p id="ec-text" class="text-[0.9rem] text-gray-700 leading-relaxed font-medium mb-6"></p>
+          <div id="ec-tip" class="hidden bg-yellow-50 border-l-4 border-xjtlu-yellow p-3 text-[0.75rem] text-yellow-800 rounded-r-lg flex items-start gap-2"></div>
+        </div>
+
+        <!-- 底部：选项区 -->
+        <div class="shrink-0 p-5 bg-gray-50 border-t border-gray-100">
+          <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest mb-3 text-center">${t('ec_choice_prompt')}</p>
+          <div id="ec-choices" class="flex flex-col gap-2.5">
+            <!-- 动态注入按钮 -->
+          </div>
+        </div>
+
       </div>
     `;
   }
